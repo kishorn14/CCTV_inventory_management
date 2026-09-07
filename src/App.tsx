@@ -17,9 +17,10 @@ import { CategoryType, Product } from './types';
 
 function MainApp() {
   const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => {
-    return window.location.pathname.toLowerCase() === '/admin' || 
-           window.location.hash.toLowerCase() === '#/admin' ||
-           window.location.search.includes('admin=true');
+    const path = window.location.pathname.toLowerCase();
+    const hash = window.location.hash.toLowerCase();
+    const search = window.location.search.toLowerCase();
+    return path.includes('admin') || hash.includes('admin') || search.includes('admin');
   });
 
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -29,10 +30,10 @@ function MainApp() {
 
   useEffect(() => {
     const handleUrlChange = () => {
-      const isAdm = window.location.pathname.toLowerCase() === '/admin' || 
-                    window.location.hash.toLowerCase() === '#/admin' ||
-                    window.location.search.includes('admin=true');
-      setIsAdminRoute(isAdm);
+      const path = window.location.pathname.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+      setIsAdminRoute(path.includes('admin') || hash.includes('admin') || search.includes('admin'));
     };
 
     window.addEventListener('popstate', handleUrlChange);
