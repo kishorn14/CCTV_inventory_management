@@ -1,0 +1,78 @@
+import { BookingFormData, Product } from '../types';
+
+export const SHOP_INFO = {
+  shopName: "Meksha Solutions",
+  tagline: "CCTV, Vehicle Batteries, Inverters, RO & Solar Systems",
+  phone: "+91 98450 12345",
+  whatsappNumber: "919845012345", // Phone without + or symbols for WhatsApp API
+  address: "Main Road, Opp. Bus Stand / City Center",
+  city: "Bangalore & Surrounding Areas",
+  email: "support@mekshasolutions.com",
+  workingHours: "8:00 AM – 9:00 PM",
+  workingDays: "All 7 Days Open (Emergency Support Available)"
+};
+
+/**
+ * Creates a clean wa.me URL with pre-filled encoded text
+ */
+export function createWhatsAppLink(message: string, phoneNumber: string = SHOP_INFO.whatsappNumber): string {
+  const encoded = encodeURIComponent(message);
+  return `https://wa.me/${phoneNumber}?text=${encoded}`;
+}
+
+/**
+ * Formats a Service Booking into a WhatsApp message
+ */
+export function formatBookingMessage(booking: BookingFormData): string {
+  const categoryLabels: Record<string, string> = {
+    cctv: '📹 CCTV Surveillance System',
+    battery: '🔋 Vehicle / Automotive Battery',
+    inverter: '⚡ UPS & Inverter Power System',
+    water_purifier: '💧 Water Purifier / RO System',
+    solar_heater: '☀️ Solar Water Heater',
+    all: '🛠️ General Inquiry / Multi-Service'
+  };
+
+  const categoryName = categoryLabels[booking.category] || booking.category;
+
+  return `🛠️ *NEW SERVICE / INSTALLATION BOOKING*
+*Shop:* ${SHOP_INFO.shopName}
+---------------------------------
+👤 *Customer Name:* ${booking.customerName}
+📞 *Phone Number:* ${booking.phoneNumber}
+📍 *Location / Address:* ${booking.address}
+🏷️ *Service Category:* ${categoryName}
+🔧 *Service Type:* ${booking.serviceType}
+⏰ *Preferred Date / Time:* ${booking.preferredTime || 'As soon as possible'}
+${booking.notes ? `📝 *Special Notes:* ${booking.notes}` : ''}
+---------------------------------
+_Sent via ${SHOP_INFO.shopName} Online Portal_`;
+}
+
+/**
+ * Formats a Product Inquiry message for WhatsApp
+ */
+export function formatProductInquiry(product: Product): string {
+  return `🛍️ *PRODUCT INQUIRY & PRICING*
+*Shop:* ${SHOP_INFO.shopName}
+---------------------------------
+📦 *Product:* ${product.name}
+🏷️ *Brand:* ${product.brand}
+🛡️ *Warranty:* ${product.warranty}
+💰 *Est. Price:* ${product.priceRange}
+
+Hello, I am interested in purchasing/inquiring about this product. Please share availability, best price, and installation details.`;
+}
+
+/**
+ * Formats an Estimate / Calculator message for WhatsApp
+ */
+export function formatEstimateMessage(title: string, details: string[]): string {
+  return `📊 *ESTIMATE / QUOTE REQUEST*
+*Shop:* ${SHOP_INFO.shopName}
+---------------------------------
+📌 *Requirement:* ${title}
+${details.map(d => `• ${d}`).join('\n')}
+---------------------------------
+Please share a detailed price quotation, warranty terms, and installation timeline for this requirement. Thank you!`;
+}
