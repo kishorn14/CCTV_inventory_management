@@ -146,7 +146,8 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
     <div className="modal-overlay" onClick={onClose}>
       <div 
         className="modal-content" 
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setIsServiceDropdownOpen(false);
           setIsTimeDropdownOpen(false);
         }}
