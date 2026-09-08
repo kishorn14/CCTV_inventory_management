@@ -21,7 +21,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { label: 'Services', href: '#services', icon: Wrench },
     { label: 'Products', href: '#products', icon: ShoppingBag },
     { label: 'Cost Estimator', href: '#estimator', icon: Calculator },
     { label: 'Why Us', href: '#why-us', icon: Shield },

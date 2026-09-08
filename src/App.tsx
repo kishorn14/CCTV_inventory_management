@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { ShopProvider } from './context/ShopContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { ServicesSection } from './components/ServicesSection';
 import { ProductCatalog } from './components/ProductCatalog';
 import { EstimatorCalculator } from './components/EstimatorCalculator';
 import { WhyChooseUs } from './components/WhyChooseUs';
@@ -79,9 +78,6 @@ function MainApp() {
         onOpenBooking={(cat) => handleOpenBooking(cat || 'cctv')}
         onSelectCategory={handleSelectCategory}
       />
-
-      {/* Services Section */}
-      <ServicesSection onOpenBooking={handleOpenBooking} />
 
       {/* Product Catalog & Category Filters */}
       <ProductCatalog

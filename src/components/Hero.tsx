@@ -7,7 +7,6 @@ import {
   ArrowRight,
   Wrench,
   ShieldCheck, 
-  Truck, 
   Award, 
   Clock, 
   ChevronRight,
@@ -80,13 +79,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
       ctaText: 'Enquire about Inverters & UPS',
       inquiryMessage: `Hello ${shopInfo.shopName}, I would like to enquire about Inverters & UPS Power Backup systems.`
     }
-  ];
-
-  const highlights = [
-    { icon: Truck, title: 'Doorstep Service', desc: 'Direct technician visit at your place' },
-    { icon: ShieldCheck, title: '100% Genuine', desc: 'Direct brand warranties' },
-    { icon: Award, title: 'Certified Techs', desc: 'Expert neat installation' },
-    { icon: Clock, title: 'Reliable Support', desc: 'Prompt repair response' },
   ];
 
   return (
@@ -1178,47 +1170,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
               <ArrowRight size={18} strokeWidth={2.5} />
             </div>
           </div>
-        </div>
-
-        {/* 4 Trust Highlights Strip */}
-        <div style={{
-          background: '#ffffff',
-          border: '1px solid #e2e8f0',
-          borderRadius: '16px',
-          padding: '24px 28px',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '20px',
-          boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)'
-        }}>
-          {highlights.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                <div style={{
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '10px',
-                  background: '#eff6ff',
-                  color: '#1d4ed8',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0
-                }}>
-                  <Icon size={22} />
-                </div>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#0f172a' }}>
-                    {item.title}
-                  </div>
-                  <div style={{ fontSize: '0.8rem', color: '#64748b' }}>
-                    {item.desc}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
         </div>
       </div>
 
