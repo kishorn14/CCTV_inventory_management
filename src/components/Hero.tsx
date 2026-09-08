@@ -7,14 +7,10 @@ import {
   ArrowRight,
   Wrench,
   ShieldCheck, 
-  Award, 
   Clock, 
-  ChevronRight,
-  Check,
-  Star,
-  Users,
-  Heart,
-  CheckCircle2,
+  Check, 
+  Star, 
+  Users, 
   HardHat,
   Headphones,
   Calculator,
@@ -1041,77 +1037,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Eight Reasons List Card (Compact Shakthi Agencies aesthetic) */}
-            <div style={{
-              background: '#ffffff',
-              border: '1px solid #e2e8f0',
-              borderRadius: '20px',
-              padding: '4px 6px',
-              marginTop: '14px',
-              boxShadow: '0 8px 24px -6px rgba(15, 23, 42, 0.06), 0 2px 8px rgba(15, 23, 42, 0.02)',
-              textAlign: 'left'
-            }}>
-              {[
-                { label: 'Genuine Products', icon: CheckCircle2 },
-                { label: 'Trusted Brands', icon: Award },
-                { label: 'Professional Installation', icon: Wrench },
-                { label: 'Affordable Pricing', icon: Heart },
-                { label: 'Warranty Support', icon: ShieldCheck },
-                { label: 'Experienced Technicians', icon: Users },
-                { label: 'Prompt Service', icon: Clock },
-                { label: 'Customer Satisfaction', icon: Star },
-              ].map((reason, idx, arr) => {
-                const Icon = reason.icon;
-                const isLast = idx === arr.length - 1;
-                return (
-                  <div
-                    key={idx}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '8px 8px',
-                      borderBottom: isLast ? 'none' : '1px solid #f1f5f9',
-                      cursor: 'pointer',
-                      borderRadius: '10px',
-                      transition: 'all 0.15s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#f8fafc';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'transparent';
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div style={{
-                        width: '28px',
-                        height: '28px',
-                        borderRadius: '50%',
-                        background: '#fef9c3',
-                        border: '1px solid #fef08a',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0
-                      }}>
-                        <Icon size={14} color="#04647a" />
-                      </div>
-                      <span style={{
-                        fontSize: '0.84rem',
-                        fontWeight: 700,
-                        color: '#0f172a',
-                        letterSpacing: '-0.01em'
-                      }}>
-                        {reason.label}
-                      </span>
-                    </div>
-                    <ChevronRight size={15} color="#94a3b8" />
-                  </div>
-                );
-              })}
             </div>
 
             {/* 4-Pillars Trust Matrix Card (100% Genuine, Expert Installation, Quick Service, After-Sales Support) */}
