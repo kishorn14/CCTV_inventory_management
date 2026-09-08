@@ -300,6 +300,242 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
             </a>
           </div>
 
+          {/* Trust Checklist & Smart Home Showcase Visual (Responsive 2-Column Split on Desktop, Directly Below Action Buttons) */}
+          <div className="hero-trust-split-section">
+            {/* Left Column: Value Proposition & 5 Checkmarks Trust Grid */}
+            <div style={{ textAlign: 'left' }}>
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: '#ecfdf5',
+                border: '1px solid #a7f3d0',
+                color: '#059669',
+                fontWeight: 800,
+                fontSize: '0.74rem',
+                letterSpacing: '0.08em',
+                padding: '4px 14px',
+                borderRadius: '9999px',
+                textTransform: 'uppercase',
+                marginBottom: '12px'
+              }}>
+                <ShieldCheck size={14} color="#059669" />
+                <span>Certified &amp; Dependable</span>
+              </div>
+
+              <h2 style={{
+                fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
+                fontWeight: 800,
+                color: '#0f172a',
+                lineHeight: 1.2,
+                marginBottom: '12px',
+                letterSpacing: '-0.02em'
+              }}>
+                Smart Solutions Designed for Modern Living
+              </h2>
+
+              <p style={{
+                fontSize: '0.94rem',
+                color: '#475569',
+                lineHeight: 1.55,
+                marginBottom: '20px'
+              }}>
+                From HD live camera monitoring on your smartphone to 24×7 uninterrupted home inverter power backup, we deliver turnkey installation across Davangere.
+              </p>
+
+              {/* 5 Checkmarks Grid */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                gap: '12px 16px',
+                marginBottom: '24px'
+              }}>
+                {[
+                  '100% Genuine Products',
+                  'Certified Expert Installation',
+                  'Official Warranty Support',
+                  'Doorstep Prompt Service',
+                  'Authorized Dealer Brands'
+                ].map((feat, idx) => (
+                  <div 
+                    key={idx}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      color: '#1e293b',
+                      fontWeight: 600,
+                      fontSize: '0.88rem'
+                    }}
+                  >
+                    <div style={{
+                      width: '22px',
+                      height: '22px',
+                      borderRadius: '50%',
+                      background: '#dcfce7',
+                      color: '#16a34a',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}>
+                      <Check size={14} strokeWidth={3} />
+                    </div>
+                    <span>{feat}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => onOpenBooking()}
+                className="btn btn-primary"
+                style={{ borderRadius: '9999px', padding: '12px 24px', fontWeight: 700 }}
+              >
+                <Wrench size={18} />
+                <span>Request Doorstep Service</span>
+              </button>
+            </div>
+
+            {/* Right Column: Showcase Card with 3D Illustration & Floating Badges */}
+            <div style={{
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              borderRadius: '26px',
+              padding: '16px',
+              position: 'relative',
+              boxShadow: '0 16px 36px -8px rgba(15, 23, 42, 0.1), 0 4px 12px rgba(15, 23, 42, 0.04)',
+              overflow: 'hidden'
+            }}>
+              {/* Top Right Rating Badge */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                marginBottom: '10px',
+                paddingRight: '4px'
+              }}>
+                <div style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: '#fffbeb',
+                  border: '1px solid #fef3c7',
+                  color: '#b45309',
+                  padding: '4px 12px',
+                  borderRadius: '9999px',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  boxShadow: '0 2px 6px rgba(245, 158, 11, 0.1)'
+                }}>
+                  <Star size={14} fill="#f59e0b" color="#f59e0b" />
+                  <span style={{ color: '#0f172a' }}>4.9 / 5 Rated (81+ Reviews)</span>
+                </div>
+              </div>
+
+              {/* 3D Smart Home Illustration Image Container */}
+              <div style={{
+                position: 'relative',
+                borderRadius: '20px',
+                overflow: 'hidden',
+                background: '#f8fafc',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <img
+                  src="/hero-smart-home.jpg"
+                  alt="Smart Home Security & Power Backup Solutions"
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    display: 'block',
+                    borderRadius: '20px',
+                    objectFit: 'cover'
+                  }}
+                />
+
+                {/* Floating Badge 1 - Top Left: Secured / HD CCTV Live */}
+                <div style={{
+                  position: 'absolute',
+                  top: '16px',
+                  left: '16px',
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  border: '1px solid rgba(226, 232, 240, 0.9)',
+                  borderRadius: '16px',
+                  padding: '8px 14px 8px 10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  boxShadow: '0 10px 22px rgba(15, 23, 42, 0.14)',
+                  animation: 'floatSlow 4s ease-in-out infinite'
+                }}>
+                  <div style={{
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '50%',
+                    background: '#e0f2fe',
+                    color: '#0284c7',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <ShieldCheck size={18} />
+                  </div>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', lineHeight: 1 }}>
+                      Secured
+                    </div>
+                    <div style={{ fontSize: '0.88rem', color: '#0f172a', fontWeight: 800, marginTop: '3px', lineHeight: 1.1 }}>
+                      HD CCTV Live
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating Badge 2 - Bottom Right: Power Backup / 24x7 Uptime */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: '16px',
+                  right: '16px',
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  border: '1px solid rgba(226, 232, 240, 0.9)',
+                  borderRadius: '16px',
+                  padding: '8px 14px 8px 10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  boxShadow: '0 10px 22px rgba(15, 23, 42, 0.14)',
+                  animation: 'floatSlow 4s ease-in-out infinite 2s'
+                }}>
+                  <div style={{
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '50%',
+                    background: '#fef3c7',
+                    color: '#d97706',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <Zap size={18} />
+                  </div>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', lineHeight: 1 }}>
+                      Power Backup
+                    </div>
+                    <div style={{ fontSize: '0.88rem', color: '#0f172a', fontWeight: 800, marginTop: '3px', lineHeight: 1.1 }}>
+                      24×7 Uptime
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* "WHAT WE DO" - Showcase (3-Column Grid on Desktop, Swipe Track on Mobile) */}
           <div className="hero-showcase-container">
             {/* Section Badge */}
@@ -662,242 +898,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                   boxShadow: '0 4px 12px rgba(234, 179, 8, 0.35)'
                 }}>
                   <ArrowRight size={18} strokeWidth={2.5} />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Trust Checklist & Smart Home Showcase Visual (Responsive 2-Column Split on Desktop) */}
-          <div className="hero-trust-split-section">
-            {/* Left Column: Value Proposition & 5 Checkmarks Trust Grid */}
-            <div style={{ textAlign: 'left' }}>
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                background: '#ecfdf5',
-                border: '1px solid #a7f3d0',
-                color: '#059669',
-                fontWeight: 800,
-                fontSize: '0.74rem',
-                letterSpacing: '0.08em',
-                padding: '4px 14px',
-                borderRadius: '9999px',
-                textTransform: 'uppercase',
-                marginBottom: '12px'
-              }}>
-                <ShieldCheck size={14} color="#059669" />
-                <span>Certified &amp; Dependable</span>
-              </div>
-
-              <h2 style={{
-                fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
-                fontWeight: 800,
-                color: '#0f172a',
-                lineHeight: 1.2,
-                marginBottom: '12px',
-                letterSpacing: '-0.02em'
-              }}>
-                Smart Solutions Designed for Modern Living
-              </h2>
-
-              <p style={{
-                fontSize: '0.94rem',
-                color: '#475569',
-                lineHeight: 1.55,
-                marginBottom: '20px'
-              }}>
-                From HD live camera monitoring on your smartphone to 24×7 uninterrupted home inverter power backup, we deliver turnkey installation across Davangere.
-              </p>
-
-              {/* 5 Checkmarks Grid */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                gap: '12px 16px',
-                marginBottom: '24px'
-              }}>
-                {[
-                  '100% Genuine Products',
-                  'Certified Expert Installation',
-                  'Official Warranty Support',
-                  'Doorstep Prompt Service',
-                  'Authorized Dealer Brands'
-                ].map((feat, idx) => (
-                  <div 
-                    key={idx}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      color: '#1e293b',
-                      fontWeight: 600,
-                      fontSize: '0.88rem'
-                    }}
-                  >
-                    <div style={{
-                      width: '22px',
-                      height: '22px',
-                      borderRadius: '50%',
-                      background: '#dcfce7',
-                      color: '#16a34a',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0
-                    }}>
-                      <Check size={14} strokeWidth={3} />
-                    </div>
-                    <span>{feat}</span>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={() => onOpenBooking()}
-                className="btn btn-primary"
-                style={{ borderRadius: '9999px', padding: '12px 24px', fontWeight: 700 }}
-              >
-                <Wrench size={18} />
-                <span>Request Doorstep Service</span>
-              </button>
-            </div>
-
-            {/* Right Column: Showcase Card with 3D Illustration & Floating Badges */}
-            <div style={{
-              background: '#ffffff',
-              border: '1px solid #e2e8f0',
-              borderRadius: '26px',
-              padding: '16px',
-              position: 'relative',
-              boxShadow: '0 16px 36px -8px rgba(15, 23, 42, 0.1), 0 4px 12px rgba(15, 23, 42, 0.04)',
-              overflow: 'hidden'
-            }}>
-              {/* Top Right Rating Badge */}
-              <div style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                marginBottom: '10px',
-                paddingRight: '4px'
-              }}>
-                <div style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  background: '#fffbeb',
-                  border: '1px solid #fef3c7',
-                  color: '#b45309',
-                  padding: '4px 12px',
-                  borderRadius: '9999px',
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
-                  boxShadow: '0 2px 6px rgba(245, 158, 11, 0.1)'
-                }}>
-                  <Star size={14} fill="#f59e0b" color="#f59e0b" />
-                  <span style={{ color: '#0f172a' }}>4.9 / 5 Rated (81+ Reviews)</span>
-                </div>
-              </div>
-
-              {/* 3D Smart Home Illustration Image Container */}
-              <div style={{
-                position: 'relative',
-                borderRadius: '20px',
-                overflow: 'hidden',
-                background: '#f8fafc',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <img
-                  src="/hero-smart-home.jpg"
-                  alt="Smart Home Security & Power Backup Solutions"
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    display: 'block',
-                    borderRadius: '20px',
-                    objectFit: 'cover'
-                  }}
-                />
-
-                {/* Floating Badge 1 - Top Left: Secured / HD CCTV Live */}
-                <div style={{
-                  position: 'absolute',
-                  top: '16px',
-                  left: '16px',
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  backdropFilter: 'blur(8px)',
-                  WebkitBackdropFilter: 'blur(8px)',
-                  border: '1px solid rgba(226, 232, 240, 0.9)',
-                  borderRadius: '16px',
-                  padding: '8px 14px 8px 10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  boxShadow: '0 10px 22px rgba(15, 23, 42, 0.14)',
-                  animation: 'floatSlow 4s ease-in-out infinite'
-                }}>
-                  <div style={{
-                    width: '34px',
-                    height: '34px',
-                    borderRadius: '50%',
-                    background: '#e0f2fe',
-                    color: '#0284c7',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
-                    <ShieldCheck size={18} />
-                  </div>
-                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', lineHeight: 1 }}>
-                      Secured
-                    </div>
-                    <div style={{ fontSize: '0.88rem', color: '#0f172a', fontWeight: 800, marginTop: '3px', lineHeight: 1.1 }}>
-                      HD CCTV Live
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating Badge 2 - Bottom Right: Power Backup / 24x7 Uptime */}
-                <div style={{
-                  position: 'absolute',
-                  bottom: '16px',
-                  right: '16px',
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  backdropFilter: 'blur(8px)',
-                  WebkitBackdropFilter: 'blur(8px)',
-                  border: '1px solid rgba(226, 232, 240, 0.9)',
-                  borderRadius: '16px',
-                  padding: '8px 14px 8px 10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  boxShadow: '0 10px 22px rgba(15, 23, 42, 0.14)',
-                  animation: 'floatSlow 4s ease-in-out infinite 2s'
-                }}>
-                  <div style={{
-                    width: '34px',
-                    height: '34px',
-                    borderRadius: '50%',
-                    background: '#fef3c7',
-                    color: '#d97706',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
-                    <Zap size={18} />
-                  </div>
-                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', lineHeight: 1 }}>
-                      Power Backup
-                    </div>
-                    <div style={{ fontSize: '0.88rem', color: '#0f172a', fontWeight: 800, marginTop: '3px', lineHeight: 1.1 }}>
-                      24×7 Uptime
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
