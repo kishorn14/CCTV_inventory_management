@@ -9,6 +9,7 @@ export const SHOP_INFO = {
   city: "Bangalore & Surrounding Areas",
   email: "support@mekshasolutions.com",
   instagramUrl: "https://www.instagram.com/mekhasolutions?stkn=MWFlcnhkbzlpZmEybg==",
+  googleMapsUrl: "https://share.google/Qdy82hkQa2UO5Axtj",
   workingHours: "8:00 AM – 9:00 PM",
   workingDays: "All 7 Days Open (Emergency Support Available)"
 };

@@ -152,7 +152,16 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                 <MapPin size={18} color="#60a5fa" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <span>{shopInfo.address}, {shopInfo.city}</span>
+                <a 
+                  href={shopInfo.googleMapsUrl || 'https://share.google/Qdy82hkQa2UO5Axtj'} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{ color: '#9ca3af', textDecoration: 'none' }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#60a5fa'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
+                >
+                  {shopInfo.address}, {shopInfo.city} ↗
+                </a>
               </div>
               <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <Phone size={18} color="#34d399" style={{ flexShrink: 0 }} />

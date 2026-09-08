@@ -3,6 +3,7 @@ import { ShopProvider } from './context/ShopContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { TrustedBrands } from './components/TrustedBrands';
+import { GoogleReviews } from './components/GoogleReviews';
 import { ProductCatalog } from './components/ProductCatalog';
 import { EstimatorCalculator } from './components/EstimatorCalculator';
 import { FaqSection } from './components/FaqSection';
@@ -96,6 +97,9 @@ function MainApp() {
 
       {/* Authorized Dealer & Trusted Brand Partners (Exide, Amaron, Luminous, CP Plus, Hikvision, Dahua) */}
       <TrustedBrands />
+
+      {/* Google Reviews & Customer Testimonials (Connected to Google Maps Share Link) */}
+      <GoogleReviews />
 
       {/* Product Catalog & Category Filters - Only shown when user clicks Explore / Category */}
       {isCatalogVisible && (

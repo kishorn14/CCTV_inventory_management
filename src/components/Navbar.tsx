@@ -7,7 +7,9 @@ import {
   Wrench, 
   ShoppingBag, 
   Calculator, 
-  MapPin 
+  MapPin,
+  Award,
+  Star
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { createWhatsAppLink } from '../utils/whatsapp';
@@ -22,9 +24,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts })
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
+    { label: 'Brands', href: '#brands', icon: Award },
+    { label: 'Reviews', href: '#reviews', icon: Star },
     { label: 'Products', href: '#products', icon: ShoppingBag, isProducts: true },
-    { label: 'Cost Estimator', href: '#estimator', icon: Calculator },
-    { label: 'Why Us', href: '#why-us', icon: Shield },
+    { label: 'Estimator', href: '#estimator', icon: Calculator },
     { label: 'Contact', href: '#contact', icon: MapPin },
   ];
 

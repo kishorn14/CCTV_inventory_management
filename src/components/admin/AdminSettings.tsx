@@ -13,7 +13,8 @@ import {
   ExternalLink,
   Copy,
   Send,
-  HelpCircle
+  HelpCircle,
+  Instagram
 } from 'lucide-react';
 import { useShop } from '../../context/ShopContext';
 import { GOOGLE_APPS_SCRIPT_CODE, sendLeadToGoogleSheets } from '../../utils/googleSheets';
@@ -29,6 +30,8 @@ export const AdminSettings: React.FC = () => {
     email: shopInfo.email,
     address: shopInfo.address,
     city: shopInfo.city,
+    googleMapsUrl: shopInfo.googleMapsUrl || 'https://share.google/Qdy82hkQa2UO5Axtj',
+    instagramUrl: shopInfo.instagramUrl || '',
     workingHours: shopInfo.workingHours,
     workingDays: shopInfo.workingDays,
     googleSheetWebhookUrl: shopInfo.googleSheetWebhookUrl || '',
@@ -57,7 +60,8 @@ export const AdminSettings: React.FC = () => {
       email: formData.email,
       address: formData.address,
       city: formData.city,
-      googleMapsUrl: `https://maps.google.com/?q=${encodeURIComponent(formData.shopName + ' ' + formData.city)}`,
+      googleMapsUrl: formData.googleMapsUrl.trim() || 'https://share.google/Qdy82hkQa2UO5Axtj',
+      instagramUrl: formData.instagramUrl.trim(),
       workingHours: formData.workingHours,
       workingDays: formData.workingDays,
       googleSheetWebhookUrl: formData.googleSheetWebhookUrl.trim(),
@@ -274,6 +278,37 @@ export const AdminSettings: React.FC = () => {
                 value={formData.city}
                 onChange={e => setFormData({ ...formData, city: e.target.value })}
                 required
+              />
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '16px' }}>
+            <div className="form-group">
+              <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <MapPin size={14} color="#1d4ed8" /> Google Maps &amp; Reviews Share URL
+              </label>
+              <input
+                type="url"
+                className="form-input"
+                placeholder="https://share.google/..."
+                value={formData.googleMapsUrl}
+                onChange={e => setFormData({ ...formData, googleMapsUrl: e.target.value })}
+              />
+              <span style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '4px', display: 'block' }}>
+                Powers the "View All Google Reviews" &amp; "Get Directions" buttons across the website.
+              </span>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Instagram size={14} color="#e1306c" /> Instagram Profile URL
+              </label>
+              <input
+                type="url"
+                className="form-input"
+                placeholder="https://www.instagram.com/..."
+                value={formData.instagramUrl}
+                onChange={e => setFormData({ ...formData, instagramUrl: e.target.value })}
               />
             </div>
           </div>

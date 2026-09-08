@@ -114,6 +114,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (!parsed.instagramUrl) {
           parsed.instagramUrl = DEFAULT_SHOP_INFO.instagramUrl;
         }
+        if (!parsed.googleMapsUrl || parsed.googleMapsUrl.includes('q=Meksha') || parsed.googleMapsUrl.includes('maps.google.com/?q=')) {
+          parsed.googleMapsUrl = DEFAULT_SHOP_INFO.googleMapsUrl;
+        }
         return parsed;
       }
       return {
@@ -124,7 +127,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         email: DEFAULT_SHOP_INFO.email,
         address: DEFAULT_SHOP_INFO.address,
         city: DEFAULT_SHOP_INFO.city,
-        googleMapsUrl: `https://maps.google.com/?q=${encodeURIComponent(DEFAULT_SHOP_INFO.shopName + ' ' + DEFAULT_SHOP_INFO.city)}`,
+        googleMapsUrl: DEFAULT_SHOP_INFO.googleMapsUrl,
         workingHours: DEFAULT_SHOP_INFO.workingHours,
         workingDays: DEFAULT_SHOP_INFO.workingDays,
         instagramUrl: DEFAULT_SHOP_INFO.instagramUrl,
@@ -140,7 +143,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         email: DEFAULT_SHOP_INFO.email,
         address: DEFAULT_SHOP_INFO.address,
         city: DEFAULT_SHOP_INFO.city,
-        googleMapsUrl: '',
+        googleMapsUrl: DEFAULT_SHOP_INFO.googleMapsUrl,
         workingHours: DEFAULT_SHOP_INFO.workingHours,
         workingDays: DEFAULT_SHOP_INFO.workingDays,
         instagramUrl: DEFAULT_SHOP_INFO.instagramUrl,
@@ -300,7 +303,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email: DEFAULT_SHOP_INFO.email,
       address: DEFAULT_SHOP_INFO.address,
       city: DEFAULT_SHOP_INFO.city,
-      googleMapsUrl: '',
+      googleMapsUrl: DEFAULT_SHOP_INFO.googleMapsUrl,
       workingHours: DEFAULT_SHOP_INFO.workingHours,
       workingDays: DEFAULT_SHOP_INFO.workingDays,
       instagramUrl: DEFAULT_SHOP_INFO.instagramUrl,

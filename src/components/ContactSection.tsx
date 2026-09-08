@@ -100,7 +100,7 @@ export const ContactSection: React.FC = () => {
                   {shopInfo.address}, {shopInfo.city}
                 </div>
                 <a
-                  href={`https://maps.google.com/?q=${encodeURIComponent(shopInfo.shopName + ' ' + shopInfo.city)}`}
+                  href={shopInfo.googleMapsUrl || 'https://share.google/Qdy82hkQa2UO5Axtj'}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
