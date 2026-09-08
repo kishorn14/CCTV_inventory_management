@@ -32,14 +32,15 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess, onGoToStore }
       alignItems: 'center',
       justifyContent: 'center',
       padding: '20px',
-      background: 'radial-gradient(circle at 50% 30%, #151d38 0%, #0a0f1d 75%)'
+      background: 'radial-gradient(circle at 50% 30%, #eff6ff 0%, #f8fafc 75%)'
     }}>
       <div className="glass-card" style={{
         maxWidth: '440px',
         width: '100%',
         padding: '36px',
-        boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
-        border: '1px solid rgba(255, 255, 255, 0.12)'
+        background: '#ffffff',
+        boxShadow: '0 20px 50px rgba(15, 23, 42, 0.1)',
+        border: '1px solid #e2e8f0'
       }}>
         {/* Header Icon */}
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>
@@ -47,21 +48,21 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess, onGoToStore }
             width: '56px',
             height: '56px',
             borderRadius: '16px',
-            background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+            background: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)',
             color: '#ffffff',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 16px auto',
-            boxShadow: '0 8px 25px rgba(37, 99, 235, 0.4)'
+            boxShadow: '0 8px 25px rgba(29, 78, 216, 0.3)'
           }}>
             <Lock size={28} />
           </div>
 
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ffffff', marginBottom: '4px' }}>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
             Shop Admin Portal
           </h1>
-          <p style={{ fontSize: '0.85rem', color: '#9ca3af' }}>
+          <p style={{ fontSize: '0.85rem', color: '#64748b' }}>
             {shopInfo.shopName} Management Dashboard
           </p>
         </div>
@@ -69,14 +70,14 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess, onGoToStore }
         {/* Error Alert */}
         {errorMsg && (
           <div style={{
-            background: 'rgba(239, 68, 68, 0.15)',
-            border: '1px solid rgba(239, 68, 68, 0.3)',
+            background: '#fef2f2',
+            border: '1px solid #fecaca',
             borderRadius: '10px',
             padding: '12px 14px',
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
-            color: '#fca5a5',
+            color: '#b91c1c',
             fontSize: '0.88rem',
             marginBottom: '20px',
             animation: 'fadeIn 0.2s ease-out'
@@ -111,7 +112,7 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess, onGoToStore }
                   transform: 'translateY(-50%)',
                   background: 'none',
                   border: 'none',
-                  color: '#9ca3af',
+                  color: '#64748b',
                   cursor: 'pointer'
                 }}
               >
@@ -130,15 +131,15 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess, onGoToStore }
         </form>
 
         {/* Back to Storefront Link */}
-        <div style={{ textAlign: 'center', paddingTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+        <div style={{ textAlign: 'center', paddingTop: '16px', borderTop: '1px solid #f1f5f9' }}>
           <button
             onClick={onGoToStore}
             style={{
               background: 'none',
               border: 'none',
-              color: '#93c5fd',
+              color: '#1d4ed8',
               fontSize: '0.88rem',
-              fontWeight: 600,
+              fontWeight: 700,
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',

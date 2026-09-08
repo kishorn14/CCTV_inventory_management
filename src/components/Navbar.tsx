@@ -55,12 +55,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               backgroundColor: '#4ade80',
               animation: 'pulseGlow 1.5s infinite' 
             }} />
-            <span>⚡ Professional CCTV Sales, Doorstep Installation & Repair Services</span>
+            <span>⚡ Authorized Sales, Doorstep Installation &amp; Service Partner</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <a 
               href={`tel:${shopInfo.phone}`} 
-              style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#fff', fontWeight: 600 }}
+              style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#ffffff', fontWeight: 600 }}
             >
               <Phone size={13} /> {shopInfo.phone}
             </a>
@@ -70,15 +70,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
         </div>
       </div>
 
-      {/* Main Sticky Navbar */}
+      {/* Main Sticky Navbar (Clean White & Crisp Light Style) */}
       <header style={{
         position: 'sticky',
         top: 0,
         zIndex: 900,
-        background: 'rgba(10, 15, 29, 0.92)',
+        background: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        borderBottom: '1px solid #e2e8f0',
+        boxShadow: '0 2px 14px rgba(15, 23, 42, 0.04)',
         transition: 'all 0.3s ease'
       }}>
         <div className="container" style={{
@@ -93,11 +94,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               width: '44px',
               height: '44px',
               borderRadius: '12px',
-              background: 'linear-gradient(135deg, #2563eb 0%, #06b6d4 100%)',
+              background: 'linear-gradient(135deg, #1d4ed8 0%, #0284c7 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 4px 15px rgba(37, 99, 235, 0.4)',
+              boxShadow: '0 4px 14px rgba(29, 78, 216, 0.3)',
               color: '#ffffff'
             }}>
               <Shield size={24} />
@@ -106,16 +107,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               <div style={{
                 fontFamily: 'Outfit, sans-serif',
                 fontSize: '1.35rem',
-                fontWeight: 800,
+                fontWeight: 900,
                 letterSpacing: '-0.02em',
-                color: '#ffffff',
+                color: '#0f172a',
                 lineHeight: 1.1
               }}>
                 {shopInfo.shopName.split(' ')[0]} <span className="text-gradient">{shopInfo.shopName.split(' ').slice(1).join(' ') || 'SOLUTIONS'}</span>
               </div>
               <div style={{
                 fontSize: '0.72rem',
-                color: 'var(--text-secondary)',
+                color: '#64748b',
                 fontWeight: 600,
                 letterSpacing: '0.04em',
                 textTransform: 'uppercase'
@@ -132,14 +133,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
                 key={link.label}
                 href={link.href}
                 style={{
-                  color: 'var(--text-secondary)',
+                  color: '#334155',
                   fontSize: '0.92rem',
                   fontWeight: 600,
                   transition: 'color 0.2s ease',
                   padding: '6px 0'
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#1d4ed8')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#334155')}
               >
                 {link.label}
               </a>
@@ -175,11 +176,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              background: '#f1f5f9',
+              border: '1px solid #cbd5e1',
               borderRadius: '8px',
               padding: '8px',
-              color: '#ffffff',
+              color: '#0f172a',
               cursor: 'pointer'
             }}
             className="mobile-toggle"
@@ -191,8 +192,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
         {/* Mobile Drawer Menu */}
         {mobileMenuOpen && (
           <div style={{
-            background: '#111827',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            background: '#ffffff',
+            borderBottom: '1px solid #e2e8f0',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
             padding: '20px',
             display: 'flex',
             flexDirection: 'column',
@@ -210,15 +212,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '12px',
-                    color: '#ffffff',
-                    fontSize: '1.05rem',
+                    color: '#0f172a',
+                    fontSize: '1rem',
                     fontWeight: 600,
                     padding: '10px 14px',
                     borderRadius: '8px',
-                    background: 'rgba(255, 255, 255, 0.04)'
+                    background: '#f8fafc',
+                    border: '1px solid #f1f5f9'
                   }}
                 >
-                  <Icon size={18} color="#60a5fa" />
+                  <Icon size={18} color="#1d4ed8" />
                   {link.label}
                 </a>
               );

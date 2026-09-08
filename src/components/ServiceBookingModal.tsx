@@ -7,12 +7,12 @@ import {
   Zap, 
   Droplets, 
   Sun, 
-  Wrench,
-  CheckCircle,
-  MapPin,
-  Calendar,
-  Phone,
-  User
+  Wrench, 
+  CheckCircle, 
+  MapPin, 
+  Calendar, 
+  Phone, 
+  User 
 } from 'lucide-react';
 import { CategoryType } from '../types';
 import { useShop } from '../context/ShopContext';
@@ -160,6 +160,7 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
       <div 
         className="modal-content" 
         onClick={(e) => e.stopPropagation()}
+        style={{ background: '#ffffff', color: '#0f172a' }}
       >
         <div className="modal-drag-handle" />
 
@@ -169,7 +170,7 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
           alignItems: 'center',
           justifyContent: 'space-between',
           marginBottom: '18px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          borderBottom: '1px solid #e2e8f0',
           paddingBottom: '14px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -177,8 +178,8 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
               width: '38px',
               height: '38px',
               borderRadius: '10px',
-              background: 'rgba(37, 99, 235, 0.2)',
-              color: '#60a5fa',
+              background: '#eff6ff',
+              color: '#1d4ed8',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -187,10 +188,10 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
               <Wrench size={20} />
             </div>
             <div>
-              <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.2 }}>
+              <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.2 }}>
                 Book Doorstep Service
               </h2>
-              <p style={{ fontSize: '0.78rem', color: '#9ca3af' }}>
+              <p style={{ fontSize: '0.78rem', color: '#64748b' }}>
                 Fast technician dispatch & verified service
               </p>
             </div>
@@ -200,7 +201,7 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
             onClick={onClose}
             aria-label="Close modal"
             style={{
-              background: 'rgba(255, 255, 255, 0.08)',
+              background: '#f1f5f9',
               border: 'none',
               borderRadius: '50%',
               width: '34px',
@@ -208,7 +209,7 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#9ca3af',
+              color: '#64748b',
               cursor: 'pointer'
             }}
           >
@@ -222,8 +223,8 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
               width: '64px',
               height: '64px',
               borderRadius: '50%',
-              background: 'rgba(16, 185, 129, 0.2)',
-              color: '#10b981',
+              background: '#ecfdf5',
+              color: '#059669',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -231,10 +232,10 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
             }}>
               <CheckCircle size={36} />
             </div>
-            <h3 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>
+            <h3 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>
               WhatsApp Opened!
             </h3>
-            <p style={{ color: '#9ca3af', fontSize: '0.95rem', marginBottom: '24px', lineHeight: 1.5 }}>
+            <p style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: '24px', lineHeight: 1.5 }}>
               Your booking details have been generated. Click send on WhatsApp and our team will immediately confirm your service slot.
             </p>
             <button onClick={resetForm} className="btn btn-primary btn-block">
@@ -269,20 +270,21 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
                       style={{
                         padding: '10px 6px',
                         borderRadius: '8px',
-                        border: isSelected ? '1px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.08)',
-                        background: isSelected ? 'rgba(37, 99, 235, 0.25)' : 'rgba(255, 255, 255, 0.04)',
-                        color: isSelected ? '#ffffff' : '#9ca3af',
+                        border: isSelected ? '1.5px solid #1d4ed8' : '1px solid #e2e8f0',
+                        background: isSelected ? '#eff6ff' : '#ffffff',
+                        color: isSelected ? '#1d4ed8' : '#475569',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: '6px',
                         cursor: 'pointer',
                         fontSize: '0.74rem',
-                        fontWeight: 600,
-                        transition: 'all 0.2s ease'
+                        fontWeight: 700,
+                        transition: 'all 0.2s ease',
+                        boxShadow: isSelected ? '0 2px 8px rgba(29, 78, 216, 0.12)' : 'none'
                       }}
                     >
-                      <Icon size={18} color={isSelected ? '#60a5fa' : '#9ca3af'} />
+                      <Icon size={18} color={isSelected ? '#1d4ed8' : '#64748b'} />
                       {item.label}
                     </button>
                   );
@@ -292,11 +294,12 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
                 <div style={{
                   marginTop: '8px',
                   fontSize: '0.78rem',
-                  color: '#fbbf24',
-                  background: 'rgba(245, 158, 11, 0.1)',
-                  border: '1px solid rgba(245, 158, 11, 0.25)',
+                  color: '#b45309',
+                  background: '#fffbeb',
+                  border: '1px solid #fde68a',
                   borderRadius: '6px',
-                  padding: '6px 10px'
+                  padding: '6px 10px',
+                  fontWeight: 600
                 }}>
                   ℹ️ This service is launching soon. Submitting this form sends a pre-inquiry directly to our shop via WhatsApp.
                 </div>
@@ -324,7 +327,7 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '12px' }}>
               <div className="form-group">
                 <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <User size={14} color="#60a5fa" /> Your Name *
+                  <User size={14} color="#1d4ed8" /> Your Name *
                 </label>
                 <input
                   type="text"
@@ -338,7 +341,7 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
 
               <div className="form-group">
                 <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Phone size={14} color="#34d399" /> Phone / Mobile *
+                  <Phone size={14} color="#059669" /> Phone / Mobile *
                 </label>
                 <input
                   type="tel"
@@ -354,7 +357,7 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
             {/* Address & Landmark */}
             <div className="form-group">
               <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <MapPin size={14} color="#f59e0b" /> Service Address / Area Landmark *
+                <MapPin size={14} color="#d97706" /> Service Address / Area Landmark *
               </label>
               <input
                 type="text"
@@ -369,7 +372,7 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
             {/* Preferred Time */}
             <div className="form-group">
               <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Calendar size={14} color="#06b6d4" /> Preferred Date / Time Slot
+                <Calendar size={14} color="#0284c7" /> Preferred Date / Time Slot
               </label>
               <select
                 className="form-select"
@@ -409,7 +412,7 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
 
             <p style={{
               fontSize: '0.75rem',
-              color: '#6b7280',
+              color: '#64748b',
               textAlign: 'center',
               marginTop: '10px'
             }}>

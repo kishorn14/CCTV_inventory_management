@@ -152,10 +152,10 @@ export const AdminProducts: React.FC = () => {
         marginBottom: '24px'
       }}>
         <div>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff' }}>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a' }}>
             Product & Inventory Catalog ({products.length})
           </h2>
-          <p style={{ fontSize: '0.85rem', color: '#9ca3af' }}>
+          <p style={{ fontSize: '0.85rem', color: '#64748b' }}>
             Add new items, update prices, change warranty details, or edit specifications.
           </p>
         </div>
@@ -183,14 +183,15 @@ export const AdminProducts: React.FC = () => {
                 key={cat.id}
                 onClick={() => setCategoryFilter(cat.id as CategoryType)}
                 style={{
-                  padding: '6px 12px',
+                  padding: '6px 14px',
                   borderRadius: '9999px',
-                  border: isSelected ? '1px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.1)',
-                  background: isSelected ? 'rgba(37, 99, 235, 0.4)' : 'rgba(255, 255, 255, 0.04)',
-                  color: isSelected ? '#ffffff' : '#9ca3af',
+                  border: isSelected ? '1px solid #1d4ed8' : '1px solid #e2e8f0',
+                  background: isSelected ? '#eff6ff' : '#ffffff',
+                  color: isSelected ? '#1d4ed8' : '#64748b',
                   fontSize: '0.82rem',
-                  fontWeight: 600,
-                  cursor: 'pointer'
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  boxShadow: isSelected ? '0 2px 6px rgba(29, 78, 216, 0.12)' : '0 1px 2px rgba(0,0,0,0.02)'
                 }}
               >
                 {cat.label}
@@ -201,14 +202,14 @@ export const AdminProducts: React.FC = () => {
 
         {/* Search */}
         <div style={{ position: 'relative', width: '260px' }}>
-          <Search size={16} color="#9ca3af" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+          <Search size={16} color="#64748b" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"
             placeholder="Search products..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             className="form-input"
-            style={{ padding: '8px 12px 8px 36px', fontSize: '0.85rem' }}
+            style={{ padding: '8px 12px 8px 36px', fontSize: '0.85rem', background: '#ffffff' }}
           />
         </div>
       </div>
@@ -219,7 +220,7 @@ export const AdminProducts: React.FC = () => {
           <div 
             key={product.id} 
             className="glass-card" 
-            style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}
+            style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)' }}
           >
             <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
               <img
@@ -229,14 +230,14 @@ export const AdminProducts: React.FC = () => {
               />
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '2px' }}>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '2px 6px', borderRadius: '4px', background: 'rgba(37, 99, 235, 0.3)', color: '#93c5fd' }}>
+                  <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '2px 6px', borderRadius: '4px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe' }}>
                     {product.brand}
                   </span>
-                  <span style={{ fontSize: '0.72rem', color: '#9ca3af', textTransform: 'capitalize' }}>
+                  <span style={{ fontSize: '0.72rem', color: '#64748b', textTransform: 'capitalize' }}>
                     {product.category.replace('_', ' ')}
                   </span>
                 </div>
-                <div style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.95rem', lineHeight: 1.3 }}>
+                <div style={{ fontWeight: 700, color: '#0f172a', fontSize: '0.95rem', lineHeight: 1.3 }}>
                   {product.name}
                 </div>
               </div>
@@ -248,14 +249,15 @@ export const AdminProducts: React.FC = () => {
               alignItems: 'center',
               padding: '8px 12px',
               borderRadius: '8px',
-              background: 'rgba(255, 255, 255, 0.03)',
+              background: '#f8fafc',
+              border: '1px solid #e2e8f0',
               fontSize: '0.85rem'
             }}>
               <div>
-                <span style={{ color: '#9ca3af', fontSize: '0.75rem' }}>Price: </span>
-                <span style={{ color: '#34d399', fontWeight: 700 }}>{product.priceRange}</span>
+                <span style={{ color: '#64748b', fontSize: '0.75rem' }}>Price: </span>
+                <span style={{ color: '#1d4ed8', fontWeight: 700 }}>{product.priceRange}</span>
               </div>
-              <div style={{ color: '#9ca3af', fontSize: '0.78rem' }}>
+              <div style={{ color: '#059669', fontSize: '0.78rem', fontWeight: 600 }}>
                 🛡️ {product.warranty}
               </div>
             </div>
@@ -264,14 +266,14 @@ export const AdminProducts: React.FC = () => {
               <button
                 onClick={() => openEditModal(product)}
                 className="btn btn-outline btn-sm"
-                style={{ borderColor: 'rgba(59, 130, 246, 0.4)', color: '#93c5fd', minHeight: '38px' }}
+                style={{ borderColor: '#bfdbfe', background: '#eff6ff', color: '#1d4ed8', minHeight: '38px' }}
               >
                 <Edit3 size={15} /> Edit
               </button>
               <button
                 onClick={() => handleDelete(product.id, product.name)}
                 className="btn btn-outline btn-sm"
-                style={{ borderColor: 'rgba(239, 68, 68, 0.4)', color: '#fca5a5', minHeight: '38px' }}
+                style={{ borderColor: '#fecaca', background: '#fef2f2', color: '#b91c1c', minHeight: '38px' }}
               >
                 <Trash2 size={15} /> Delete
               </button>
@@ -281,10 +283,10 @@ export const AdminProducts: React.FC = () => {
       </div>
 
       {/* Desktop Products Table (Visible on >= 768px) */}
-      <div className="admin-desktop-table glass-card" style={{ padding: '0', overflowX: 'auto' }}>
+      <div className="admin-desktop-table glass-card" style={{ padding: '0', overflowX: 'auto', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.88rem' }}>
           <thead>
-            <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.1)', background: 'rgba(255, 255, 255, 0.03)', color: '#9ca3af' }}>
+            <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#f8fafc', color: '#64748b', fontWeight: 700 }}>
               <th style={{ padding: '14px 18px' }}>Product</th>
               <th style={{ padding: '14px 18px' }}>Category</th>
               <th style={{ padding: '14px 18px' }}>Brand</th>
@@ -295,7 +297,7 @@ export const AdminProducts: React.FC = () => {
           </thead>
           <tbody>
             {filtered.map(product => (
-              <tr key={product.id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+              <tr key={product.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                 <td style={{ padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <img
                     src={product.image}
@@ -303,26 +305,26 @@ export const AdminProducts: React.FC = () => {
                     style={{ width: '44px', height: '44px', borderRadius: '8px', objectFit: 'cover' }}
                   />
                   <div>
-                    <div style={{ fontWeight: 700, color: '#ffffff', maxWidth: '280px', lineHeight: 1.3 }}>
+                    <div style={{ fontWeight: 700, color: '#0f172a', maxWidth: '280px', lineHeight: 1.3 }}>
                       {product.name}
                     </div>
                     {product.badge && (
-                      <span style={{ fontSize: '0.7rem', color: '#fbbf24', fontWeight: 600 }}>
+                      <span style={{ fontSize: '0.7rem', color: '#b45309', fontWeight: 700 }}>
                         ★ {product.badge}
                       </span>
                     )}
                   </div>
                 </td>
-                <td style={{ padding: '14px 18px', color: '#93c5fd', textTransform: 'capitalize' }}>
+                <td style={{ padding: '14px 18px', color: '#1d4ed8', textTransform: 'capitalize', fontWeight: 600 }}>
                   {product.category.replace('_', ' ')}
                 </td>
-                <td style={{ padding: '14px 18px', color: '#ffffff', fontWeight: 600 }}>
+                <td style={{ padding: '14px 18px', color: '#0f172a', fontWeight: 600 }}>
                   {product.brand}
                 </td>
-                <td style={{ padding: '14px 18px', color: '#34d399', fontWeight: 700 }}>
+                <td style={{ padding: '14px 18px', color: '#059669', fontWeight: 800 }}>
                   {product.priceRange}
                 </td>
-                <td style={{ padding: '14px 18px', color: '#9ca3af', fontSize: '0.82rem' }}>
+                <td style={{ padding: '14px 18px', color: '#64748b', fontSize: '0.82rem' }}>
                   {product.warranty}
                 </td>
                 <td style={{ padding: '14px 18px', textAlign: 'right' }}>
@@ -330,9 +332,9 @@ export const AdminProducts: React.FC = () => {
                     <button
                       onClick={() => openEditModal(product)}
                       style={{
-                        background: 'rgba(59, 130, 246, 0.2)',
-                        border: '1px solid rgba(59, 130, 246, 0.4)',
-                        color: '#93c5fd',
+                        background: '#eff6ff',
+                        border: '1px solid #bfdbfe',
+                        color: '#1d4ed8',
                         borderRadius: '6px',
                         padding: '6px 10px',
                         cursor: 'pointer'
@@ -344,9 +346,9 @@ export const AdminProducts: React.FC = () => {
                     <button
                       onClick={() => handleDelete(product.id, product.name)}
                       style={{
-                        background: 'rgba(239, 68, 68, 0.2)',
-                        border: '1px solid rgba(239, 68, 68, 0.4)',
-                        color: '#fca5a5',
+                        background: '#fef2f2',
+                        border: '1px solid #fecaca',
+                        color: '#b91c1c',
                         borderRadius: '6px',
                         padding: '6px 10px',
                         cursor: 'pointer'
@@ -373,22 +375,22 @@ export const AdminProducts: React.FC = () => {
       {/* Add / Edit Product Modal */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '640px' }}>
+          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '640px', background: '#ffffff', color: '#0f172a' }}>
             <div className="modal-drag-handle" />
             <div style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               marginBottom: '18px',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              borderBottom: '1px solid #e2e8f0',
               paddingBottom: '12px'
             }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>
                 {editingProduct ? 'Edit Product Details' : 'Add New Product to Shop'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}
               >
                 <X size={20} />
               </button>
@@ -495,24 +497,24 @@ export const AdminProducts: React.FC = () => {
 
               {/* Photo Upload & Presets Section */}
               <div style={{
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0',
                 borderRadius: '10px',
                 padding: '14px',
                 marginBottom: '16px'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '10px' }}>
-                  <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#93c5fd' }}>
+                  <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#1d4ed8' }}>
                     Option 1: Upload from Phone / PC
                   </span>
                   <label style={{
-                    background: 'rgba(37, 99, 235, 0.25)',
-                    border: '1px solid rgba(59, 130, 246, 0.5)',
-                    color: '#ffffff',
+                    background: '#eff6ff',
+                    border: '1px solid #bfdbfe',
+                    color: '#1d4ed8',
                     padding: '6px 14px',
                     borderRadius: '8px',
                     fontSize: '0.8rem',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -542,7 +544,7 @@ export const AdminProducts: React.FC = () => {
                 {/* Preset Options */}
                 {PRESET_IMAGES[formData.category] && (
                   <div>
-                    <span style={{ fontSize: '0.78rem', color: '#9ca3af', display: 'block', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '0.78rem', color: '#64748b', display: 'block', marginBottom: '8px' }}>
                       Option 2: Or select a ready-made category photo:
                     </span>
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center', overflowX: 'auto', paddingBottom: '4px' }}>
@@ -558,15 +560,15 @@ export const AdminProducts: React.FC = () => {
                             borderRadius: '6px',
                             objectFit: 'cover',
                             cursor: 'pointer',
-                            border: formData.image === imgUrl ? '2px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.2)',
-                            boxShadow: formData.image === imgUrl ? '0 0 10px rgba(59, 130, 246, 0.5)' : 'none'
+                            border: formData.image === imgUrl ? '2px solid #1d4ed8' : '1px solid #cbd5e1',
+                            boxShadow: formData.image === imgUrl ? '0 0 10px rgba(29, 78, 216, 0.3)' : 'none'
                           }}
                         />
                       ))}
                       {/* Live Image Preview */}
                       {formData.image && (
                         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                          <span style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 600 }}>Active Preview:</span>
+                          <span style={{ fontSize: '0.75rem', color: '#059669', fontWeight: 700 }}>Active Preview:</span>
                           <img
                             src={formData.image}
                             alt="preview"

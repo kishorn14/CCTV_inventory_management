@@ -49,10 +49,10 @@ export const AdminServices: React.FC = () => {
   return (
     <div>
       <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff' }}>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a' }}>
           Service Packages & Repair Offerings
         </h2>
-        <p style={{ fontSize: '0.85rem', color: '#9ca3af' }}>
+        <p style={{ fontSize: '0.85rem', color: '#64748b' }}>
           Update service response time, doorstep visit charges, and inclusions for each category.
         </p>
       </div>
@@ -63,18 +63,18 @@ export const AdminServices: React.FC = () => {
         gap: '20px'
       }}>
         {services.map(srv => (
-          <div key={srv.id} className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div key={srv.id} className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)' }}>
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', lineHeight: 1.3 }}>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.3 }}>
                   {srv.title}
                 </h3>
                 <button
                   onClick={() => openEdit(srv)}
                   style={{
-                    background: 'rgba(59, 130, 246, 0.2)',
-                    border: '1px solid rgba(59, 130, 246, 0.4)',
-                    color: '#93c5fd',
+                    background: '#eff6ff',
+                    border: '1px solid #bfdbfe',
+                    color: '#1d4ed8',
                     borderRadius: '6px',
                     padding: '6px 10px',
                     cursor: 'pointer'
@@ -86,22 +86,22 @@ export const AdminServices: React.FC = () => {
               </div>
 
               <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
-                <span style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.06)', padding: '3px 8px', borderRadius: '6px', color: '#93c5fd' }}>
+                <span style={{ fontSize: '0.75rem', background: '#eff6ff', border: '1px solid #bfdbfe', padding: '3px 8px', borderRadius: '6px', color: '#1d4ed8', fontWeight: 600 }}>
                   🕒 {srv.responseTime}
                 </span>
-                <span style={{ fontSize: '0.75rem', background: 'rgba(16,185,129,0.15)', padding: '3px 8px', borderRadius: '6px', color: '#34d399', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.75rem', background: '#ecfdf5', border: '1px solid #a7f3d0', padding: '3px 8px', borderRadius: '6px', color: '#059669', fontWeight: 700 }}>
                   💰 {srv.startingPrice}
                 </span>
               </div>
 
-              <p style={{ fontSize: '0.84rem', color: '#9ca3af', lineHeight: 1.45, marginBottom: '14px' }}>
+              <p style={{ fontSize: '0.84rem', color: '#64748b', lineHeight: 1.45, marginBottom: '14px' }}>
                 {srv.shortDesc}
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {srv.bulletPoints.map((pt, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '0.78rem', color: '#d1d5db' }}>
-                    <CheckCircle2 size={13} color="#60a5fa" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div key={i} style={{ display: 'flex', gap: '6px', fontSize: '0.78rem', color: '#334155' }}>
+                    <CheckCircle2 size={13} color="#1d4ed8" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <span>{pt}</span>
                   </div>
                 ))}
@@ -114,21 +114,21 @@ export const AdminServices: React.FC = () => {
       {/* Edit Service Modal */}
       {editingService && (
         <div className="modal-overlay" onClick={() => setEditingService(null)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '580px', padding: '26px' }}>
+          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: '580px', padding: '26px', background: '#ffffff', color: '#0f172a' }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               marginBottom: '18px',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              borderBottom: '1px solid #e2e8f0',
               paddingBottom: '12px'
             }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>
                 Edit Service Package
               </h3>
               <button
                 onClick={() => setEditingService(null)}
-                style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer' }}
+                style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}
               >
                 <X size={20} />
               </button>

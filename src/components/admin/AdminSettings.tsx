@@ -132,25 +132,26 @@ export const AdminSettings: React.FC = () => {
   return (
     <div style={{ maxWidth: '840px' }}>
       <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff' }}>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a' }}>
           Shop & WhatsApp Contact Settings
         </h2>
-        <p style={{ fontSize: '0.85rem', color: '#9ca3af' }}>
+        <p style={{ fontSize: '0.85rem', color: '#64748b' }}>
           Update your phone number, WhatsApp receiving number, shop address, and admin credentials.
         </p>
       </div>
 
       {successMsg && (
         <div style={{
-          background: 'rgba(16, 185, 129, 0.15)',
-          border: '1px solid rgba(16, 185, 129, 0.4)',
+          background: '#ecfdf5',
+          border: '1px solid #a7f3d0',
           borderRadius: '10px',
           padding: '14px',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
-          color: '#34d399',
+          color: '#065f46',
           fontSize: '0.9rem',
+          fontWeight: 600,
           marginBottom: '20px',
           animation: 'fadeIn 0.2s ease-out'
         }}>
@@ -160,8 +161,8 @@ export const AdminSettings: React.FC = () => {
       )}
 
       {/* Main Shop Details Form */}
-      <div className="glass-card" style={{ padding: '28px', marginBottom: '32px' }}>
-        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '18px' }}>
+      <div className="glass-card" style={{ padding: '28px', marginBottom: '32px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)' }}>
+        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a', marginBottom: '18px' }}>
           Store Contact & Display Information
         </h3>
 
@@ -193,7 +194,7 @@ export const AdminSettings: React.FC = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '16px' }}>
             <div className="form-group">
               <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Phone size={14} color="#60a5fa" /> Primary Call Helpline
+                <Phone size={14} color="#1d4ed8" /> Primary Call Helpline
               </label>
               <input
                 type="text"
@@ -207,7 +208,7 @@ export const AdminSettings: React.FC = () => {
 
             <div className="form-group">
               <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <MessageCircle size={14} color="#34d399" /> WhatsApp Number (For Leads & Bookings) *
+                <MessageCircle size={14} color="#059669" /> WhatsApp Number (For Leads & Bookings) *
               </label>
               <input
                 type="text"
@@ -217,7 +218,7 @@ export const AdminSettings: React.FC = () => {
                 onChange={e => setFormData({ ...formData, whatsappPhone: e.target.value })}
                 required
               />
-              <span style={{ fontSize: '0.72rem', color: '#9ca3af', marginTop: '4px', display: 'block' }}>
+              <span style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '4px', display: 'block' }}>
                 All customer bookings and product quotes will be sent to this WhatsApp number.
               </span>
             </div>
@@ -226,7 +227,7 @@ export const AdminSettings: React.FC = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '16px' }}>
             <div className="form-group">
               <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Mail size={14} color="#f59e0b" /> Contact Email
+                <Mail size={14} color="#d97706" /> Contact Email
               </label>
               <input
                 type="email"
@@ -239,7 +240,7 @@ export const AdminSettings: React.FC = () => {
 
             <div className="form-group">
               <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Clock size={14} color="#06b6d4" /> Working Hours & Days
+                <Clock size={14} color="#0284c7" /> Working Hours & Days
               </label>
               <input
                 type="text"
@@ -254,7 +255,7 @@ export const AdminSettings: React.FC = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '16px' }}>
             <div className="form-group">
               <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <MapPin size={14} color="#ef4444" /> Shop Address / Street
+                <MapPin size={14} color="#ea580c" /> Shop Address / Street
               </label>
               <input
                 type="text"
@@ -284,7 +285,7 @@ export const AdminSettings: React.FC = () => {
       </div>
 
       {/* Google Sheets Lead Sync Card */}
-      <div className="glass-card" style={{ padding: '28px', marginBottom: '32px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+      <div className="glass-card" style={{ padding: '28px', marginBottom: '32px', background: '#ffffff', border: '1.5px solid #a7f3d0', boxShadow: '0 4px 16px rgba(16, 185, 129, 0.08)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -292,19 +293,19 @@ export const AdminSettings: React.FC = () => {
                 width: '36px',
                 height: '36px',
                 borderRadius: '8px',
-                background: 'rgba(16, 185, 129, 0.2)',
-                color: '#34d399',
+                background: '#ecfdf5',
+                color: '#059669',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
                 <FileSpreadsheet size={20} />
               </div>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#ffffff' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#0f172a' }}>
                 Google Sheets Customer Lead Sync
               </h3>
             </div>
-            <p style={{ fontSize: '0.85rem', color: '#9ca3af', marginTop: '4px' }}>
+            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '4px' }}>
               Automatically log all customer bookings and estimate requests directly into your personal Google Sheet / Excel.
             </p>
           </div>
@@ -322,16 +323,16 @@ export const AdminSettings: React.FC = () => {
         {/* Setup Guide Accordion */}
         {showGuide && (
           <div style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            background: '#f8fafc',
+            border: '1px solid #e2e8f0',
             borderRadius: '12px',
             padding: '18px',
             marginBottom: '20px',
             fontSize: '0.88rem',
             lineHeight: 1.6,
-            color: '#d1d5db'
+            color: '#334155'
           }}>
-            <h4 style={{ color: '#60a5fa', marginBottom: '8px', fontWeight: 700 }}>
+            <h4 style={{ color: '#1d4ed8', marginBottom: '8px', fontWeight: 700 }}>
               🚀 Quick 3-Step Setup Instructions:
             </h4>
             <ol style={{ paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -354,9 +355,9 @@ export const AdminSettings: React.FC = () => {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: copiedScript ? '#34d399' : '#60a5fa',
+                  color: copiedScript ? '#059669' : '#1d4ed8',
                   fontSize: '0.8rem',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -373,7 +374,7 @@ export const AdminSettings: React.FC = () => {
               value={formData.googleSheetWebhookUrl}
               onChange={e => setFormData({ ...formData, googleSheetWebhookUrl: e.target.value })}
             />
-            <span style={{ fontSize: '0.74rem', color: '#9ca3af', marginTop: '4px', display: 'block' }}>
+            <span style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '4px', display: 'block' }}>
               Every time a customer submits a service booking or quotation request, a row will be automatically appended to your sheet.
             </span>
           </div>
@@ -391,12 +392,13 @@ export const AdminSettings: React.FC = () => {
 
           {testResult && (
             <div style={{
-              background: testResult.includes('✅') ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-              border: `1px solid ${testResult.includes('✅') ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
+              background: testResult.includes('✅') ? '#ecfdf5' : '#fef2f2',
+              border: `1px solid ${testResult.includes('✅') ? '#a7f3d0' : '#fecaca'}`,
               borderRadius: '8px',
               padding: '10px 14px',
               fontSize: '0.85rem',
-              color: testResult.includes('✅') ? '#34d399' : '#fca5a5',
+              fontWeight: 600,
+              color: testResult.includes('✅') ? '#065f46' : '#b91c1c',
               marginBottom: '14px'
             }}>
               {testResult}
@@ -413,7 +415,7 @@ export const AdminSettings: React.FC = () => {
               onClick={handleTestGoogleSheet}
               disabled={testSending}
               className="btn btn-outline btn-sm"
-              style={{ borderColor: 'rgba(16, 185, 129, 0.4)', color: '#34d399' }}
+              style={{ borderColor: '#a7f3d0', background: '#ecfdf5', color: '#059669', fontWeight: 700 }}
             >
               <Send size={15} /> {testSending ? 'Sending Test...' : '🧪 Send Test Booking Row'}
             </button>
@@ -434,21 +436,21 @@ export const AdminSettings: React.FC = () => {
       </div>
 
       {/* Password Management Card */}
-      <div className="glass-card" style={{ padding: '28px' }}>
-        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', marginBottom: '8px' }}>
+      <div className="glass-card" style={{ padding: '28px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)' }}>
+        <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>
           Change Admin Portal Password
         </h3>
-        <p style={{ fontSize: '0.85rem', color: '#9ca3af', marginBottom: '18px' }}>
+        <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '18px' }}>
           Set a secure custom password to protect your store catalog and settings.
         </p>
 
         {passError && (
           <div style={{
-            background: 'rgba(239, 68, 68, 0.15)',
-            border: '1px solid rgba(239, 68, 68, 0.4)',
+            background: '#fef2f2',
+            border: '1px solid #fecaca',
             borderRadius: '8px',
             padding: '12px',
-            color: '#fca5a5',
+            color: '#b91c1c',
             fontSize: '0.85rem',
             marginBottom: '16px',
             display: 'flex',

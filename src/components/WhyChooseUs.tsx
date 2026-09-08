@@ -76,29 +76,32 @@ export const WhyChooseUs: React.FC = () => {
                   padding: '26px',
                   display: 'flex',
                   gap: '18px',
-                  alignItems: 'flex-start'
+                  alignItems: 'flex-start',
+                  background: '#ffffff',
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)'
                 }}
               >
                 <div style={{
                   width: '48px',
                   height: '48px',
                   borderRadius: '12px',
-                  background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(16, 185, 129, 0.15) 100%)',
-                  border: '1px solid rgba(59, 130, 246, 0.3)',
+                  background: 'linear-gradient(135deg, #eff6ff 0%, #ecfdf5 100%)',
+                  border: '1px solid #bfdbfe',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#60a5fa',
+                  color: '#1d4ed8',
                   flexShrink: 0
                 }}>
                   <Icon size={24} />
                 </div>
 
                 <div>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff', marginBottom: '6px' }}>
+                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0f172a', marginBottom: '6px' }}>
                     {item.title}
                   </h3>
-                  <p style={{ fontSize: '0.86rem', color: '#9ca3af', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: '0.86rem', color: '#64748b', lineHeight: 1.5 }}>
                     {item.desc}
                   </p>
                 </div>
@@ -109,16 +112,17 @@ export const WhyChooseUs: React.FC = () => {
 
         {/* Authorized Brands Marquee / Grid */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.02)',
-          border: '1px solid rgba(255, 255, 255, 0.06)',
+          background: '#ffffff',
+          border: '1px solid #e2e8f0',
           borderRadius: '20px',
           padding: '36px 28px',
-          textAlign: 'center'
+          textAlign: 'center',
+          boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)'
         }}>
           <h3 style={{
             fontSize: '1rem',
-            fontWeight: 700,
-            color: '#93c5fd',
+            fontWeight: 800,
+            color: '#1d4ed8',
             textTransform: 'uppercase',
             letterSpacing: '0.06em',
             marginBottom: '20px'
@@ -137,8 +141,8 @@ export const WhyChooseUs: React.FC = () => {
               <div
                 key={i}
                 style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: '#f8fafc',
+                  border: '1px solid #cbd5e1',
                   borderRadius: '9999px',
                   padding: '8px 18px',
                   display: 'flex',
@@ -146,16 +150,18 @@ export const WhyChooseUs: React.FC = () => {
                   gap: '8px',
                   fontSize: '0.9rem',
                   fontWeight: 700,
-                  color: '#ffffff'
+                  color: '#0f172a',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
                 }}
               >
                 <span>{brand.name}</span>
                 <span style={{
                   fontSize: '0.7rem',
-                  padding: '2px 6px',
+                  padding: '2px 8px',
                   borderRadius: '9999px',
-                  background: 'rgba(37, 99, 235, 0.3)',
-                  color: '#93c5fd'
+                  background: '#eff6ff',
+                  color: '#1d4ed8',
+                  border: '1px solid #bfdbfe'
                 }}>
                   {brand.category}
                 </span>

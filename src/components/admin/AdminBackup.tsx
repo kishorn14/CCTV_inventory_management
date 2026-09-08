@@ -40,25 +40,26 @@ export const AdminBackup: React.FC = () => {
   return (
     <div style={{ maxWidth: '840px' }}>
       <div style={{ marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff' }}>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a' }}>
           Data Backup, Export & Reset
         </h2>
-        <p style={{ fontSize: '0.85rem', color: '#9ca3af' }}>
+        <p style={{ fontSize: '0.85rem', color: '#64748b' }}>
           Safely export your product catalog and store details to a JSON file or restore default shop data.
         </p>
       </div>
 
       {statusMsg && (
         <div style={{
-          background: 'rgba(16, 185, 129, 0.15)',
-          border: '1px solid rgba(16, 185, 129, 0.4)',
+          background: '#ecfdf5',
+          border: '1px solid #a7f3d0',
           borderRadius: '10px',
           padding: '14px',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
-          color: '#34d399',
+          color: '#065f46',
           fontSize: '0.9rem',
+          fontWeight: 600,
           marginBottom: '20px'
         }}>
           <CheckCircle2 size={18} />
@@ -67,11 +68,11 @@ export const AdminBackup: React.FC = () => {
       )}
 
       {/* Export Card */}
-      <div className="glass-card" style={{ padding: '24px', marginBottom: '24px' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff', marginBottom: '6px' }}>
+      <div className="glass-card" style={{ padding: '24px', marginBottom: '24px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)' }}>
+        <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0f172a', marginBottom: '6px' }}>
           1. Download Backup (JSON)
         </h3>
-        <p style={{ fontSize: '0.85rem', color: '#9ca3af', marginBottom: '16px' }}>
+        <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '16px' }}>
           Save a complete copy of all your products, prices, services, and contact info to your computer.
         </p>
         <button onClick={handleExport} className="btn btn-primary btn-sm">
@@ -80,11 +81,11 @@ export const AdminBackup: React.FC = () => {
       </div>
 
       {/* Import Card */}
-      <div className="glass-card" style={{ padding: '24px', marginBottom: '24px' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff', marginBottom: '6px' }}>
+      <div className="glass-card" style={{ padding: '24px', marginBottom: '24px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)' }}>
+        <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0f172a', marginBottom: '6px' }}>
           2. Restore / Import Data from JSON
         </h3>
-        <p style={{ fontSize: '0.85rem', color: '#9ca3af', marginBottom: '14px' }}>
+        <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '14px' }}>
           Paste raw JSON from a previous backup file below:
         </p>
         <textarea
@@ -93,7 +94,7 @@ export const AdminBackup: React.FC = () => {
           placeholder="Paste JSON content here..."
           value={importText}
           onChange={e => setImportText(e.target.value)}
-          style={{ marginBottom: '14px' }}
+          style={{ marginBottom: '14px', background: '#f8fafc' }}
         />
         <button onClick={handleImport} className="btn btn-outline btn-sm" disabled={!importText.trim()}>
           <Upload size={16} /> Import & Apply Data
@@ -101,26 +102,26 @@ export const AdminBackup: React.FC = () => {
       </div>
 
       {/* Reset Card */}
-      <div className="glass-card" style={{ padding: '24px', borderColor: 'rgba(239, 68, 68, 0.3)' }}>
+      <div className="glass-card" style={{ padding: '24px', background: '#ffffff', border: '1px solid #fecaca', boxShadow: '0 4px 16px rgba(239, 68, 68, 0.05)' }}>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-          <AlertTriangle size={24} color="#ef4444" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <AlertTriangle size={24} color="#dc2626" style={{ flexShrink: 0, marginTop: '2px' }} />
           <div>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fca5a5', marginBottom: '4px' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#b91c1c', marginBottom: '4px' }}>
               Reset to Original Factory Defaults
             </h3>
-            <p style={{ fontSize: '0.85rem', color: '#9ca3af', marginBottom: '16px' }}>
+            <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '16px' }}>
               Restores the default catalog of CCTV, Batteries, Inverters, RO purifiers, and Solar heaters.
             </p>
             <button
               onClick={handleReset}
               style={{
-                background: 'rgba(239, 68, 68, 0.2)',
-                border: '1px solid rgba(239, 68, 68, 0.5)',
-                color: '#fca5a5',
+                background: '#fef2f2',
+                border: '1px solid #fecaca',
+                color: '#b91c1c',
                 padding: '8px 16px',
                 borderRadius: '8px',
                 fontSize: '0.85rem',
-                fontWeight: 600,
+                fontWeight: 700,
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',

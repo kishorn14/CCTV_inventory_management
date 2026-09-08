@@ -34,9 +34,11 @@ export const FaqSection: React.FC = () => {
                 key={idx}
                 className="glass-card"
                 style={{
-                  padding: '18px 24px',
+                  padding: '20px 24px',
                   cursor: 'pointer',
-                  borderColor: isOpen ? 'rgba(59, 130, 246, 0.4)' : 'rgba(255, 255, 255, 0.08)'
+                  background: '#ffffff',
+                  border: isOpen ? '1.5px solid #1d4ed8' : '1px solid #e2e8f0',
+                  boxShadow: isOpen ? '0 4px 16px rgba(29, 78, 216, 0.08)' : '0 2px 6px rgba(0, 0, 0, 0.03)'
                 }}
                 onClick={() => toggleFaq(idx)}
               >
@@ -49,21 +51,21 @@ export const FaqSection: React.FC = () => {
                   <h3 style={{
                     fontSize: '1.05rem',
                     fontWeight: 700,
-                    color: isOpen ? '#60a5fa' : '#ffffff',
+                    color: isOpen ? '#1d4ed8' : '#0f172a',
                     lineHeight: 1.3
                   }}>
                     {faq.q}
                   </h3>
-                  {isOpen ? <ChevronUp size={20} color="#60a5fa" /> : <ChevronDown size={20} color="#9ca3af" />}
+                  {isOpen ? <ChevronUp size={20} color="#1d4ed8" /> : <ChevronDown size={20} color="#64748b" />}
                 </div>
 
                 {isOpen && (
                   <div style={{
                     marginTop: '12px',
                     paddingTop: '12px',
-                    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderTop: '1px solid #f1f5f9',
                     fontSize: '0.92rem',
-                    color: '#9ca3af',
+                    color: '#475569',
                     lineHeight: 1.6,
                     animation: 'fadeIn 0.2s ease-out'
                   }}>

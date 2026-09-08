@@ -75,13 +75,13 @@ export const ContactSection: React.FC = () => {
           {/* Shop Information Cards */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             {/* Address Card */}
-            <div className="glass-card" style={{ padding: '24px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+            <div className="glass-card" style={{ padding: '24px', display: 'flex', gap: '16px', alignItems: 'flex-start', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)' }}>
               <div style={{
                 width: '46px',
                 height: '46px',
                 borderRadius: '12px',
-                background: 'rgba(37, 99, 235, 0.2)',
-                color: '#60a5fa',
+                background: '#eff6ff',
+                color: '#1d4ed8',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -90,13 +90,13 @@ export const ContactSection: React.FC = () => {
                 <MapPin size={24} />
               </div>
               <div>
-                <div style={{ fontSize: '0.8rem', color: '#9ca3af', textTransform: 'uppercase', fontWeight: 600 }}>
+                <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 700 }}>
                   Shop Location
                 </div>
-                <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#ffffff', marginTop: '2px', marginBottom: '4px' }}>
+                <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', marginTop: '2px', marginBottom: '4px' }}>
                   {shopInfo.shopName}
                 </div>
-                <div style={{ fontSize: '0.9rem', color: '#d1d5db', lineHeight: 1.4 }}>
+                <div style={{ fontSize: '0.9rem', color: '#334155', lineHeight: 1.4 }}>
                   {shopInfo.address}, {shopInfo.city}
                 </div>
                 <a
@@ -107,9 +107,9 @@ export const ContactSection: React.FC = () => {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '4px',
-                    color: '#60a5fa',
+                    color: '#1d4ed8',
                     fontSize: '0.85rem',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     marginTop: '8px'
                   }}
                 >
@@ -119,13 +119,13 @@ export const ContactSection: React.FC = () => {
             </div>
 
             {/* Timings Card */}
-            <div className="glass-card" style={{ padding: '24px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+            <div className="glass-card" style={{ padding: '24px', display: 'flex', gap: '16px', alignItems: 'flex-start', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)' }}>
               <div style={{
                 width: '46px',
                 height: '46px',
                 borderRadius: '12px',
-                background: 'rgba(245, 158, 11, 0.2)',
-                color: '#fbbf24',
+                background: '#fffbeb',
+                color: '#d97706',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -134,26 +134,26 @@ export const ContactSection: React.FC = () => {
                 <Clock size={24} />
               </div>
               <div>
-                <div style={{ fontSize: '0.8rem', color: '#9ca3af', textTransform: 'uppercase', fontWeight: 600 }}>
+                <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 700 }}>
                   Working Hours
                 </div>
-                <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#ffffff', marginTop: '2px', marginBottom: '2px' }}>
+                <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#0f172a', marginTop: '2px', marginBottom: '2px' }}>
                   {shopInfo.workingHours}
                 </div>
-                <div style={{ fontSize: '0.85rem', color: '#34d399' }}>
+                <div style={{ fontSize: '0.85rem', color: '#059669', fontWeight: 600 }}>
                   {shopInfo.workingDays}
                 </div>
               </div>
             </div>
 
             {/* Direct Phone & WhatsApp Callouts */}
-            <div className="glass-card" style={{ padding: '24px', display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+            <div className="glass-card" style={{ padding: '24px', display: 'flex', gap: '16px', alignItems: 'flex-start', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)' }}>
               <div style={{
                 width: '46px',
                 height: '46px',
                 borderRadius: '12px',
-                background: 'rgba(16, 185, 129, 0.2)',
-                color: '#10b981',
+                background: '#ecfdf5',
+                color: '#059669',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -162,10 +162,10 @@ export const ContactSection: React.FC = () => {
                 <Phone size={24} />
               </div>
               <div style={{ width: '100%' }}>
-                <div style={{ fontSize: '0.8rem', color: '#9ca3af', textTransform: 'uppercase', fontWeight: 600 }}>
+                <div style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 700 }}>
                   Direct Helpline
                 </div>
-                <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', marginTop: '2px', marginBottom: '10px' }}>
+                <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', marginTop: '2px', marginBottom: '10px' }}>
                   {shopInfo.phone}
                 </div>
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
@@ -186,11 +186,11 @@ export const ContactSection: React.FC = () => {
           </div>
 
           {/* Quick Message / Query Form */}
-          <div className="glass-card" style={{ padding: '30px' }}>
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#ffffff', marginBottom: '6px' }}>
+          <div className="glass-card" style={{ padding: '30px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.06)' }}>
+            <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#0f172a', marginBottom: '6px' }}>
               Send a Quick Query
             </h3>
-            <p style={{ fontSize: '0.88rem', color: '#9ca3af', marginBottom: '22px' }}>
+            <p style={{ fontSize: '0.88rem', color: '#64748b', marginBottom: '22px' }}>
               Have a custom requirement or question? Type below to chat directly with us on WhatsApp.
             </p>
 

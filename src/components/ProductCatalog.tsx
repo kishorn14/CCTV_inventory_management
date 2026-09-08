@@ -81,7 +81,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           }}>
             <Search 
               size={20} 
-              color="#9ca3af" 
+              color="#64748b" 
               style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} 
             />
             <input
@@ -91,14 +91,14 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{
                 width: '100%',
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                background: '#ffffff',
+                border: '1px solid #cbd5e1',
                 borderRadius: '9999px',
                 padding: '14px 20px 14px 48px',
-                color: '#ffffff',
+                color: '#0f172a',
                 fontSize: '0.95rem',
                 outline: 'none',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)'
+                boxShadow: '0 2px 10px rgba(15, 23, 42, 0.05)'
               }}
             />
             {searchQuery && (
@@ -111,9 +111,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   transform: 'translateY(-50%)',
                   background: 'none',
                   border: 'none',
-                  color: '#9ca3af',
+                  color: '#64748b',
                   cursor: 'pointer',
-                  fontSize: '0.85rem'
+                  fontSize: '0.85rem',
+                  fontWeight: 600
                 }}
               >
                 Clear
@@ -141,28 +142,28 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     padding: '10px 18px',
                     borderRadius: '9999px',
                     fontSize: '0.88rem',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                     border: isSelected 
-                      ? '1px solid #3b82f6' 
-                      : '1px solid rgba(255, 255, 255, 0.1)',
+                      ? '1px solid #1d4ed8' 
+                      : '1px solid #e2e8f0',
                     background: isSelected 
-                      ? 'linear-gradient(135deg, rgba(37, 99, 235, 0.9) 0%, rgba(29, 78, 216, 0.95) 100%)' 
-                      : 'rgba(255, 255, 255, 0.05)',
-                    color: isSelected ? '#ffffff' : '#d1d5db',
-                    boxShadow: isSelected ? '0 4px 15px rgba(37, 99, 235, 0.4)' : 'none',
+                      ? 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)' 
+                      : '#ffffff',
+                    color: isSelected ? '#ffffff' : '#334155',
+                    boxShadow: isSelected ? '0 4px 14px rgba(29, 78, 216, 0.25)' : '0 1px 3px rgba(0,0,0,0.04)',
                     whiteSpace: 'nowrap'
                   }}
                 >
-                  <Icon size={16} color={isSelected ? '#ffffff' : '#60a5fa'} />
+                  <Icon size={16} color={isSelected ? '#ffffff' : '#2563eb'} />
                   {cat.label}
                   <span style={{
                     fontSize: '0.75rem',
                     padding: '2px 7px',
                     borderRadius: '9999px',
-                    background: isSelected ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.1)',
-                    color: isSelected ? '#ffffff' : '#9ca3af'
+                    background: isSelected ? 'rgba(255, 255, 255, 0.25)' : '#f1f5f9',
+                    color: isSelected ? '#ffffff' : '#64748b'
                   }}>
                     {count}
                   </span>
@@ -177,11 +178,11 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           <div style={{
             textAlign: 'center',
             padding: '50px 20px',
-            background: 'rgba(255, 255, 255, 0.02)',
+            background: '#ffffff',
             borderRadius: '16px',
-            border: '1px dashed rgba(255, 255, 255, 0.1)'
+            border: '1px dashed #cbd5e1'
           }}>
-            <p style={{ fontSize: '1.1rem', color: '#9ca3af', marginBottom: '16px' }}>
+            <p style={{ fontSize: '1.1rem', color: '#64748b', marginBottom: '16px' }}>
               No products found matching "{searchQuery}".
             </p>
             <button 
@@ -208,12 +209,15 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
-                    height: '100%'
+                    height: '100%',
+                    background: '#ffffff',
+                    border: '1px solid #e2e8f0',
+                    boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)'
                   }}
                 >
                   <div>
                     {/* Image Header with Badges */}
-                    <div style={{ position: 'relative', width: '100%', height: '210px', overflow: 'hidden' }}>
+                    <div style={{ position: 'relative', width: '100%', height: '210px', overflow: 'hidden', background: '#f8fafc' }}>
                       <img 
                         src={product.image} 
                         alt={product.name}
@@ -229,7 +233,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       <div style={{
                         position: 'absolute',
                         inset: 0,
-                        background: 'linear-gradient(to top, rgba(17, 24, 39, 0.95) 0%, rgba(17, 24, 39, 0.2) 60%, rgba(0,0,0,0) 100%)'
+                        background: 'linear-gradient(to top, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0) 50%)'
                       }} />
 
                       {/* Top Badges */}
@@ -241,26 +245,26 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                         gap: '6px'
                       }}>
                         <span style={{
-                          background: 'rgba(37, 99, 235, 0.85)',
-                          backdropFilter: 'blur(8px)',
+                          background: '#1d4ed8',
                           color: '#ffffff',
                           fontSize: '0.72rem',
                           fontWeight: 700,
                           padding: '4px 10px',
                           borderRadius: '9999px',
-                          textTransform: 'uppercase'
+                          textTransform: 'uppercase',
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
                         }}>
                           {product.brand}
                         </span>
                         {product.badge && (
                           <span style={{
-                            background: 'rgba(245, 158, 11, 0.9)',
-                            backdropFilter: 'blur(8px)',
-                            color: '#111827',
+                            background: '#f59e0b',
+                            color: '#ffffff',
                             fontSize: '0.72rem',
                             fontWeight: 700,
                             padding: '4px 10px',
-                            borderRadius: '9999px'
+                            borderRadius: '9999px',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
                           }}>
                             {product.badge}
                           </span>
@@ -273,7 +277,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       <h3 style={{
                         fontSize: '1.15rem',
                         fontWeight: 700,
-                        color: '#ffffff',
+                        color: '#0f172a',
                         marginBottom: '8px',
                         lineHeight: 1.35
                       }}>
@@ -285,7 +289,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                         display: 'flex',
                         alignItems: 'center',
                         gap: '6px',
-                        color: '#34d399',
+                        color: '#059669',
                         fontSize: '0.8rem',
                         fontWeight: 600,
                         marginBottom: '12px'
@@ -308,10 +312,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                             alignItems: 'flex-start',
                             gap: '8px',
                             fontSize: '0.82rem',
-                            color: '#9ca3af',
+                            color: '#475569',
                             lineHeight: 1.4
                           }}>
-                            <Check size={14} color="#60a5fa" style={{ flexShrink: 0, marginTop: '2px' }} />
+                            <Check size={14} color="#1d4ed8" style={{ flexShrink: 0, marginTop: '2px' }} />
                             <span>{feat}</span>
                           </li>
                         ))}
@@ -319,8 +323,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
                       {/* Price Guide */}
                       <div style={{
-                        background: 'rgba(255, 255, 255, 0.04)',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        background: '#f8fafc',
+                        border: '1px solid #e2e8f0',
                         borderRadius: '8px',
                         padding: '10px 12px',
                         display: 'flex',
@@ -328,8 +332,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                         justifyContent: 'space-between',
                         marginBottom: '18px'
                       }}>
-                        <span style={{ fontSize: '0.78rem', color: '#9ca3af' }}>Price Guide:</span>
-                        <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#60a5fa' }}>
+                        <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 600 }}>Price Guide:</span>
+                        <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#1d4ed8' }}>
                           {product.priceRange}
                         </span>
                       </div>

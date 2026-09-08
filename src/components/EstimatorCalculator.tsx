@@ -110,13 +110,13 @@ export const EstimatorCalculator: React.FC = () => {
 
         {/* Empty State if Admin has not added CCTV products yet */}
         {cctvProducts.length === 0 ? (
-          <div className="glass-card" style={{ maxWidth: '640px', margin: '0 auto', padding: '40px 24px', textAlign: 'center' }}>
+          <div className="glass-card" style={{ maxWidth: '640px', margin: '0 auto', padding: '40px 24px', textAlign: 'center', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)' }}>
             <div style={{
               width: '60px',
               height: '60px',
               borderRadius: '50%',
-              background: 'rgba(245, 158, 11, 0.15)',
-              color: '#fbbf24',
+              background: '#fffbeb',
+              color: '#d97706',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -124,10 +124,10 @@ export const EstimatorCalculator: React.FC = () => {
             }}>
               <AlertCircle size={32} />
             </div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#ffffff', marginBottom: '8px' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>
               CCTV Products Being Configured by Shop
             </h3>
-            <p style={{ fontSize: '0.9rem', color: '#9ca3af', lineHeight: 1.5, marginBottom: '24px' }}>
+            <p style={{ fontSize: '0.9rem', color: '#64748b', lineHeight: 1.5, marginBottom: '24px' }}>
               Our shop admin is currently updating CCTV models and pricing in the system. You can request a custom quote directly on WhatsApp.
             </p>
             <button onClick={handleSendWhatsApp} className="btn btn-whatsapp btn-lg">
@@ -136,12 +136,12 @@ export const EstimatorCalculator: React.FC = () => {
           </div>
         ) : (
           /* Active Estimator Using Only Admin-Configured Products */
-          <div className="glass-card" style={{ maxWidth: '900px', margin: '0 auto', padding: '22px 18px' }}>
+          <div className="glass-card" style={{ maxWidth: '900px', margin: '0 auto', padding: '28px 24px', background: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 4px 20px rgba(15, 23, 42, 0.06)' }}>
             {/* Step 1: Select Camera Model from Admin Inventory */}
             <div className="form-group" style={{ marginBottom: '24px' }}>
               <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px' }}>
                 <span>1. Select Camera / Security Package:</span>
-                <span style={{ color: '#93c5fd', fontSize: '0.8rem', fontWeight: 600 }}>
+                <span style={{ color: '#1d4ed8', fontSize: '0.8rem', fontWeight: 700 }}>
                   {cctvProducts.length} Models Available
                 </span>
               </label>
@@ -162,16 +162,17 @@ export const EstimatorCalculator: React.FC = () => {
                         padding: '16px',
                         borderRadius: '12px',
                         border: isSelected 
-                          ? '2px solid #3b82f6' 
-                          : '1px solid rgba(255, 255, 255, 0.08)',
+                          ? '2px solid #1d4ed8' 
+                          : '1px solid #e2e8f0',
                         background: isSelected 
-                          ? 'rgba(37, 99, 235, 0.22)' 
-                          : 'rgba(255, 255, 255, 0.03)',
+                          ? '#eff6ff' 
+                          : '#ffffff',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'space-between'
+                        justifyContent: 'space-between',
+                        boxShadow: isSelected ? '0 4px 14px rgba(29, 78, 216, 0.15)' : '0 1px 3px rgba(0,0,0,0.02)'
                       }}
                     >
                       <div>
@@ -181,37 +182,37 @@ export const EstimatorCalculator: React.FC = () => {
                             fontWeight: 700,
                             padding: '3px 8px',
                             borderRadius: '9999px',
-                            background: isSelected ? '#2563eb' : 'rgba(255, 255, 255, 0.1)',
-                            color: '#ffffff',
+                            background: isSelected ? '#1d4ed8' : '#f1f5f9',
+                            color: isSelected ? '#ffffff' : '#475569',
                             textTransform: 'uppercase'
                           }}>
                             {prod.brand}
                           </span>
                           {prod.badge && (
-                            <span style={{ fontSize: '0.7rem', color: '#fbbf24', fontWeight: 600 }}>
+                            <span style={{ fontSize: '0.7rem', color: '#b45309', fontWeight: 700 }}>
                               ★ {prod.badge}
                             </span>
                           )}
                         </div>
 
-                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#ffffff', lineHeight: 1.3, marginBottom: '6px' }}>
+                        <div style={{ fontSize: '0.98rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.3, marginBottom: '6px' }}>
                           {prod.name}
                         </div>
 
-                        <div style={{ fontSize: '0.78rem', color: '#34d399', fontWeight: 600, marginBottom: '10px' }}>
+                        <div style={{ fontSize: '0.78rem', color: '#059669', fontWeight: 600, marginBottom: '10px' }}>
                           🛡️ {prod.warranty}
                         </div>
                       </div>
 
                       <div style={{
                         paddingTop: '8px',
-                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderTop: '1px solid #e2e8f0',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center'
                       }}>
-                        <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>Price:</span>
-                        <span style={{ fontSize: '0.95rem', fontWeight: 800, color: isSelected ? '#60a5fa' : '#ffffff' }}>
+                        <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>Price:</span>
+                        <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#1d4ed8' }}>
                           {prod.priceRange}
                         </span>
                       </div>
@@ -235,8 +236,8 @@ export const EstimatorCalculator: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '14px',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: '#f8fafc',
+                  border: '1px solid #cbd5e1',
                   borderRadius: '10px',
                   padding: '8px 16px',
                   width: 'fit-content'
@@ -249,19 +250,20 @@ export const EstimatorCalculator: React.FC = () => {
                       width: '36px',
                       height: '36px',
                       borderRadius: '8px',
-                      background: 'rgba(255, 255, 255, 0.12)',
-                      border: 'none',
-                      color: '#ffffff',
+                      background: '#ffffff',
+                      border: '1px solid #cbd5e1',
+                      color: '#0f172a',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                     }}
                   >
                     <Minus size={16} />
                   </button>
 
-                  <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#ffffff', minWidth: '40px', textAlign: 'center' }}>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', minWidth: '40px', textAlign: 'center' }}>
                     {quantity}
                   </span>
 
@@ -273,13 +275,14 @@ export const EstimatorCalculator: React.FC = () => {
                       width: '36px',
                       height: '36px',
                       borderRadius: '8px',
-                      background: 'rgba(255, 255, 255, 0.12)',
-                      border: 'none',
-                      color: '#ffffff',
+                      background: '#ffffff',
+                      border: '1px solid #cbd5e1',
+                      color: '#0f172a',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
                     }}
                   >
                     <Plus size={16} />
@@ -313,18 +316,19 @@ export const EstimatorCalculator: React.FC = () => {
                   style={{
                     padding: '12px 14px',
                     borderRadius: '10px',
-                    border: needInstallation ? '1px solid #10b981' : '1px solid rgba(255, 255, 255, 0.1)',
-                    background: needInstallation ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.03)',
-                    color: needInstallation ? '#ffffff' : '#9ca3af',
-                    fontWeight: 600,
+                    border: needInstallation ? '1.5px solid #10b981' : '1px solid #e2e8f0',
+                    background: needInstallation ? '#ecfdf5' : '#ffffff',
+                    color: needInstallation ? '#065f46' : '#64748b',
+                    fontWeight: 700,
                     fontSize: '0.86rem',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px'
+                    gap: '8px',
+                    boxShadow: needInstallation ? '0 2px 8px rgba(16, 185, 129, 0.15)' : 'none'
                   }}
                 >
-                  <CheckCircle2 size={18} color={needInstallation ? '#34d399' : '#9ca3af'} style={{ flexShrink: 0 }} />
+                  <CheckCircle2 size={18} color={needInstallation ? '#10b981' : '#94a3af'} style={{ flexShrink: 0 }} />
                   <span>Doorstep Installation Included</span>
                 </button>
 
@@ -334,18 +338,19 @@ export const EstimatorCalculator: React.FC = () => {
                   style={{
                     padding: '12px 14px',
                     borderRadius: '10px',
-                    border: !needInstallation ? '1px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.1)',
-                    background: !needInstallation ? 'rgba(37, 99, 235, 0.2)' : 'rgba(255, 255, 255, 0.03)',
-                    color: !needInstallation ? '#ffffff' : '#9ca3af',
-                    fontWeight: 600,
+                    border: !needInstallation ? '1.5px solid #1d4ed8' : '1px solid #e2e8f0',
+                    background: !needInstallation ? '#eff6ff' : '#ffffff',
+                    color: !needInstallation ? '#1e40af' : '#64748b',
+                    fontWeight: 700,
                     fontSize: '0.86rem',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px'
+                    gap: '8px',
+                    boxShadow: !needInstallation ? '0 2px 8px rgba(37, 99, 235, 0.15)' : 'none'
                   }}
                 >
-                  <CheckCircle2 size={18} color={!needInstallation ? '#60a5fa' : '#9ca3af'} style={{ flexShrink: 0 }} />
+                  <CheckCircle2 size={18} color={!needInstallation ? '#1d4ed8' : '#94a3af'} style={{ flexShrink: 0 }} />
                   <span>Equipment Only (Self-Fit)</span>
                 </button>
               </div>
@@ -353,25 +358,26 @@ export const EstimatorCalculator: React.FC = () => {
 
             {/* Total Calculation Output Based Solely on Admin Product */}
             <div style={{
-              background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(16, 185, 129, 0.18) 100%)',
-              border: '1px solid rgba(59, 130, 246, 0.4)',
+              background: 'linear-gradient(135deg, #eff6ff 0%, #ecfdf5 100%)',
+              border: '1px solid #bfdbfe',
               borderRadius: '16px',
-              padding: '20px 18px',
+              padding: '22px 20px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               flexWrap: 'wrap',
-              gap: '18px'
+              gap: '18px',
+              boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)'
             }}>
               {selectedProduct && (
                 <div style={{ width: '100%' }}>
-                  <div style={{ fontSize: '0.8rem', color: '#93c5fd', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.8rem', color: '#1e40af', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 700 }}>
                     Selected Model: {selectedProduct.name} ({quantity} {quantity > 1 ? 'Units' : 'Unit'})
                   </div>
-                  <div style={{ fontSize: 'clamp(1.7rem, 5vw, 2.2rem)', fontWeight: 800, color: '#ffffff', lineHeight: 1.2, margin: '6px 0' }}>
+                  <div style={{ fontSize: 'clamp(1.7rem, 5vw, 2.2rem)', fontWeight: 800, color: '#0f172a', lineHeight: 1.2, margin: '6px 0' }}>
                     {calculateTotalEstimate()}
                   </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', fontSize: '0.78rem', color: '#a7f3d0', marginTop: '6px' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', fontSize: '0.82rem', color: '#065f46', fontWeight: 600, marginTop: '6px' }}>
                     <span>🛡️ {selectedProduct.warranty}</span>
                     <span>✓ Genuine Product</span>
                     {needInstallation && <span>⚡ Doorstep Fitting</span>}

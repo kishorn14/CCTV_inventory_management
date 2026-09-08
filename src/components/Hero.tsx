@@ -28,8 +28,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
       title: 'CCTV Security',
       tagline: 'HD / 4K & Mobile Live View',
       icon: Camera,
-      color: '#3b82f6',
-      bgGlow: 'rgba(59, 130, 246, 0.15)',
+      color: '#1d4ed8',
+      bgGlow: '#eff6ff',
       status: 'Active • Doorstep Service',
       active: true
     },
@@ -38,8 +38,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
       title: 'Vehicle Batteries',
       tagline: 'Car & Bike Batteries',
       icon: BatteryCharging,
-      color: '#10b981',
-      bgGlow: 'rgba(16, 185, 129, 0.15)',
+      color: '#059669',
+      bgGlow: '#ecfdf5',
       status: 'Coming Soon 🚀',
       active: false
     },
@@ -48,8 +48,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
       title: 'UPS & Inverters',
       tagline: 'Sine Wave & Battery Combos',
       icon: Zap,
-      color: '#f59e0b',
-      bgGlow: 'rgba(245, 158, 11, 0.15)',
+      color: '#d97706',
+      bgGlow: '#fffbeb',
       status: 'Coming Soon 🚀',
       active: false
     },
@@ -58,8 +58,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
       title: 'RO Purifiers',
       tagline: 'Filter Change & TDS Service',
       icon: Droplets,
-      color: '#06b6d4',
-      bgGlow: 'rgba(6, 182, 212, 0.15)',
+      color: '#0284c7',
+      bgGlow: '#f0f9ff',
       status: 'Coming Soon 🚀',
       active: false
     },
@@ -68,8 +68,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
       title: 'Solar Heaters',
       tagline: 'ETC / FPC Solar Systems',
       icon: Sun,
-      color: '#fb923c',
-      bgGlow: 'rgba(251, 146, 60, 0.15)',
+      color: '#ea580c',
+      bgGlow: '#fff7ed',
       status: 'Coming Soon 🚀',
       active: false
     },
@@ -97,7 +97,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
         transform: 'translateX(-50%)',
         width: '700px',
         height: '400px',
-        background: 'radial-gradient(ellipse at center, rgba(37, 99, 235, 0.22) 0%, rgba(16, 185, 129, 0.08) 50%, rgba(0,0,0,0) 80%)',
+        background: 'radial-gradient(ellipse at center, rgba(37, 99, 235, 0.12) 0%, rgba(16, 185, 129, 0.06) 50%, rgba(255,255,255,0) 80%)',
         filter: 'blur(70px)',
         zIndex: -1,
         pointerEvents: 'none'
@@ -111,7 +111,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
               width: '8px', 
               height: '8px', 
               borderRadius: '50%', 
-              backgroundColor: '#34d399',
+              backgroundColor: '#10b981',
               display: 'inline-block' 
             }} />
             Authorized Sales, Doorstep Installation & Repair Specialist
@@ -124,7 +124,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
             fontSize: 'clamp(1.95rem, 6.5vw, 3.4rem)',
             fontWeight: 800,
             lineHeight: 1.2,
-            color: '#ffffff',
+            color: '#0f172a',
             marginBottom: '16px'
           }}>
             Smart Security & CCTV Solutions with{' '}
@@ -133,7 +133,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
           
           <p style={{
             fontSize: 'clamp(0.95rem, 3.5vw, 1.15rem)',
-            color: '#9ca3af',
+            color: '#475569',
             lineHeight: 1.55,
             maxWidth: '680px',
             margin: '0 auto 28px auto'
@@ -175,7 +175,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(145px, 1fr))',
-          gap: '12px',
+          gap: '14px',
           marginTop: '36px',
           marginBottom: '36px'
         }}>
@@ -196,8 +196,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '12px',
-                  background: 'rgba(17, 24, 39, 0.85)',
-                  border: `1px solid rgba(255, 255, 255, 0.08)`
+                  background: '#ffffff',
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0 4px 14px rgba(15, 23, 42, 0.05)'
                 }}
               >
                 <div style={{
@@ -217,7 +218,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
                   }}>
                     <Icon size={24} />
                   </div>
-                  <ChevronRight size={18} color="#6b7280" />
+                  <ChevronRight size={18} color="#94a3af" />
                 </div>
 
                 <div>
@@ -225,7 +226,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
                     <h2 style={{
                       fontSize: '1.15rem',
                       fontWeight: 700,
-                      color: '#ffffff',
+                      color: '#0f172a',
                       margin: 0
                     }}>
                       {tile.title}
@@ -238,15 +239,15 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
                     padding: '2px 8px',
                     borderRadius: '9999px',
                     marginBottom: '6px',
-                    background: tile.active ? 'rgba(37, 99, 235, 0.3)' : 'rgba(245, 158, 11, 0.2)',
-                    color: tile.active ? '#93c5fd' : '#fbbf24',
-                    border: tile.active ? '1px solid rgba(59, 130, 246, 0.4)' : '1px solid rgba(245, 158, 11, 0.4)'
+                    background: tile.active ? '#eff6ff' : '#fffbeb',
+                    color: tile.active ? '#1d4ed8' : '#b45309',
+                    border: tile.active ? '1px solid #bfdbfe' : '1px solid #fde68a'
                   }}>
                     {tile.status}
                   </div>
                   <p style={{
                     fontSize: '0.82rem',
-                    color: '#9ca3af',
+                    color: '#64748b',
                     lineHeight: 1.4
                   }}>
                     {tile.tagline}
@@ -259,13 +260,14 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
 
         {/* 4 Trust Highlights Strip */}
         <div style={{
-          background: 'rgba(255, 255, 255, 0.03)',
-          border: '1px solid rgba(255, 255, 255, 0.06)',
+          background: '#ffffff',
+          border: '1px solid #e2e8f0',
           borderRadius: '16px',
           padding: '24px 28px',
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '20px'
+          gap: '20px',
+          boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)'
         }}>
           {highlights.map((item, index) => {
             const Icon = item.icon;
@@ -275,8 +277,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
                   width: '42px',
                   height: '42px',
                   borderRadius: '10px',
-                  background: 'rgba(37, 99, 235, 0.15)',
-                  color: '#60a5fa',
+                  background: '#eff6ff',
+                  color: '#1d4ed8',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -285,10 +287,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onSelectCategory }) =
                   <Icon size={22} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#ffffff' }}>
+                  <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#0f172a' }}>
                     {item.title}
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: '#9ca3af' }}>
+                  <div style={{ fontSize: '0.8rem', color: '#64748b' }}>
                     {item.desc}
                   </div>
                 </div>

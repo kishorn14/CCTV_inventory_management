@@ -29,14 +29,14 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({ onOpenBooking 
         {/* Tooltip */}
         <div
           style={{
-            background: '#111827',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            color: '#ffffff',
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
+            color: '#0f172a',
             padding: '8px 14px',
             borderRadius: '9999px',
             fontSize: '0.85rem',
-            fontWeight: 600,
-            boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+            fontWeight: 700,
+            boxShadow: '0 4px 20px rgba(15, 23, 42, 0.12)',
             whiteSpace: 'nowrap',
             display: 'flex',
             alignItems: 'center',
@@ -61,7 +61,7 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({ onOpenBooking 
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 8px 25px rgba(16, 185, 129, 0.5)',
+            boxShadow: '0 8px 25px rgba(16, 185, 129, 0.4)',
             cursor: 'pointer',
             transition: 'transform 0.2s ease',
             textDecoration: 'none'
@@ -84,10 +84,11 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({ onOpenBooking 
           left: 0,
           right: 0,
           zIndex: 990,
-          background: 'rgba(10, 15, 29, 0.96)',
+          background: 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+          borderTop: '1px solid #e2e8f0',
+          boxShadow: '0 -4px 20px rgba(15, 23, 42, 0.08)',
           padding: '10px 16px',
           gap: '10px'
         }}

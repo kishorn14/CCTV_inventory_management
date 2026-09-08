@@ -33,12 +33,23 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'cctv': return '#3b82f6';
-      case 'battery': return '#10b981';
-      case 'inverter': return '#f59e0b';
-      case 'water_purifier': return '#06b6d4';
-      case 'solar_heater': return '#fb923c';
-      default: return '#3b82f6';
+      case 'cctv': return '#1d4ed8';
+      case 'battery': return '#059669';
+      case 'inverter': return '#d97706';
+      case 'water_purifier': return '#0284c7';
+      case 'solar_heater': return '#ea580c';
+      default: return '#1d4ed8';
+    }
+  };
+
+  const getCategoryBg = (category: string) => {
+    switch (category) {
+      case 'cctv': return '#eff6ff';
+      case 'battery': return '#ecfdf5';
+      case 'inverter': return '#fffbeb';
+      case 'water_purifier': return '#f0f9ff';
+      case 'solar_heater': return '#fff7ed';
+      default: return '#eff6ff';
     }
   };
 
@@ -67,6 +78,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
           {services.map((srv) => {
             const Icon = getServiceIcon(srv.category);
             const accentColor = getCategoryColor(srv.category);
+            const iconBg = getCategoryBg(srv.category);
 
             return (
               <div 
@@ -77,7 +89,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  borderTop: `3px solid ${accentColor}`
+                  borderTop: `4px solid ${accentColor}`,
+                  background: '#ffffff',
+                  border: '1px solid #e2e8f0',
+                  borderTopColor: accentColor,
+                  boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)'
                 }}
               >
                 <div>
@@ -92,7 +108,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
                       width: '52px',
                       height: '52px',
                       borderRadius: '14px',
-                      background: `rgba(${accentColor === '#3b82f6' ? '59, 130, 246' : accentColor === '#10b981' ? '16, 185, 129' : accentColor === '#f59e0b' ? '245, 158, 11' : '6, 182, 212'}, 0.15)`,
+                      background: iconBg,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -107,13 +123,13 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
                       gap: '5px',
                       padding: '5px 12px',
                       borderRadius: '9999px',
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: '#f1f5f9',
+                      border: '1px solid #e2e8f0',
                       fontSize: '0.78rem',
                       fontWeight: 600,
-                      color: '#d1d5db'
+                      color: '#475569'
                     }}>
-                      <Clock size={13} color="#60a5fa" />
+                      <Clock size={13} color="#2563eb" />
                       {srv.responseTime}
                     </div>
                   </div>
@@ -122,7 +138,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
                   <h3 style={{
                     fontSize: '1.25rem',
                     fontWeight: 700,
-                    color: '#ffffff',
+                    color: '#0f172a',
                     marginBottom: '10px',
                     lineHeight: 1.3
                   }}>
@@ -131,7 +147,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
 
                   <p style={{
                     fontSize: '0.88rem',
-                    color: '#9ca3af',
+                    color: '#64748b',
                     lineHeight: 1.55,
                     marginBottom: '20px'
                   }}>
@@ -151,7 +167,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
                         alignItems: 'flex-start',
                         gap: '8px',
                         fontSize: '0.84rem',
-                        color: '#e5e7eb'
+                        color: '#334155'
                       }}>
                         <CheckCircle2 size={16} color={accentColor} style={{ flexShrink: 0, marginTop: '2px' }} />
                         <span>{point}</span>
@@ -163,7 +179,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
                 {/* Footer with Price & Booking button */}
                 <div style={{
                   paddingTop: '18px',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderTop: '1px solid #f1f5f9',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -171,8 +187,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
                 }}>
                   {srv.startingPrice && (
                     <div>
-                      <div style={{ fontSize: '0.72rem', color: '#9ca3af', textTransform: 'uppercase' }}>Pricing</div>
-                      <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#ffffff' }}>
+                      <div style={{ fontSize: '0.72rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Pricing</div>
+                      <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a' }}>
                         {srv.startingPrice}
                       </div>
                     </div>
@@ -182,7 +198,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
                     <button
                       onClick={() => onOpenBooking(srv.category)}
                       className="btn btn-outline btn-sm"
-                      style={{ marginLeft: 'auto', border: '1px solid rgba(245, 158, 11, 0.4)', color: '#fbbf24' }}
+                      style={{ marginLeft: 'auto', border: '1px solid #fde68a', background: '#fffbeb', color: '#b45309' }}
                     >
                       Pre-Inquire on WhatsApp <ArrowRight size={15} />
                     </button>
