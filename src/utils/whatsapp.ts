@@ -3,8 +3,8 @@ import { BookingFormData, Product } from '../types';
 export const SHOP_INFO = {
   shopName: "Meksha CCTV Solutions & Services",
   tagline: "CCTV Surveillance, Vehicle Batteries & Inverters",
-  phone: "+91 80504 26215",
-  whatsappNumber: "918050426215", // Phone without + or symbols for WhatsApp API
+  phone: "+91 63664 06305",
+  whatsappNumber: "916366406305", // Phone without + or symbols for WhatsApp API
   address: "#536/10, No. 4B Cross, Dollars Colony, Shamanur",
   city: "Davangere, Karnataka 577004",
   email: "support@mekshasolutions.com",

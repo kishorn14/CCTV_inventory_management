@@ -54,11 +54,11 @@ export const AdminSettings: React.FC = () => {
     setSuccessMsg('');
 
     if (!isValidPhoneNumber(formData.whatsappPhone)) {
-      alert('WhatsApp Number must contain at least 10 digits (e.g. 918050426215).');
+      alert('WhatsApp Number must contain at least 10 digits (e.g. 916366406305).');
       return;
     }
     if (!isValidPhoneNumber(formData.phone)) {
-      alert('Helpline Phone Number must contain at least 10 digits (e.g. +91 80504 26215).');
+      alert('Helpline Phone Number must contain at least 10 digits (e.g. +91 63664 06305).');
       return;
     }
 
@@ -215,7 +215,7 @@ export const AdminSettings: React.FC = () => {
               <input
                 type="text"
                 className="form-input"
-                placeholder="+91 96066 78763"
+                placeholder="+91 63664 06305"
                 value={formData.phone}
                 onChange={e => setFormData({ ...formData, phone: e.target.value })}
                 required
@@ -229,7 +229,7 @@ export const AdminSettings: React.FC = () => {
               <input
                 type="text"
                 className="form-input"
-                placeholder="919606678763 (with country code, no + or spaces)"
+                placeholder="916366406305 (with country code, no + or spaces)"
                 value={formData.whatsappPhone}
                 onChange={e => setFormData({ ...formData, whatsappPhone: e.target.value })}
                 required
