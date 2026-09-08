@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Phone, MessageCircle, Instagram, Mail, MapPin, Lock } from 'lucide-react';
+import { Phone, MessageCircle, Instagram, Mail, MapPin, Lock } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { createWhatsAppLink } from '../utils/whatsapp';
 import { CategoryType } from '../types';
@@ -31,19 +31,19 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
         }}>
           {/* Col 1: Brand Summary */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <div style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '10px',
-                background: 'linear-gradient(135deg, #2563eb 0%, #06b6d4 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#ffffff'
-              }}>
-                <Shield size={20} />
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+              <img
+                src="/logo.jpg"
+                alt={shopInfo.shopName}
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '10px',
+                  objectFit: 'cover',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)'
+                }}
+              />
               <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff' }}>
                 {shopInfo.shopName.split(' ')[0]} <span className="text-gradient">{shopInfo.shopName.split(' ').slice(1).join(' ') || 'SOLUTIONS'}</span>
               </div>

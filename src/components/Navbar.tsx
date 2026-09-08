@@ -3,7 +3,6 @@ import {
   MessageCircle, 
   Menu, 
   X, 
-  Shield, 
   Wrench, 
   ShoppingBag, 
   Calculator, 
@@ -52,20 +51,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts })
           height: '66px'
         }}>
           {/* Logo */}
-          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{
-              width: '44px',
-              height: '44px',
-              borderRadius: '12px',
-              background: 'linear-gradient(135deg, #1d4ed8 0%, #0284c7 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 4px 14px rgba(29, 78, 216, 0.3)',
-              color: '#ffffff'
-            }}>
-              <Shield size={24} />
-            </div>
+          <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+            <img
+              src="/logo.jpg"
+              alt={shopInfo.shopName}
+              style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '12px',
+                objectFit: 'cover',
+                boxShadow: '0 4px 14px rgba(15, 23, 42, 0.12)',
+                border: '1px solid rgba(226, 232, 240, 0.9)'
+              }}
+            />
             <div>
               <div style={{
                 fontFamily: 'Outfit, sans-serif',
