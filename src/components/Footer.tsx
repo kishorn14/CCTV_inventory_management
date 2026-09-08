@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Phone, MessageCircle, Mail, MapPin, Lock } from 'lucide-react';
+import { Shield, Phone, MessageCircle, Instagram, Mail, MapPin, Lock } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { createWhatsAppLink } from '../utils/whatsapp';
 import { CategoryType } from '../types';
@@ -51,7 +51,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
             <p style={{ lineHeight: 1.6, marginBottom: '20px', color: '#9ca3af' }}>
               Your trusted partner for CCTV Security Surveillance, Automotive Car/Bike Batteries, and Home Inverters & UPS Power Systems.
             </p>
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
               <a
                 href={createWhatsAppLink(`Hello ${shopInfo.shopName}!`, shopInfo.whatsappPhone)}
                 target="_blank"
@@ -62,6 +62,26 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
               </a>
               <a href={`tel:${shopInfo.phone}`} className="btn btn-call btn-sm">
                 <Phone size={15} /> Call Shop
+              </a>
+              <a
+                href={shopInfo.instagramUrl || "https://www.instagram.com/mekhasolutions?stkn=MWFlcnhkbzlpZmEybg=="}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: 'linear-gradient(45deg, #f09433 0%, #dc2743 50%, #bc1888 100%)',
+                  color: '#ffffff',
+                  padding: '8px 14px',
+                  borderRadius: '9999px',
+                  fontSize: '0.84rem',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  boxShadow: '0 2px 8px rgba(220, 39, 67, 0.3)'
+                }}
+              >
+                <Instagram size={15} /> Instagram
               </a>
             </div>
           </div>

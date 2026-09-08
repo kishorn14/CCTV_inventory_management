@@ -117,7 +117,7 @@ export const FloatingActions: React.FC<FloatingActionsProps> = () => {
 
       {/* 3. Instagram Button (Vibrant Signature Gradient) */}
       <a
-        href="https://instagram.com/"
+        href={shopInfo.instagramUrl || "https://www.instagram.com/mekhasolutions?stkn=MWFlcnhkbzlpZmEybg=="}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Visit Instagram"

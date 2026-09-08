@@ -8,6 +8,7 @@ export const SHOP_INFO = {
   address: "Main Road, Opp. Bus Stand / City Center",
   city: "Bangalore & Surrounding Areas",
   email: "support@mekshasolutions.com",
+  instagramUrl: "https://www.instagram.com/mekhasolutions?stkn=MWFlcnhkbzlpZmEybg==",
   workingHours: "8:00 AM – 9:00 PM",
   workingDays: "All 7 Days Open (Emergency Support Available)"
 };

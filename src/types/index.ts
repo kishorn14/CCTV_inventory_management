@@ -58,6 +58,7 @@ export interface ShopContactInfo {
   googleMapsUrl: string;
   workingHours: string;
   workingDays: string;
+  instagramUrl?: string;
   googleSheetWebhookUrl?: string;
   googleSheetViewUrl?: string;
 }

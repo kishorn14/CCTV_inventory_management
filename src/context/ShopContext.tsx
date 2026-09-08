@@ -87,6 +87,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           parsed.phone = DEFAULT_SHOP_INFO.phone;
           parsed.whatsappPhone = DEFAULT_SHOP_INFO.whatsappNumber;
         }
+        if (!parsed.instagramUrl) {
+          parsed.instagramUrl = DEFAULT_SHOP_INFO.instagramUrl;
+        }
         return parsed;
       }
       return {
@@ -100,6 +103,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         googleMapsUrl: `https://maps.google.com/?q=${encodeURIComponent(DEFAULT_SHOP_INFO.shopName + ' ' + DEFAULT_SHOP_INFO.city)}`,
         workingHours: DEFAULT_SHOP_INFO.workingHours,
         workingDays: DEFAULT_SHOP_INFO.workingDays,
+        instagramUrl: DEFAULT_SHOP_INFO.instagramUrl,
         googleSheetWebhookUrl: defaultWebhook,
         googleSheetViewUrl: ''
       };
@@ -115,6 +119,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         googleMapsUrl: '',
         workingHours: DEFAULT_SHOP_INFO.workingHours,
         workingDays: DEFAULT_SHOP_INFO.workingDays,
+        instagramUrl: DEFAULT_SHOP_INFO.instagramUrl,
         googleSheetWebhookUrl: defaultWebhook,
         googleSheetViewUrl: ''
       };
