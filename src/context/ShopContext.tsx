@@ -107,9 +107,16 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (!parsed.googleSheetWebhookUrl) {
           parsed.googleSheetWebhookUrl = defaultWebhook;
         }
-        if (parsed.whatsappPhone === '919845012345' || parsed.phone === '+91 98450 12345') {
+        if (parsed.whatsappPhone === '919845012345' || parsed.phone === '+91 98450 12345' || parsed.phone === '+91 96066 78763' || parsed.whatsappPhone === '919606678763') {
           parsed.phone = DEFAULT_SHOP_INFO.phone;
           parsed.whatsappPhone = DEFAULT_SHOP_INFO.whatsappNumber;
+        }
+        if (!parsed.address || parsed.address.includes('Main Road, Opp. Bus Stand')) {
+          parsed.address = DEFAULT_SHOP_INFO.address;
+          parsed.city = DEFAULT_SHOP_INFO.city;
+        }
+        if (!parsed.shopName || parsed.shopName === 'Meksha Solutions') {
+          parsed.shopName = DEFAULT_SHOP_INFO.shopName;
         }
         if (!parsed.instagramUrl) {
           parsed.instagramUrl = DEFAULT_SHOP_INFO.instagramUrl;

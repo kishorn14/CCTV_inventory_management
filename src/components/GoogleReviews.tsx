@@ -137,7 +137,7 @@ export const GoogleReviews: React.FC = () => {
           boxShadow: '0 2px 6px rgba(245, 158, 11, 0.12)'
         }}>
           <GoogleGIcon size={14} />
-          <span>Google Reviews</span>
+          <span>Google Reviews • 4.9 ★ (81 Reviews)</span>
         </div>
 
         {/* Section Heading */}
@@ -148,7 +148,7 @@ export const GoogleReviews: React.FC = () => {
           lineHeight: 1.25,
           marginBottom: '10px'
         }}>
-          Loved by Customers Across the City
+          Loved by Customers Across Davangere &amp; Karnataka
         </h2>
 
         {/* Section Subtitle */}
@@ -157,10 +157,10 @@ export const GoogleReviews: React.FC = () => {
           color: '#64748b',
           lineHeight: 1.55,
           marginBottom: '28px',
-          maxWidth: '560px',
+          maxWidth: '580px',
           margin: '0 auto 28px'
         }}>
-          Real reviews from real people — see why thousands trust {shopInfo.shopName}.
+          Real reviews from verified Google Maps customers — see why people trust {shopInfo.shopName} for CCTV, vehicle batteries &amp; inverters.
         </p>
 
         {/* Testimonial Card Container */}

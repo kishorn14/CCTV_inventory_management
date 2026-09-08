@@ -1,17 +1,17 @@
 import { BookingFormData, Product } from '../types';
 
 export const SHOP_INFO = {
-  shopName: "Meksha Solutions",
-  tagline: "CCTV, Vehicle Batteries & Inverters",
-  phone: "+91 96066 78763",
-  whatsappNumber: "919606678763", // Phone without + or symbols for WhatsApp API
-  address: "Main Road, Opp. Bus Stand / City Center",
-  city: "Bangalore & Surrounding Areas",
+  shopName: "Meksha CCTV Solutions & Services",
+  tagline: "CCTV Surveillance, Vehicle Batteries & Inverters",
+  phone: "+91 80504 26215",
+  whatsappNumber: "918050426215", // Phone without + or symbols for WhatsApp API
+  address: "#536/10, No. 4B Cross, Dollars Colony, Shamanur",
+  city: "Davangere, Karnataka 577004",
   email: "support@mekshasolutions.com",
   instagramUrl: "https://www.instagram.com/mekhasolutions?stkn=MWFlcnhkbzlpZmEybg==",
   googleMapsUrl: "https://share.google/Qdy82hkQa2UO5Axtj",
-  workingHours: "8:00 AM – 9:00 PM",
-  workingDays: "All 7 Days Open (Emergency Support Available)"
+  workingHours: "8:00 AM – 8:00 PM",
+  workingDays: "All 7 Days Open (Doorstep Service Available)"
 };
 
 /**
