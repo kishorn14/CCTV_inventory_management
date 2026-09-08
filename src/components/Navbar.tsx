@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { 
-  Phone, 
   MessageCircle, 
   Menu, 
   X, 
@@ -31,45 +30,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
 
   return (
     <>
-      {/* Top Notification / Emergency Bar */}
-      <div style={{
-        background: 'linear-gradient(90deg, #1e3a8a 0%, #1d4ed8 50%, #047857 100%)',
-        color: '#ffffff',
-        fontSize: '0.82rem',
-        padding: '7px 0',
-        fontWeight: 500,
-      }}>
-        <div className="container" style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '8px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ 
-              display: 'inline-block', 
-              width: '8px', 
-              height: '8px', 
-              borderRadius: '50%', 
-              backgroundColor: '#4ade80',
-              animation: 'pulseGlow 1.5s infinite' 
-            }} />
-            <span>⚡ Authorized Sales, Doorstep Installation &amp; Service Partner</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <a 
-              href={`tel:${shopInfo.phone}`} 
-              style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#ffffff', fontWeight: 600 }}
-            >
-              <Phone size={13} /> {shopInfo.phone}
-            </a>
-            <span style={{ opacity: 0.6 }}>|</span>
-            <span>🕒 {shopInfo.workingHours}</span>
-          </div>
-        </div>
-      </div>
-
       {/* Main Sticky Navbar (Clean White & Crisp Light Style) */}
       <header style={{
         position: 'sticky',
