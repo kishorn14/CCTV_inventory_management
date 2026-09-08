@@ -18,7 +18,9 @@ import {
   HardHat,
   Headphones,
   Calculator,
-  Gauge
+  Gauge,
+  Video,
+  BatteryCharging
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { createWhatsAppLink } from '../utils/whatsapp';
@@ -33,51 +35,32 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelectCategory }) => {
   const { shopInfo } = useShop();
-  const [activeRangeIndex, setActiveRangeIndex] = useState<number>(0);
   const [isPowerPlannerOpen, setIsPowerPlannerOpen] = useState<boolean>(false);
 
-  const rangeData = [
+  const rangeCards = [
     {
       id: 'cctv' as CategoryType,
-      tabLabel: 'CCTV',
-      counter: '01 / 03',
-      title: 'Hikvision, CP PLUS & Dahua',
+      title: 'CCTV Surveillance',
+      subtitle: 'Hikvision, CP PLUS & Dahua HD Smart Cameras',
       image: '/range-cctv.jpg',
-      points: [
-        'Hikvision ColorVu & Turbo HD Bullet Cameras',
-        'CP PLUS 360° Smart Wi-Fi PTZ Cameras',
-        'Dahua 4K NVR Kits with Surveillance Storage'
-      ],
-      ctaText: 'Enquire about CCTV',
-      inquiryMessage: `Hello ${shopInfo.shopName}, I would like to enquire about Hikvision, CP PLUS & Dahua CCTV Cameras & Setup.`
+      icon: Video,
+      btnText: 'Explore CCTV'
     },
     {
       id: 'battery' as CategoryType,
-      tabLabel: 'Batteries',
-      counter: '02 / 03',
-      title: 'Amaron & Exide Batteries',
+      title: 'Batteries',
+      subtitle: 'All Types of Automotive & Inverter Batteries',
       image: '/range-batteries.jpg',
-      points: [
-        'Amaron Pro & Hi-Life Automotive Batteries',
-        'Exide InvaRed & Mileage Tall Tubular Batteries',
-        'Commercial Heavy-Duty & Tractor Batteries'
-      ],
-      ctaText: 'Enquire about Batteries',
-      inquiryMessage: `Hello ${shopInfo.shopName}, I would like to enquire about Amaron & Exide Batteries (Car, Bike, and Inverter).`
+      icon: BatteryCharging,
+      btnText: 'Explore Batteries'
     },
     {
       id: 'inverter' as CategoryType,
-      tabLabel: 'Inverters',
-      counter: '03 / 03',
       title: 'Inverters & UPS',
+      subtitle: 'Reliable Power Backup for Home & Office',
       image: '/range-inverters.jpg',
-      points: [
-        'Luminous & Microtek Pure Sine Wave Combos',
-        'Mini DC UPS for Wi-Fi Modems & Routers',
-        'CCTV Centralized Uninterrupted Power Backup'
-      ],
-      ctaText: 'Enquire about Inverters & UPS',
-      inquiryMessage: `Hello ${shopInfo.shopName}, I would like to enquire about Inverters & UPS Power Backup systems.`
+      icon: Zap,
+      btnText: 'Explore Inverters'
     }
   ];
 
@@ -810,9 +793,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
           </div>
         </div>
 
-        {/* "OUR RANGE" - Interactive Product Showcase (from shakthiagencies.in) */}
+        {/* "WHAT WE DO" - Horizontal Scrollable Showcase (from shakthiagencies.in) */}
         <div style={{
-          maxWidth: '480px',
+          maxWidth: '860px',
           margin: '40px auto 0 auto',
           textAlign: 'center'
         }}>
@@ -830,19 +813,19 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
             textTransform: 'uppercase',
             marginBottom: '10px'
           }}>
-            Our Range
+            What We Do
           </div>
 
           {/* Main Title */}
           <h2 style={{
-            fontSize: 'clamp(1.5rem, 5vw, 2.1rem)',
+            fontSize: 'clamp(1.5rem, 5vw, 2.2rem)',
             fontWeight: 800,
             color: '#0f172a',
             lineHeight: 1.2,
             marginBottom: '10px',
             letterSpacing: '-0.02em'
           }}>
-            Premium Products, Honest Pricing
+            Premium Power &amp; Security, Under One Roof
           </h2>
 
           {/* Subtitle */}
@@ -850,226 +833,170 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
             fontSize: '0.9rem',
             color: '#475569',
             lineHeight: 1.55,
-            marginBottom: '20px'
+            maxWidth: '540px',
+            margin: '0 auto 16px auto'
           }}>
-            Hand-picked from India's most trusted brands — for performance you can depend on.
+            Genuine products, certified installation and end-to-end after-sales support.
           </p>
 
-          {/* Category Filter Tabs (Pill Buttons) */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            background: '#f1f5f9',
-            padding: '4px',
-            borderRadius: '9999px',
-            marginBottom: '18px',
-            boxShadow: 'inset 0 1px 3px rgba(15, 23, 42, 0.06)'
-          }}>
-            {rangeData.map((item, idx) => {
-              const isActive = activeRangeIndex === idx;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveRangeIndex(idx);
-                    onSelectCategory(item.id);
-                  }}
-                  style={{
-                    background: isActive ? 'linear-gradient(135deg, #eab308 0%, #ca8a04 100%)' : 'transparent',
-                    color: isActive ? '#ffffff' : '#475569',
-                    fontWeight: 700,
-                    fontSize: '0.84rem',
-                    padding: '7px 18px',
-                    borderRadius: '9999px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    boxShadow: isActive ? '0 3px 10px rgba(202, 138, 4, 0.3)' : 'none',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  {item.tabLabel}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Range Showcase Card */}
-          {(() => {
-            const current = rangeData[activeRangeIndex];
-            return (
-              <div style={{
-                background: '#ffffff',
-                border: '1px solid #e2e8f0',
-                borderRadius: '24px',
-                overflow: 'hidden',
-                boxShadow: '0 12px 32px -8px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.03)',
-                textAlign: 'left'
-              }}>
-                {/* 3D Product Image with Counter & Title Overlay */}
-                <div style={{
-                  position: 'relative',
-                  height: '240px',
-                  width: '100%',
-                  overflow: 'hidden',
-                  background: '#0f172a'
-                }}>
-                  <img
-                    src={current.image}
-                    alt={current.title}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      transition: 'transform 0.4s ease'
-                    }}
-                  />
-                  <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(15, 23, 42, 0.75) 0%, rgba(15, 23, 42, 0.1) 60%, rgba(0,0,0,0) 100%)'
-                  }} />
-
-                  {/* Top-Left Counter Badge */}
-                  <div style={{
-                    position: 'absolute',
-                    top: '14px',
-                    left: '14px',
-                    background: 'linear-gradient(135deg, #eab308 0%, #ca8a04 100%)',
-                    color: '#ffffff',
-                    fontSize: '0.74rem',
-                    fontWeight: 800,
-                    padding: '4px 12px',
-                    borderRadius: '9999px',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-                  }}>
-                    {current.counter}
-                  </div>
-
-                  {/* Bottom-Left Title Overlay */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: '16px',
-                    left: '18px',
-                    color: '#ffffff',
-                    fontSize: '1.5rem',
-                    fontWeight: 800,
-                    letterSpacing: '-0.02em',
-                    textShadow: '0 2px 8px rgba(0,0,0,0.5)'
-                  }}>
-                    {current.title}
-                  </div>
-                </div>
-
-                {/* Content Area with 3 Bullet Points & CTA Button */}
-                <div style={{
-                  padding: '18px 16px',
-                  background: '#fefce8'
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '10px',
-                    marginBottom: '16px'
-                  }}>
-                    {current.points.map((pt, pIdx) => (
-                      <div 
-                        key={pIdx}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '10px',
-                          color: '#1e293b',
-                          fontSize: '0.86rem',
-                          fontWeight: 600
-                        }}
-                      >
-                        <div style={{
-                          width: '18px',
-                          height: '18px',
-                          borderRadius: '50%',
-                          background: '#fef08a',
-                          border: '1px solid #fde047',
-                          color: '#854d0e',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          flexShrink: 0
-                        }}>
-                          <Check size={11} strokeWidth={3} />
-                        </div>
-                        <span>{pt}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Enquire Button */}
-                  <a
-                    href={createWhatsAppLink(current.inquiryMessage, shopInfo.whatsappPhone)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px',
-                      background: 'linear-gradient(135deg, #eab308 0%, #ca8a04 100%)',
-                      color: '#ffffff',
-                      padding: '12px 20px',
-                      borderRadius: '9999px',
-                      fontWeight: 700,
-                      fontSize: '0.92rem',
-                      textDecoration: 'none',
-                      width: '100%',
-                      boxSizing: 'border-box',
-                      boxShadow: '0 4px 14px rgba(202, 138, 4, 0.3)',
-                      transition: 'all 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 6px 18px rgba(202, 138, 4, 0.4)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 4px 14px rgba(202, 138, 4, 0.3)';
-                    }}
-                  >
-                    <span>{current.ctaText}</span>
-                    <ArrowRight size={16} />
-                  </a>
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* 3 Pagination Dots */}
+          {/* Swipe indicator */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            marginTop: '16px',
-            marginBottom: '32px'
+            justifyContent: 'flex-start',
+            maxWidth: '480px',
+            margin: '0 auto 12px auto',
+            paddingLeft: '10px',
+            color: '#64748b',
+            fontSize: '0.82rem',
+            fontWeight: 600,
+            gap: '6px'
           }}>
-            {rangeData.map((_, dotIdx) => {
-              const isSelected = activeRangeIndex === dotIdx;
+            <span>Swipe to explore</span>
+            <ArrowRight size={14} />
+          </div>
+
+          {/* Horizontal Scrollable Carousel Track */}
+          <div 
+            style={{
+              display: 'flex',
+              gap: '16px',
+              overflowX: 'auto',
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+              padding: '6px 12px 24px 12px',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none'
+            }}
+          >
+            {rangeCards.map((card) => {
+              const Icon = card.icon;
               return (
-                <button
-                  key={dotIdx}
-                  onClick={() => setActiveRangeIndex(dotIdx)}
-                  aria-label={`Go to slide ${dotIdx + 1}`}
+                <div
+                  key={card.id}
                   style={{
-                    width: isSelected ? '22px' : '8px',
-                    height: '8px',
-                    borderRadius: '9999px',
-                    background: isSelected ? '#ca8a04' : '#cbd5e1',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: 0,
-                    transition: 'all 0.25s ease'
+                    flex: '0 0 clamp(270px, 78vw, 315px)',
+                    height: '420px',
+                    borderRadius: '26px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    boxShadow: '0 12px 32px -8px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.05)',
+                    border: '1px solid rgba(226, 232, 240, 0.8)',
+                    scrollSnapAlign: 'start',
+                    textAlign: 'left',
+                    background: '#0f172a'
                   }}
-                />
+                >
+                  {/* Background Product Image */}
+                  <img
+                    src={card.image}
+                    alt={card.title}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover'
+                    }}
+                  />
+
+                  {/* Dark Gradient Overlay for Readability */}
+                  <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(to top, rgba(15, 23, 42, 0.96) 0%, rgba(15, 23, 42, 0.72) 40%, rgba(15, 23, 42, 0.15) 75%, transparent 100%)'
+                  }} />
+
+                  {/* Top-Left Circular Category Icon */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '16px',
+                    left: '16px',
+                    width: '42px',
+                    height: '42px',
+                    borderRadius: '50%',
+                    background: '#04647a',
+                    color: '#ffffff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                    border: '1px solid rgba(255,255,255,0.2)'
+                  }}>
+                    <Icon size={20} />
+                  </div>
+
+                  {/* Bottom Text Content & Action Button */}
+                  <div style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    padding: '22px 18px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}>
+                    <h3 style={{
+                      fontSize: '1.45rem',
+                      fontWeight: 800,
+                      color: '#facc15',
+                      margin: 0,
+                      lineHeight: 1.15,
+                      letterSpacing: '-0.01em',
+                      textShadow: '0 2px 8px rgba(0,0,0,0.4)'
+                    }}>
+                      {card.title}
+                    </h3>
+                    <p style={{
+                      fontSize: '0.84rem',
+                      color: '#f8fafc',
+                      lineHeight: 1.35,
+                      margin: '0 0 12px 0',
+                      opacity: 0.95,
+                      fontWeight: 500
+                    }}>
+                      {card.subtitle}
+                    </p>
+
+                    <a
+                      href="#products"
+                      onClick={() => onSelectCategory(card.id)}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                        background: 'rgba(0, 0, 0, 0.4)',
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        border: '1.5px solid #eab308',
+                        color: '#fef08a',
+                        fontWeight: 700,
+                        fontSize: '0.86rem',
+                        padding: '10px 18px',
+                        borderRadius: '9999px',
+                        textDecoration: 'none',
+                        width: 'fit-content',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = '#eab308';
+                        e.currentTarget.style.color = '#0f172a';
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)';
+                        e.currentTarget.style.color = '#fef08a';
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                    >
+                      <span>{card.btnText}</span>
+                      <ArrowRight size={15} />
+                    </a>
+                  </div>
+                </div>
               );
             })}
           </div>
@@ -1078,6 +1005,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
           <div 
             onClick={() => setIsPowerPlannerOpen(true)}
             style={{
+              maxWidth: '480px',
+              margin: '20px auto 36px auto',
               background: 'linear-gradient(135deg, #024b86 0%, #03667c 100%)',
               borderRadius: '24px',
               padding: '22px 18px',
@@ -1089,7 +1018,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
               justifyContent: 'space-between',
               gap: '14px',
               textAlign: 'left',
-              marginBottom: '36px',
               transition: 'all 0.2s ease',
               border: '1px solid rgba(255, 255, 255, 0.12)'
             }}
