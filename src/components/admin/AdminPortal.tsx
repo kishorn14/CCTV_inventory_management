@@ -6,7 +6,6 @@ import {
   Database,
   Store,
   LogOut,
-  ShieldCheck,
   Video,
   Award
 } from 'lucide-react';
@@ -72,18 +71,17 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
         }}>
           {/* Brand Logo & Title */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)',
-              color: '#ffffff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <ShieldCheck size={22} />
-            </div>
+            <img
+              src="/logo.jpg"
+              alt="Mekha Logo"
+              style={{
+                width: '42px',
+                height: '42px',
+                borderRadius: '10px',
+                objectFit: 'cover',
+                border: '2px solid #e2e8f0'
+              }}
+            />
             <div>
               <div style={{ fontWeight: 800, fontSize: '1.15rem', color: '#0f172a', lineHeight: 1.1 }}>
                 {shopInfo.shopName} <span style={{ color: '#1d4ed8', fontSize: '0.8rem', fontWeight: 700 }}>[ADMIN]</span>
