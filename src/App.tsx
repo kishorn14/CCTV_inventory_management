@@ -4,7 +4,6 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { ProductCatalog } from './components/ProductCatalog';
 import { EstimatorCalculator } from './components/EstimatorCalculator';
-import { WhyChooseUs } from './components/WhyChooseUs';
 import { FaqSection } from './components/FaqSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
@@ -106,9 +105,6 @@ function MainApp() {
 
       {/* Interactive CCTV & Inverter Cost / Load Estimator */}
       <EstimatorCalculator />
-
-      {/* Trust Badges & Authorized Brands */}
-      <WhyChooseUs />
 
       {/* FAQs */}
       <FaqSection />
