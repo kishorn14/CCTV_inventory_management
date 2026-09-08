@@ -25,9 +25,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts })
 
   const navLinks = [
     { label: 'Brands', href: '#brands', icon: Award },
-    { label: 'Reviews', href: '#reviews', icon: Star },
     { label: 'Products', href: '#products', icon: ShoppingBag, isProducts: true },
     { label: 'Estimator', href: '#estimator', icon: Calculator },
+    { label: 'Reviews', href: '#reviews', icon: Star },
     { label: 'Contact', href: '#contact', icon: MapPin },
   ];
 

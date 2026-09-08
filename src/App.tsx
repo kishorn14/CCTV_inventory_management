@@ -98,9 +98,6 @@ function MainApp() {
       {/* Authorized Dealer & Trusted Brand Partners (Exide, Amaron, Luminous, CP Plus, Hikvision, Dahua) */}
       <TrustedBrands />
 
-      {/* Google Reviews & Customer Testimonials (Connected to Google Maps Share Link) */}
-      <GoogleReviews />
-
       {/* Product Catalog & Category Filters - Only shown when user clicks Explore / Category */}
       {isCatalogVisible && (
         <ProductCatalog
@@ -113,6 +110,9 @@ function MainApp() {
 
       {/* Interactive CCTV & Inverter Cost / Load Estimator */}
       <EstimatorCalculator />
+
+      {/* Google Reviews & Customer Testimonials (Connected to Google Maps Share Link) */}
+      <GoogleReviews />
 
       {/* FAQs */}
       <FaqSection />
