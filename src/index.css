@@ -606,21 +606,64 @@ textarea {
    Preserves 100% mobile experience, unlocks premium desktop layout
    ========================================================= */
 
-/* Hero Action Buttons */
-.hero-cta-group {
+/* Hero 2-Column Main Split Layout (Desktop Side-by-Side, Mobile Stacked) */
+.hero-main-split {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-main-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-cta-buttons {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 420px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto 22px auto;
 }
 
-@media (min-width: 640px) {
-  .hero-cta-group {
+.hero-trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  justify-content: center;
+}
+
+@media (min-width: 900px) {
+  .hero-main-split {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    max-width: 580px;
+    grid-template-columns: 1.12fr 0.88fr;
+    gap: 48px;
+    max-width: 1200px;
+    margin: 12px auto 0 auto;
+    align-items: center;
+    text-align: left;
+  }
+
+  .hero-main-left {
+    align-items: flex-start;
+  }
+
+  .hero-cta-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: none;
+    margin: 0 0 26px 0;
     gap: 12px;
+  }
+
+  .hero-trust-badges {
+    justify-content: flex-start;
+    gap: 12px 20px;
   }
 }
 

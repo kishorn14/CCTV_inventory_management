@@ -5,7 +5,6 @@ import {
   MessageCircle, 
   Phone,
   ArrowRight,
-  Wrench,
   ShieldCheck, 
   Clock, 
   Check, 
@@ -94,316 +93,226 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
       }} />
 
       <div className="container">
-        {/* Top Trust Badge */}
-        <div style={{ textAlign: 'center', marginBottom: '12px' }}>
-          <div className="section-badge" style={{
-            background: 'rgba(239, 246, 255, 0.95)',
-            border: '1px solid #bfdbfe',
-            color: '#1d4ed8',
-            fontWeight: 600,
-            fontSize: '0.82rem',
-            padding: '5px 15px',
-            borderRadius: '9999px',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            boxShadow: '0 2px 8px rgba(29, 78, 216, 0.05)',
-            margin: 0
-          }}>
-            <Sparkles size={14} color="#2563eb" />
-            <span>Authorized Dealer · Trusted Since Years</span>
-          </div>
-        </div>
-
-        {/* Hero Main Heading & Description */}
-        <div style={{ textAlign: 'center', maxWidth: '880px', margin: '0 auto 24px auto' }}>
-          <h1 style={{
-            fontSize: 'clamp(2.1rem, 6.8vw, 3.5rem)',
-            fontWeight: 800,
-            lineHeight: 1.15,
-            color: '#0f172a',
-            marginBottom: '14px',
-            letterSpacing: '-0.025em'
-          }}>
-            Reliable Power &amp;{' '}
-            <span style={{ position: 'relative', display: 'inline-block', color: '#1d4ed8' }}>
-              Smart Security
-              <svg
-                viewBox="0 0 250 20"
-                style={{
-                  position: 'absolute',
-                  left: 0,
-                  bottom: '-6px',
-                  width: '100%',
-                  height: '14px',
-                  overflow: 'visible',
-                  pointerEvents: 'none'
-                }}
-              >
-                <path
-                  d="M 4 13 Q 125 1 246 11"
-                  fill="transparent"
-                  stroke="#eab308"
-                  strokeWidth="4.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>{' '}
-            Solutions for Every Home &amp; Business
-          </h1>
-          
-          <p style={{
-            fontSize: 'clamp(0.96rem, 3.4vw, 1.12rem)',
-            color: '#475569',
-            lineHeight: 1.55,
-            maxWidth: '680px',
-            margin: '0 auto 22px auto'
-          }}>
-            We specialize in genuine batteries, inverters, and CCTV systems with professional installation and dependable after-sales support.
-          </p>
-
-          {/* Action Buttons - Hero Pill Buttons Group (Responsive 2x2 on Desktop) */}
-          <div className="hero-cta-group">
-            {/* Button 0: Book a Service */}
-            <button
-              onClick={() => onOpenBooking()}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                background: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)',
-                color: '#ffffff',
-                padding: '13px 28px',
-                borderRadius: '9999px',
-                fontWeight: 700,
-                fontSize: '0.98rem',
-                border: 'none',
-                cursor: 'pointer',
-                width: '100%',
-                boxShadow: '0 4px 14px rgba(29, 78, 216, 0.28)',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 18px rgba(29, 78, 216, 0.35)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 14px rgba(29, 78, 216, 0.28)';
-              }}
-            >
-              <Wrench size={18} />
-              <span>Book a Service</span>
-            </button>
-
-            {/* Button 1: Get Free Quote */}
-            <button
-              onClick={() => onOpenQuote ? onOpenQuote() : onOpenBooking()}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                background: '#04647a',
-                color: '#ffffff',
-                padding: '13px 28px',
-                borderRadius: '9999px',
-                fontWeight: 700,
-                fontSize: '0.98rem',
-                border: 'none',
-                cursor: 'pointer',
-                width: '100%',
-                boxShadow: '0 4px 14px rgba(4, 100, 122, 0.22)',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.background = '#035264';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.background = '#04647a';
-              }}
-            >
-              <span>Get Free Quote</span>
-              <ArrowRight size={18} />
-            </button>
-
-            {/* Button 2: WhatsApp Now */}
-            <a
-              href={createWhatsAppLink(`Hello ${shopInfo.shopName}, I would like to get a free quote for CCTV, batteries, or inverter systems.`, shopInfo.whatsappPhone)}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                background: '#22c55e',
-                color: '#ffffff',
-                padding: '13px 28px',
-                borderRadius: '9999px',
-                fontWeight: 700,
-                fontSize: '0.98rem',
-                textDecoration: 'none',
-                width: '100%',
-                boxShadow: '0 4px 14px rgba(34, 197, 94, 0.22)',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.background = '#16a34a';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.background = '#22c55e';
-              }}
-            >
-              <MessageCircle size={18} />
-              <span>WhatsApp Now</span>
-            </a>
-
-            {/* Button 3: Call Now */}
-            <a
-              href={`tel:${shopInfo.phone}`}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                background: '#ffffff',
-                color: '#0f172a',
-                padding: '13px 28px',
-                borderRadius: '9999px',
-                fontWeight: 700,
-                fontSize: '0.98rem',
-                textDecoration: 'none',
-                border: '1px solid #e2e8f0',
-                width: '100%',
-                boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.borderColor = '#cbd5e1';
-                e.currentTarget.style.background = '#f8fafc';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.borderColor = '#e2e8f0';
-                e.currentTarget.style.background = '#ffffff';
-              }}
-            >
-              <Phone size={17} color="#0f172a" />
-              <span>Call Now</span>
-            </a>
-          </div>
-
-          {/* Trust Checklist & Smart Home Showcase Visual (Responsive 2-Column Split on Desktop, Directly Below Action Buttons) */}
-          <div className="hero-trust-split-section">
-            {/* Left Column: Value Proposition & 5 Checkmarks Trust Grid */}
-            <div style={{ textAlign: 'left' }}>
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                background: '#ecfdf5',
-                border: '1px solid #a7f3d0',
-                color: '#059669',
-                fontWeight: 800,
-                fontSize: '0.74rem',
-                letterSpacing: '0.08em',
-                padding: '4px 14px',
-                borderRadius: '9999px',
-                textTransform: 'uppercase',
-                marginBottom: '12px'
-              }}>
-                <ShieldCheck size={14} color="#059669" />
-                <span>Certified &amp; Dependable</span>
-              </div>
-
-              <h2 style={{
-                fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
-                fontWeight: 800,
-                color: '#0f172a',
-                lineHeight: 1.2,
-                marginBottom: '12px',
-                letterSpacing: '-0.02em'
-              }}>
-                Smart Solutions Designed for Modern Living
-              </h2>
-
-              <p style={{
-                fontSize: '0.94rem',
-                color: '#475569',
-                lineHeight: 1.55,
-                marginBottom: '20px'
-              }}>
-                From HD live camera monitoring on your smartphone to 24×7 uninterrupted home inverter power backup, we deliver turnkey installation across Davangere.
-              </p>
-
-              {/* 5 Checkmarks Grid */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                gap: '12px 16px',
-                marginBottom: '24px'
-              }}>
-                {[
-                  '100% Genuine Products',
-                  'Certified Expert Installation',
-                  'Official Warranty Support',
-                  'Doorstep Prompt Service',
-                  'Authorized Dealer Brands'
-                ].map((feat, idx) => (
-                  <div 
-                    key={idx}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      color: '#1e293b',
-                      fontWeight: 600,
-                      fontSize: '0.88rem'
-                    }}
-                  >
-                    <div style={{
-                      width: '22px',
-                      height: '22px',
-                      borderRadius: '50%',
-                      background: '#dcfce7',
-                      color: '#16a34a',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0
-                    }}>
-                      <Check size={14} strokeWidth={3} />
-                    </div>
-                    <span>{feat}</span>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={() => onOpenBooking()}
-                className="btn btn-primary"
-                style={{ borderRadius: '9999px', padding: '12px 24px', fontWeight: 700 }}
-              >
-                <Wrench size={18} />
-                <span>Request Doorstep Service</span>
-              </button>
+        {/* Main 2-Column Hero Split (Desktop Side-by-Side, Mobile Stacked) */}
+        <div className="hero-main-split">
+          {/* LEFT COLUMN: Badge, H1 Title, Subtitle, CTA Buttons, Trust Badges */}
+          <div className="hero-main-left">
+            {/* 1. Top Trust Badge */}
+            <div className="section-badge" style={{
+              background: 'rgba(239, 246, 255, 0.95)',
+              border: '1px solid #bfdbfe',
+              color: '#0284c7',
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              padding: '5px 15px',
+              borderRadius: '9999px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 2px 8px rgba(2, 132, 199, 0.08)',
+              marginBottom: '16px'
+            }}>
+              <Sparkles size={14} color="#0284c7" />
+              <span>Authorized Dealer · Trusted Since Years</span>
             </div>
 
-            {/* Right Column: Showcase Card with 3D Illustration & Floating Badges */}
+            {/* 2. Main Heading */}
+            <h1 style={{
+              fontSize: 'clamp(2.2rem, 3.8vw, 3.4rem)',
+              fontWeight: 800,
+              lineHeight: 1.15,
+              color: '#0f172a',
+              marginBottom: '16px',
+              letterSpacing: '-0.025em'
+            }}>
+              Reliable Power &amp;{' '}
+              <span style={{ position: 'relative', display: 'inline-block', color: '#0284c7' }}>
+                Smart Security
+                <svg
+                  viewBox="0 0 250 20"
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    bottom: '-6px',
+                    width: '100%',
+                    height: '14px',
+                    overflow: 'visible',
+                    pointerEvents: 'none'
+                  }}
+                >
+                  <path
+                    d="M 4 13 Q 125 1 246 11"
+                    fill="transparent"
+                    stroke="#eab308"
+                    strokeWidth="4.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>{' '}
+              Solutions for Every Home &amp; Business
+            </h1>
+            
+            {/* 3. Subtitle */}
+            <p style={{
+              fontSize: 'clamp(0.96rem, 1.8vw, 1.06rem)',
+              color: '#475569',
+              lineHeight: 1.6,
+              maxWidth: '560px',
+              marginBottom: '26px'
+            }}>
+              We specialize in genuine batteries, inverters, CCTV systems, and solar panels with professional installation and dependable after-sales support.
+            </p>
+
+            {/* 4. Action Buttons (Horizontal Row on Desktop, Full Width Stack on Mobile) */}
+            <div className="hero-cta-buttons">
+              {/* Button 1: Get Free Quote */}
+              <button
+                onClick={() => onOpenQuote ? onOpenQuote() : onOpenBooking()}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  background: '#04647a',
+                  color: '#ffffff',
+                  padding: '13px 26px',
+                  borderRadius: '9999px',
+                  fontWeight: 700,
+                  fontSize: '0.96rem',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(4, 100, 122, 0.25)',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.background = '#035264';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.background = '#04647a';
+                }}
+              >
+                <span>Get Free Quote</span>
+                <ArrowRight size={17} />
+              </button>
+
+              {/* Button 2: WhatsApp Now */}
+              <a
+                href={createWhatsAppLink(`Hello ${shopInfo.shopName}, I would like to get a free quote for CCTV, batteries, or inverter systems.`, shopInfo.whatsappPhone)}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  background: '#22c55e',
+                  color: '#ffffff',
+                  padding: '13px 26px',
+                  borderRadius: '9999px',
+                  fontWeight: 700,
+                  fontSize: '0.96rem',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 14px rgba(34, 197, 94, 0.24)',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.background = '#16a34a';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.background = '#22c55e';
+                }}
+              >
+                <MessageCircle size={18} />
+                <span>WhatsApp Now</span>
+              </a>
+
+              {/* Button 3: Call Now */}
+              <a
+                href={`tel:${shopInfo.phone}`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  background: '#ffffff',
+                  color: '#0f172a',
+                  padding: '13px 24px',
+                  borderRadius: '9999px',
+                  fontWeight: 700,
+                  fontSize: '0.96rem',
+                  textDecoration: 'none',
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.borderColor = '#cbd5e1';
+                  e.currentTarget.style.background = '#f8fafc';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = '#e2e8f0';
+                  e.currentTarget.style.background = '#ffffff';
+                }}
+              >
+                <Phone size={16} color="#0f172a" />
+                <span>Call Now</span>
+              </a>
+            </div>
+
+            {/* 5. Trust Badges Row */}
+            <div className="hero-trust-badges">
+              {[
+                'Genuine Products',
+                'Expert Installation',
+                'Warranty Support',
+                'Fast Service',
+                'Trusted Brands'
+              ].map((feat, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '7px',
+                    color: '#334155',
+                    fontWeight: 600,
+                    fontSize: '0.86rem'
+                  }}
+                >
+                  <div style={{
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    background: '#dcfce7',
+                    color: '#16a34a',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <Check size={12} strokeWidth={3.5} />
+                  </div>
+                  <span>{feat}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: 3D Smart Home Showcase Card */}
+          <div className="hero-main-right" style={{ width: '100%' }}>
             <div style={{
               background: '#ffffff',
-              border: '1px solid #e2e8f0',
-              borderRadius: '26px',
+              border: '1px solid rgba(226, 232, 240, 0.9)',
+              borderRadius: '28px',
               padding: '16px',
               position: 'relative',
-              boxShadow: '0 16px 36px -8px rgba(15, 23, 42, 0.1), 0 4px 12px rgba(15, 23, 42, 0.04)',
+              boxShadow: '0 20px 45px -10px rgba(15, 23, 42, 0.12), 0 4px 16px rgba(15, 23, 42, 0.04)',
               overflow: 'hidden'
             }}>
               {/* Top Right Rating Badge */}
@@ -427,7 +336,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                   boxShadow: '0 2px 6px rgba(245, 158, 11, 0.1)'
                 }}>
                   <Star size={14} fill="#f59e0b" color="#f59e0b" />
-                  <span style={{ color: '#0f172a' }}>4.9 / 5 Rated (81+ Reviews)</span>
+                  <span style={{ color: '#0f172a' }}>4.9 / 5 Rated</span>
                 </div>
               </div>
 
@@ -453,7 +362,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                   }}
                 />
 
-                {/* Floating Badge 1 - Top Left: Secured / HD CCTV Live */}
+                {/* Floating Badge 1 - Top Left: Power Backup / 24x7 Uptime */}
                 <div style={{
                   position: 'absolute',
                   top: '16px',
@@ -469,46 +378,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                   gap: '10px',
                   boxShadow: '0 10px 22px rgba(15, 23, 42, 0.14)',
                   animation: 'floatSlow 4s ease-in-out infinite'
-                }}>
-                  <div style={{
-                    width: '34px',
-                    height: '34px',
-                    borderRadius: '50%',
-                    background: '#e0f2fe',
-                    color: '#0284c7',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
-                    <ShieldCheck size={18} />
-                  </div>
-                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', lineHeight: 1 }}>
-                      Secured
-                    </div>
-                    <div style={{ fontSize: '0.88rem', color: '#0f172a', fontWeight: 800, marginTop: '3px', lineHeight: 1.1 }}>
-                      HD CCTV Live
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating Badge 2 - Bottom Right: Power Backup / 24x7 Uptime */}
-                <div style={{
-                  position: 'absolute',
-                  bottom: '16px',
-                  right: '16px',
-                  background: 'rgba(255, 255, 255, 0.95)',
-                  backdropFilter: 'blur(8px)',
-                  WebkitBackdropFilter: 'blur(8px)',
-                  border: '1px solid rgba(226, 232, 240, 0.9)',
-                  borderRadius: '16px',
-                  padding: '8px 14px 8px 10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  boxShadow: '0 10px 22px rgba(15, 23, 42, 0.14)',
-                  animation: 'floatSlow 4s ease-in-out infinite 2s'
                 }}>
                   <div style={{
                     width: '34px',
@@ -532,12 +401,53 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                     </div>
                   </div>
                 </div>
+
+                {/* Floating Badge 2 - Bottom Right: Secured / HD CCTV Live */}
+                <div style={{
+                  position: 'absolute',
+                  bottom: '16px',
+                  right: '16px',
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  border: '1px solid rgba(226, 232, 240, 0.9)',
+                  borderRadius: '16px',
+                  padding: '8px 14px 8px 10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  boxShadow: '0 10px 22px rgba(15, 23, 42, 0.14)',
+                  animation: 'floatSlow 4s ease-in-out infinite 2s'
+                }}>
+                  <div style={{
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '50%',
+                    background: '#e0f2fe',
+                    color: '#0284c7',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <ShieldCheck size={18} />
+                  </div>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', lineHeight: 1 }}>
+                      Secured
+                    </div>
+                    <div style={{ fontSize: '0.88rem', color: '#0f172a', fontWeight: 800, marginTop: '3px', lineHeight: 1.1 }}>
+                      HD CCTV Live
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* "WHAT WE DO" - Showcase (3-Column Grid on Desktop, Swipe Track on Mobile) */}
-          <div className="hero-showcase-container">
+        {/* "WHAT WE DO" - Showcase (3-Column Grid on Desktop, Swipe Track on Mobile) */}
+        <div className="hero-showcase-container">
             {/* Section Badge */}
             <div style={{
               display: 'inline-block',
@@ -1141,7 +1051,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
             </div>
           </div>
         </div>
-      </div>
 
       {/* Interactive Power Planner / Inverter Load Calculator Modal */}
       <PowerPlannerModal
