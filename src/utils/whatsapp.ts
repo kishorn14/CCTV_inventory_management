@@ -3,8 +3,8 @@ import { BookingFormData, Product } from '../types';
 export const SHOP_INFO = {
   shopName: "Meksha Solutions",
   tagline: "CCTV, Vehicle Batteries & Inverters",
-  phone: "+91 98450 12345",
-  whatsappNumber: "919845012345", // Phone without + or symbols for WhatsApp API
+  phone: "+91 96066 78763",
+  whatsappNumber: "919606678763", // Phone without + or symbols for WhatsApp API
   address: "Main Road, Opp. Bus Stand / City Center",
   city: "Bangalore & Surrounding Areas",
   email: "support@mekshasolutions.com",
@@ -16,8 +16,12 @@ export const SHOP_INFO = {
  * Creates a clean wa.me URL with pre-filled encoded text
  */
 export function createWhatsAppLink(message: string, phoneNumber: string = SHOP_INFO.whatsappNumber): string {
+  let cleanPhone = (phoneNumber || SHOP_INFO.whatsappNumber).replace(/[^0-9]/g, '');
+  if (cleanPhone.length === 10) {
+    cleanPhone = `91${cleanPhone}`;
+  }
   const encoded = encodeURIComponent(message);
-  return `https://wa.me/${phoneNumber}?text=${encoded}`;
+  return `https://wa.me/${cleanPhone}?text=${encoded}`;
 }
 
 /**

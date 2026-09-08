@@ -24,10 +24,10 @@ interface ShopContextType {
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  PRODUCTS: 'meksha_shop_products_v3',
-  SERVICES: 'meksha_shop_services_v3',
-  SHOP_INFO: 'meksha_shop_info_v3',
-  ADMIN_PASS: 'meksha_shop_admin_pass_v3'
+  PRODUCTS: 'meksha_shop_products_v4',
+  SERVICES: 'meksha_shop_services_v4',
+  SHOP_INFO: 'meksha_shop_info_v4',
+  ADMIN_PASS: 'meksha_shop_admin_pass_v4'
 };
 
 const DEFAULT_PASS = 'meksha@2026';
@@ -36,7 +36,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // 1. Products state with auto-migration / cleanup
   const [products, setProducts] = useState<Product[]>(() => {
     try {
-      // Clean up legacy v2 storage if present
+      // Clean up legacy v2/v3 storage if present
+      localStorage.removeItem('meksha_shop_products_v3');
+      localStorage.removeItem('meksha_shop_services_v3');
+      localStorage.removeItem('meksha_shop_info_v3');
       localStorage.removeItem('meksha_shop_products_v2');
       localStorage.removeItem('meksha_shop_services_v2');
       localStorage.removeItem('meksha_shop_products_v1');
@@ -79,6 +82,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const parsed = JSON.parse(saved);
         if (!parsed.googleSheetWebhookUrl) {
           parsed.googleSheetWebhookUrl = defaultWebhook;
+        }
+        if (parsed.whatsappPhone === '919845012345' || parsed.phone === '+91 98450 12345') {
+          parsed.phone = DEFAULT_SHOP_INFO.phone;
+          parsed.whatsappPhone = DEFAULT_SHOP_INFO.whatsappNumber;
         }
         return parsed;
       }

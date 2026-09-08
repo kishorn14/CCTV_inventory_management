@@ -199,7 +199,7 @@ export const AdminSettings: React.FC = () => {
               <input
                 type="text"
                 className="form-input"
-                placeholder="+91 98450 12345"
+                placeholder="+91 96066 78763"
                 value={formData.phone}
                 onChange={e => setFormData({ ...formData, phone: e.target.value })}
                 required
@@ -213,7 +213,7 @@ export const AdminSettings: React.FC = () => {
               <input
                 type="text"
                 className="form-input"
-                placeholder="919845012345 (with country code, no + or spaces)"
+                placeholder="919606678763 (with country code, no + or spaces)"
                 value={formData.whatsappPhone}
                 onChange={e => setFormData({ ...formData, whatsappPhone: e.target.value })}
                 required
