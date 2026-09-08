@@ -166,7 +166,7 @@ export const GoogleReviews: React.FC = () => {
         {/* Testimonial Card Container */}
         <div 
           style={{
-            maxWidth: '560px',
+            maxWidth: '740px',
             margin: '0 auto',
             position: 'relative'
           }}
@@ -179,10 +179,10 @@ export const GoogleReviews: React.FC = () => {
           <div 
             style={{
               background: '#ffffff',
-              borderRadius: '24px',
+              borderRadius: '26px',
               border: '1px solid #e2e8f0',
-              padding: '28px 24px 22px',
-              boxShadow: '0 10px 30px -5px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04)',
+              padding: '32px 28px 26px',
+              boxShadow: '0 12px 36px -8px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03)',
               textAlign: 'left',
               position: 'relative',
               transition: 'all 0.3s ease',

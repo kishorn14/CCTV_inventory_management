@@ -600,3 +600,170 @@ textarea {
   background: #cbd5e1;
   border-radius: 4px;
 }
+
+/* =========================================================
+   DESKTOP RESPONSIVE ENHANCEMENTS
+   Preserves 100% mobile experience, unlocks premium desktop layout
+   ========================================================= */
+
+/* Hero Action Buttons */
+.hero-cta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .hero-cta-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 580px;
+    gap: 12px;
+  }
+}
+
+/* "What We Do" Showcase Grid / Carousel */
+.hero-showcase-container {
+  max-width: 1160px;
+  margin: 40px auto 0 auto;
+  text-align: center;
+}
+
+.hero-swipe-hint {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  max-width: 480px;
+  margin: 0 auto 12px auto;
+  padding-left: 10px;
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  gap: 6px;
+}
+
+@media (min-width: 900px) {
+  .hero-swipe-hint {
+    display: none;
+  }
+}
+
+.hero-cards-track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 6px 12px 24px 12px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hero-cards-track::-webkit-scrollbar {
+  display: none;
+}
+
+.hero-card-item {
+  flex: 0 0 clamp(270px, 78vw, 315px);
+  height: 420px;
+  border-radius: 26px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 32px -8px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  scroll-snap-align: start;
+  text-align: left;
+  background: #0f172a;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+@media (min-width: 900px) {
+  .hero-cards-track {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 10px 0 30px 0;
+    overflow: visible;
+  }
+
+  .hero-card-item {
+    flex: auto;
+    height: 440px;
+  }
+
+  .hero-card-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.22), 0 8px 20px rgba(15, 23, 42, 0.08);
+  }
+}
+
+/* Planners 2-Column Banner Grid */
+.hero-planners-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 480px;
+  margin: 20px auto 36px auto;
+}
+
+@media (min-width: 768px) {
+  .hero-planners-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 1160px;
+    margin: 28px auto 44px auto;
+  }
+}
+
+/* Trust Checklist & Smart Home Split Section */
+.hero-trust-split-section {
+  max-width: 480px;
+  margin: 32px auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (min-width: 900px) {
+  .hero-trust-split-section {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 48px;
+    align-items: center;
+    max-width: 1160px;
+    margin: 48px auto 0 auto;
+    text-align: left;
+  }
+}
+
+/* Why Meksha Trust Split Section */
+.hero-why-split-section {
+  max-width: 480px;
+  margin: 40px auto 0 auto;
+  text-align: center;
+}
+
+.hero-why-split-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+@media (min-width: 900px) {
+  .hero-why-split-section {
+    max-width: 1160px;
+    margin: 50px auto 0 auto;
+  }
+
+  .hero-why-split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: stretch;
+    text-align: left;
+  }
+}
