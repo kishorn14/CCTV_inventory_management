@@ -128,3 +128,83 @@ export const DEFAULT_CCTV_PRICING: CctvPricingConfig = {
   installationPerCamera: 450
 };
 
+export interface BrandPartner {
+  id: string;
+  name: string;
+  tagline: string;
+  category: 'battery' | 'cctv';
+  image: string;
+  badge?: string;
+}
+
+export const DEFAULT_BRANDS: BrandPartner[] = [
+  // Battery Brands
+  {
+    id: 'brand-exide',
+    name: 'Exide',
+    tagline: 'Power That Lasts',
+    category: 'battery',
+    image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&q=80',
+    badge: 'Authorized Dealer'
+  },
+  {
+    id: 'brand-amaron',
+    name: 'Amaron',
+    tagline: 'Reliable Performance',
+    category: 'battery',
+    image: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=600&q=80',
+    badge: 'High Cranking'
+  },
+  {
+    id: 'brand-luminous',
+    name: 'Luminous',
+    tagline: 'India\'s #1 Inverter Battery',
+    category: 'battery',
+    image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80',
+    badge: 'Long Backup'
+  },
+  {
+    id: 'brand-livguard',
+    name: 'Livguard',
+    tagline: 'Smart Energy Solutions',
+    category: 'battery',
+    image: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=600&q=80',
+    badge: 'Heavy Duty'
+  },
+
+  // CCTV Brands
+  {
+    id: 'brand-cpplus',
+    name: 'CP PLUS',
+    tagline: 'Security Simplified',
+    category: 'cctv',
+    image: 'https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=600&q=80',
+    badge: 'Best Seller'
+  },
+  {
+    id: 'brand-hikvision',
+    name: 'Hikvision',
+    tagline: 'Advanced Monitoring & AI',
+    category: 'cctv',
+    image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80',
+    badge: 'Global Leader'
+  },
+  {
+    id: 'brand-dahua',
+    name: 'Dahua',
+    tagline: 'Smart AI Surveillance',
+    category: 'cctv',
+    image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80',
+    badge: '4K Ultra HD'
+  },
+  {
+    id: 'brand-unv',
+    name: 'UNV (Uniview)',
+    tagline: 'Intelligent Security',
+    category: 'cctv',
+    image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80',
+    badge: 'Smart Vision'
+  }
+];
+
+

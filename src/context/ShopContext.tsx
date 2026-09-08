@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product, ServiceItem, ShopContactInfo, CctvPricingConfig, DEFAULT_CCTV_PRICING } from '../types';
+import { Product, ServiceItem, ShopContactInfo, CctvPricingConfig, DEFAULT_CCTV_PRICING, BrandPartner, DEFAULT_BRANDS } from '../types';
 import { PRODUCTS as DEFAULT_PRODUCTS, SERVICES as DEFAULT_SERVICES } from '../data/shopData';
 import { SHOP_INFO as DEFAULT_SHOP_INFO } from '../utils/whatsapp';
 
 interface ShopContextType {
   products: Product[];
   services: ServiceItem[];
+  brands: BrandPartner[];
   shopInfo: ShopContactInfo;
   cctvPricing: CctvPricingConfig;
   adminPassword: string;
@@ -15,6 +16,10 @@ interface ShopContextType {
   addService: (service: Omit<ServiceItem, 'id'>) => void;
   updateService: (id: string, updated: Partial<ServiceItem>) => void;
   deleteService: (id: string) => void;
+  addBrand: (brand: Omit<BrandPartner, 'id'>) => void;
+  updateBrand: (id: string, updated: Partial<BrandPartner>) => void;
+  deleteBrand: (id: string) => void;
+  resetBrands: () => void;
   updateShopInfo: (info: ShopContactInfo) => void;
   updateCctvPricing: (pricing: CctvPricingConfig) => void;
   resetCctvPricing: () => void;
@@ -29,6 +34,7 @@ const ShopContext = createContext<ShopContextType | undefined>(undefined);
 const STORAGE_KEYS = {
   PRODUCTS: 'meksha_shop_products_v4',
   SERVICES: 'meksha_shop_services_v4',
+  BRANDS: 'meksha_shop_brands_v4',
   SHOP_INFO: 'meksha_shop_info_v4',
   CCTV_PRICING: 'meksha_cctv_pricing_v4',
   ADMIN_PASS: 'meksha_shop_admin_pass_v4'
@@ -77,7 +83,21 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   });
 
-  // 3. Shop Info state
+  // 3. Trusted Brand Partners state
+  const [brands, setBrands] = useState<BrandPartner[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.BRANDS);
+      if (saved) {
+        const parsed: BrandPartner[] = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+      return DEFAULT_BRANDS;
+    } catch {
+      return DEFAULT_BRANDS;
+    }
+  });
+
+  // 4. Shop Info state
   const [shopInfo, setShopInfo] = useState<ShopContactInfo>(() => {
     const defaultWebhook = 'https://script.google.com/macros/s/AKfycbzXmQwZ0f3EzFWkvWy_hqNBRpBy8ETYI9Rdql9Q6P3RXxlJEaIN_jVl_Vnjgkb_2x13mw/exec';
     try {
@@ -173,6 +193,14 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     try {
+      localStorage.setItem(STORAGE_KEYS.BRANDS, JSON.stringify(brands));
+    } catch (e) {
+      console.error('Failed to save brands to localStorage', e);
+    }
+  }, [brands]);
+
+  useEffect(() => {
+    try {
       localStorage.setItem(STORAGE_KEYS.SHOP_INFO, JSON.stringify(shopInfo));
     } catch (e) {
       console.error('Failed to save shop info to localStorage', e);
@@ -223,6 +251,24 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setServices(prev => prev.filter(s => s.id !== id));
   };
 
+  // Brand CRUD
+  const addBrand = (newBrand: Omit<BrandPartner, 'id'>) => {
+    const id = `brand-${Date.now()}`;
+    setBrands(prev => [ ...prev, { ...newBrand, id } ]);
+  };
+
+  const updateBrand = (id: string, updated: Partial<BrandPartner>) => {
+    setBrands(prev => prev.map(b => b.id === id ? { ...b, ...updated } : b));
+  };
+
+  const deleteBrand = (id: string) => {
+    setBrands(prev => prev.filter(b => b.id !== id));
+  };
+
+  const resetBrands = () => {
+    setBrands(DEFAULT_BRANDS);
+  };
+
   // Shop Info, CCTV Pricing & Password
   const updateShopInfo = (newInfo: ShopContactInfo) => {
     setShopInfo(newInfo);
@@ -244,6 +290,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const resetToDefaults = () => {
     setProducts(DEFAULT_PRODUCTS);
     setServices(DEFAULT_SERVICES);
+    setBrands(DEFAULT_BRANDS);
     setCctvPricing(DEFAULT_CCTV_PRICING);
     setShopInfo({
       shopName: DEFAULT_SHOP_INFO.shopName,
@@ -268,6 +315,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return JSON.stringify({
       products,
       services,
+      brands,
       shopInfo,
       cctvPricing,
       exportedAt: new Date().toISOString()
@@ -282,6 +330,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       if (parsed.services && Array.isArray(parsed.services)) {
         setServices(parsed.services);
+      }
+      if (parsed.brands && Array.isArray(parsed.brands)) {
+        setBrands(parsed.brands);
       }
       if (parsed.shopInfo) {
         setShopInfo(parsed.shopInfo);
@@ -299,6 +350,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <ShopContext.Provider value={{
       products,
       services,
+      brands,
       shopInfo,
       cctvPricing,
       adminPassword,
@@ -308,6 +360,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       addService,
       updateService,
       deleteService,
+      addBrand,
+      updateBrand,
+      deleteBrand,
+      resetBrands,
       updateShopInfo,
       updateCctvPricing,
       resetCctvPricing,

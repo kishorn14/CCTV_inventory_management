@@ -7,10 +7,12 @@ import {
   Store,
   LogOut,
   ShieldCheck,
-  Video
+  Video,
+  Award
 } from 'lucide-react';
 import { AdminLogin } from './AdminLogin';
 import { AdminProducts } from './AdminProducts';
+import { AdminBrands } from './AdminBrands';
 import { AdminServices } from './AdminServices';
 import { AdminCctvPricing } from './AdminCctvPricing';
 import { AdminSettings } from './AdminSettings';
@@ -27,7 +29,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
     return sessionStorage.getItem('mekha_admin_logged_in') === 'true';
   });
 
-  const [activeTab, setActiveTab] = useState<'products' | 'services' | 'cctv_pricing' | 'settings' | 'backup'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'brands' | 'cctv_pricing' | 'services' | 'settings' | 'backup'>('products');
 
   const handleLogout = () => {
     sessionStorage.removeItem('mekha_admin_logged_in');
@@ -40,6 +42,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
 
   const navTabs = [
     { id: 'products', label: 'Products & Pricing', icon: ShoppingBag },
+    { id: 'brands', label: 'Brand Partners', icon: Award },
     { id: 'cctv_pricing', label: 'CCTV Estimator Pricing', icon: Video },
     { id: 'services', label: 'Services & AMC', icon: Wrench },
     { id: 'settings', label: 'Shop & WhatsApp Details', icon: Settings },
@@ -167,6 +170,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
 
         {/* Tab Content */}
         {activeTab === 'products' && <AdminProducts />}
+        {activeTab === 'brands' && <AdminBrands />}
         {activeTab === 'cctv_pricing' && <AdminCctvPricing />}
         {activeTab === 'services' && <AdminServices />}
         {activeTab === 'settings' && <AdminSettings />}
