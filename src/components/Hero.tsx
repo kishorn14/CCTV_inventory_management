@@ -308,6 +308,313 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
             </a>
           </div>
 
+          {/* "WHAT WE DO" - Horizontal Scrollable Showcase (CCTV, Batteries, Inverters) */}
+          <div style={{
+            maxWidth: '860px',
+            margin: '40px auto 0 auto',
+            textAlign: 'center'
+          }}>
+            {/* Section Badge */}
+            <div style={{
+              display: 'inline-block',
+              background: '#fef9c3',
+              border: '1px solid #fef08a',
+              color: '#854d0e',
+              fontWeight: 800,
+              fontSize: '0.74rem',
+              letterSpacing: '0.08em',
+              padding: '4px 14px',
+              borderRadius: '9999px',
+              textTransform: 'uppercase',
+              marginBottom: '10px'
+            }}>
+              What We Do
+            </div>
+
+            {/* Main Title */}
+            <h2 style={{
+              fontSize: 'clamp(1.5rem, 5vw, 2.2rem)',
+              fontWeight: 800,
+              color: '#0f172a',
+              lineHeight: 1.2,
+              marginBottom: '10px',
+              letterSpacing: '-0.02em'
+            }}>
+              Premium Power &amp; Security, Under One Roof
+            </h2>
+
+            {/* Subtitle */}
+            <p style={{
+              fontSize: '0.9rem',
+              color: '#475569',
+              lineHeight: 1.55,
+              maxWidth: '540px',
+              margin: '0 auto 16px auto'
+            }}>
+              Genuine products, certified installation and end-to-end after-sales support.
+            </p>
+
+            {/* Swipe indicator */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              maxWidth: '480px',
+              margin: '0 auto 12px auto',
+              paddingLeft: '10px',
+              color: '#64748b',
+              fontSize: '0.82rem',
+              fontWeight: 600,
+              gap: '6px'
+            }}>
+              <span>Swipe to explore</span>
+              <ArrowRight size={14} />
+            </div>
+
+            {/* Horizontal Scrollable Carousel Track */}
+            <div 
+              style={{
+                display: 'flex',
+                gap: '16px',
+                overflowX: 'auto',
+                scrollSnapType: 'x mandatory',
+                WebkitOverflowScrolling: 'touch',
+                padding: '6px 12px 24px 12px',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none'
+              }}
+            >
+              {rangeCards.map((card) => {
+                const Icon = card.icon;
+                return (
+                  <div
+                    key={card.id}
+                    style={{
+                      flex: '0 0 clamp(270px, 78vw, 315px)',
+                      height: '420px',
+                      borderRadius: '26px',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      boxShadow: '0 12px 32px -8px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.05)',
+                      border: '1px solid rgba(226, 232, 240, 0.8)',
+                      scrollSnapAlign: 'start',
+                      textAlign: 'left',
+                      background: '#0f172a'
+                    }}
+                  >
+                    {/* Background Product Image */}
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover'
+                      }}
+                    />
+
+                    {/* Dark Gradient Overlay for Readability */}
+                    <div style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(to top, rgba(15, 23, 42, 0.96) 0%, rgba(15, 23, 42, 0.72) 40%, rgba(15, 23, 42, 0.15) 75%, transparent 100%)'
+                    }} />
+
+                    {/* Top-Left Circular Category Icon */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '16px',
+                      left: '16px',
+                      width: '42px',
+                      height: '42px',
+                      borderRadius: '50%',
+                      background: '#04647a',
+                      color: '#ffffff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                      border: '1px solid rgba(255,255,255,0.2)'
+                    }}>
+                      <Icon size={20} />
+                    </div>
+
+                    {/* Bottom Text Content & Action Button */}
+                    <div style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      padding: '22px 18px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '4px'
+                    }}>
+                      <h3 style={{
+                        fontSize: '1.45rem',
+                        fontWeight: 800,
+                        color: '#facc15',
+                        margin: 0,
+                        lineHeight: 1.15,
+                        letterSpacing: '-0.01em',
+                        textShadow: '0 2px 8px rgba(0,0,0,0.4)'
+                      }}>
+                        {card.title}
+                      </h3>
+                      <p style={{
+                        fontSize: '0.84rem',
+                        color: '#f8fafc',
+                        lineHeight: 1.35,
+                        margin: '0 0 12px 0',
+                        opacity: 0.95,
+                        fontWeight: 500
+                      }}>
+                        {card.subtitle}
+                      </p>
+
+                      <a
+                        href="#products"
+                        onClick={() => onSelectCategory(card.id)}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                          background: 'rgba(0, 0, 0, 0.4)',
+                          backdropFilter: 'blur(8px)',
+                          WebkitBackdropFilter: 'blur(8px)',
+                          border: '1.5px solid #eab308',
+                          color: '#fef08a',
+                          fontWeight: 700,
+                          fontSize: '0.86rem',
+                          padding: '10px 18px',
+                          borderRadius: '9999px',
+                          textDecoration: 'none',
+                          width: 'fit-content',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                          transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = '#eab308';
+                          e.currentTarget.style.color = '#0f172a';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)';
+                          e.currentTarget.style.color = '#fef08a';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                      >
+                        <span>{card.btnText}</span>
+                        <ArrowRight size={15} />
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Power Planner Banner Card (Interactive Load Calculator Trigger) */}
+            <div 
+              onClick={() => setIsPowerPlannerOpen(true)}
+              style={{
+                maxWidth: '480px',
+                margin: '20px auto 36px auto',
+                background: 'linear-gradient(135deg, #024b86 0%, #03667c 100%)',
+                borderRadius: '24px',
+                padding: '22px 18px',
+                color: '#ffffff',
+                boxShadow: '0 12px 30px rgba(2, 75, 134, 0.22)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '14px',
+                textAlign: 'left',
+                transition: 'all 0.2s ease',
+                border: '1px solid rgba(255, 255, 255, 0.12)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 16px 36px rgba(2, 75, 134, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(2, 75, 134, 0.22)';
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '16px',
+                  background: 'rgba(255, 255, 255, 0.12)',
+                  backdropFilter: 'blur(6px)',
+                  WebkitBackdropFilter: 'blur(6px)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <Calculator size={24} color="#fde047" />
+                </div>
+                <div>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    color: '#fde047',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    marginBottom: '4px'
+                  }}>
+                    <Gauge size={13} />
+                    <span>Power Planner</span>
+                  </div>
+                  <h3 style={{
+                    fontSize: '1.12rem',
+                    fontWeight: 800,
+                    color: '#ffffff',
+                    lineHeight: 1.25,
+                    margin: '0 0 4px 0',
+                    letterSpacing: '-0.01em'
+                  }}>
+                    Not sure what inverter size you need?
+                  </h3>
+                  <p style={{
+                    fontSize: '0.8rem',
+                    color: '#e2e8f0',
+                    lineHeight: 1.35,
+                    margin: 0,
+                    opacity: 0.9
+                  }}>
+                    Use our free Load Calculator — pick your appliances &amp; get an instant recommendation.
+                  </p>
+                </div>
+              </div>
+
+              <div style={{
+                width: '42px',
+                height: '42px',
+                borderRadius: '50%',
+                background: '#eab308',
+                color: '#0f172a',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: '0 4px 12px rgba(234, 179, 8, 0.35)'
+              }}>
+                <ArrowRight size={18} strokeWidth={2.5} />
+              </div>
+            </div>
+          </div>
+
           {/* Trust Checklist & Smart Home Showcase Visual (Shakthi Agencies inspired) */}
           <div style={{
             maxWidth: '480px',
@@ -789,313 +1096,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                   </div>
                 );
               })}
-            </div>
-          </div>
-        </div>
-
-        {/* "WHAT WE DO" - Horizontal Scrollable Showcase (from shakthiagencies.in) */}
-        <div style={{
-          maxWidth: '860px',
-          margin: '40px auto 0 auto',
-          textAlign: 'center'
-        }}>
-          {/* Section Badge */}
-          <div style={{
-            display: 'inline-block',
-            background: '#fef9c3',
-            border: '1px solid #fef08a',
-            color: '#854d0e',
-            fontWeight: 800,
-            fontSize: '0.74rem',
-            letterSpacing: '0.08em',
-            padding: '4px 14px',
-            borderRadius: '9999px',
-            textTransform: 'uppercase',
-            marginBottom: '10px'
-          }}>
-            What We Do
-          </div>
-
-          {/* Main Title */}
-          <h2 style={{
-            fontSize: 'clamp(1.5rem, 5vw, 2.2rem)',
-            fontWeight: 800,
-            color: '#0f172a',
-            lineHeight: 1.2,
-            marginBottom: '10px',
-            letterSpacing: '-0.02em'
-          }}>
-            Premium Power &amp; Security, Under One Roof
-          </h2>
-
-          {/* Subtitle */}
-          <p style={{
-            fontSize: '0.9rem',
-            color: '#475569',
-            lineHeight: 1.55,
-            maxWidth: '540px',
-            margin: '0 auto 16px auto'
-          }}>
-            Genuine products, certified installation and end-to-end after-sales support.
-          </p>
-
-          {/* Swipe indicator */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            maxWidth: '480px',
-            margin: '0 auto 12px auto',
-            paddingLeft: '10px',
-            color: '#64748b',
-            fontSize: '0.82rem',
-            fontWeight: 600,
-            gap: '6px'
-          }}>
-            <span>Swipe to explore</span>
-            <ArrowRight size={14} />
-          </div>
-
-          {/* Horizontal Scrollable Carousel Track */}
-          <div 
-            style={{
-              display: 'flex',
-              gap: '16px',
-              overflowX: 'auto',
-              scrollSnapType: 'x mandatory',
-              WebkitOverflowScrolling: 'touch',
-              padding: '6px 12px 24px 12px',
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none'
-            }}
-          >
-            {rangeCards.map((card) => {
-              const Icon = card.icon;
-              return (
-                <div
-                  key={card.id}
-                  style={{
-                    flex: '0 0 clamp(270px, 78vw, 315px)',
-                    height: '420px',
-                    borderRadius: '26px',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    boxShadow: '0 12px 32px -8px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.05)',
-                    border: '1px solid rgba(226, 232, 240, 0.8)',
-                    scrollSnapAlign: 'start',
-                    textAlign: 'left',
-                    background: '#0f172a'
-                  }}
-                >
-                  {/* Background Product Image */}
-                  <img
-                    src={card.image}
-                    alt={card.title}
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover'
-                    }}
-                  />
-
-                  {/* Dark Gradient Overlay for Readability */}
-                  <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(15, 23, 42, 0.96) 0%, rgba(15, 23, 42, 0.72) 40%, rgba(15, 23, 42, 0.15) 75%, transparent 100%)'
-                  }} />
-
-                  {/* Top-Left Circular Category Icon */}
-                  <div style={{
-                    position: 'absolute',
-                    top: '16px',
-                    left: '16px',
-                    width: '42px',
-                    height: '42px',
-                    borderRadius: '50%',
-                    background: '#04647a',
-                    color: '#ffffff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
-                    border: '1px solid rgba(255,255,255,0.2)'
-                  }}>
-                    <Icon size={20} />
-                  </div>
-
-                  {/* Bottom Text Content & Action Button */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    padding: '22px 18px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '4px'
-                  }}>
-                    <h3 style={{
-                      fontSize: '1.45rem',
-                      fontWeight: 800,
-                      color: '#facc15',
-                      margin: 0,
-                      lineHeight: 1.15,
-                      letterSpacing: '-0.01em',
-                      textShadow: '0 2px 8px rgba(0,0,0,0.4)'
-                    }}>
-                      {card.title}
-                    </h3>
-                    <p style={{
-                      fontSize: '0.84rem',
-                      color: '#f8fafc',
-                      lineHeight: 1.35,
-                      margin: '0 0 12px 0',
-                      opacity: 0.95,
-                      fontWeight: 500
-                    }}>
-                      {card.subtitle}
-                    </p>
-
-                    <a
-                      href="#products"
-                      onClick={() => onSelectCategory(card.id)}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '6px',
-                        background: 'rgba(0, 0, 0, 0.4)',
-                        backdropFilter: 'blur(8px)',
-                        WebkitBackdropFilter: 'blur(8px)',
-                        border: '1.5px solid #eab308',
-                        color: '#fef08a',
-                        fontWeight: 700,
-                        fontSize: '0.86rem',
-                        padding: '10px 18px',
-                        borderRadius: '9999px',
-                        textDecoration: 'none',
-                        width: 'fit-content',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
-                        transition: 'all 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = '#eab308';
-                        e.currentTarget.style.color = '#0f172a';
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'rgba(0, 0, 0, 0.4)';
-                        e.currentTarget.style.color = '#fef08a';
-                        e.currentTarget.style.transform = 'translateY(0)';
-                      }}
-                    >
-                      <span>{card.btnText}</span>
-                      <ArrowRight size={15} />
-                    </a>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Power Planner Banner Card (Interactive Load Calculator Trigger) */}
-          <div 
-            onClick={() => setIsPowerPlannerOpen(true)}
-            style={{
-              maxWidth: '480px',
-              margin: '20px auto 36px auto',
-              background: 'linear-gradient(135deg, #024b86 0%, #03667c 100%)',
-              borderRadius: '24px',
-              padding: '22px 18px',
-              color: '#ffffff',
-              boxShadow: '0 12px 30px rgba(2, 75, 134, 0.22)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '14px',
-              textAlign: 'left',
-              transition: 'all 0.2s ease',
-              border: '1px solid rgba(255, 255, 255, 0.12)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 16px 36px rgba(2, 75, 134, 0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 12px 30px rgba(2, 75, 134, 0.22)';
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <div style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '16px',
-                background: 'rgba(255, 255, 255, 0.12)',
-                backdropFilter: 'blur(6px)',
-                WebkitBackdropFilter: 'blur(6px)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
-              }}>
-                <Calculator size={24} color="#fde047" />
-              </div>
-              <div>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  color: '#fde047',
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  marginBottom: '4px'
-                }}>
-                  <Gauge size={13} />
-                  <span>Power Planner</span>
-                </div>
-                <h3 style={{
-                  fontSize: '1.12rem',
-                  fontWeight: 800,
-                  color: '#ffffff',
-                  lineHeight: 1.25,
-                  margin: '0 0 4px 0',
-                  letterSpacing: '-0.01em'
-                }}>
-                  Not sure what inverter size you need?
-                </h3>
-                <p style={{
-                  fontSize: '0.8rem',
-                  color: '#e2e8f0',
-                  lineHeight: 1.35,
-                  margin: 0,
-                  opacity: 0.9
-                }}>
-                  Use our free Load Calculator — pick your appliances &amp; get an instant recommendation.
-                </p>
-              </div>
-            </div>
-
-            <div style={{
-              width: '42px',
-              height: '42px',
-              borderRadius: '50%',
-              background: '#eab308',
-              color: '#0f172a',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              boxShadow: '0 4px 12px rgba(234, 179, 8, 0.35)'
-            }}>
-              <ArrowRight size={18} strokeWidth={2.5} />
             </div>
           </div>
         </div>
