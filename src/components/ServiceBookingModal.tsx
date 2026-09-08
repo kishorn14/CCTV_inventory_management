@@ -12,7 +12,13 @@ import {
   Phone, 
   User,
   ChevronDown,
-  Check
+  Check,
+  Locate,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  Navigation,
+  ExternalLink
 } from 'lucide-react';
 import { CategoryType } from '../types';
 import { useShop } from '../context/ShopContext';
@@ -73,6 +79,11 @@ export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
   const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState<boolean>(false);
   const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState<boolean>(false);
 
+  // GPS Location State
+  const [gpsCoordinates, setGpsCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+  const [isDetectingLocation, setIsDetectingLocation] = useState<boolean>(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
+
   useEffect(() => {
     if (initialCategory) {
       setCategory(initialCategory);
@@ -85,6 +96,56 @@ export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
       setServiceType(DEFAULT_SERVICE_OPTIONS[category][0]);
     }
   }, [category]);
+
+  // Detect Live GPS Location
+  const handleDetectLocation = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setLocationError(null);
+
+    if (!('geolocation' in navigator)) {
+      setLocationError('Geolocation is not supported by your browser. Please type your address manually.');
+      return;
+    }
+
+    setIsDetectingLocation(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        setGpsCoordinates({ lat, lng });
+        setIsDetectingLocation(false);
+
+        // Try reverse geocoding via Nominatim OpenStreetMap API
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`, {
+            headers: { 'Accept-Language': 'en' }
+          });
+          const data = await res.json();
+          if (data && data.display_name) {
+            setAddress(data.display_name);
+          } else {
+            setAddress(`📍 Live GPS Site Location (Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)})`);
+          }
+        } catch {
+          setAddress(`📍 Live GPS Site Location (Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)})`);
+        }
+      },
+      (err) => {
+        setIsDetectingLocation(false);
+        if (err.code === err.PERMISSION_DENIED) {
+          setLocationError('Location permission denied. Please allow location access in your browser or type your address.');
+        } else if (err.code === err.POSITION_UNAVAILABLE) {
+          setLocationError('Location information is unavailable. Please type your address.');
+        } else if (err.code === err.TIMEOUT) {
+          setLocationError('Location request timed out. Please try again or type your address.');
+        } else {
+          setLocationError('Unable to detect location. Please type your address.');
+        }
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+    );
+  };
 
   if (!isOpen) return null;
 
@@ -103,19 +164,21 @@ export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
     };
 
     const categoryName = categoryLabels[category] || category;
+    const mapsLink = gpsCoordinates ? `https://maps.google.com/?q=${gpsCoordinates.lat},${gpsCoordinates.lng}` : null;
 
     const message = `🛠️ *NEW SERVICE / INSTALLATION BOOKING*
 *Shop:* ${shopInfo.shopName}
 ---------------------------------
 👤 *Customer Name:* ${customerName}
 📞 *Phone Number:* ${phoneNumber}
-📍 *Location / Address:* ${address}
+📍 *Service Address / Landmark:* ${address}
+${mapsLink ? `🗺️ *Live GPS Map Link:* ${mapsLink}` : `📌 _(Tip: You can also tap 📎 > 'Location' in WhatsApp to send your live pin)_`}
 🏷️ *Service Category:* ${categoryName}
 🔧 *Service Type:* ${serviceType}
 ⏰ *Preferred Date / Time:* ${preferredTime || 'As soon as possible'}
 ${notes ? `📝 *Special Notes:* ${notes}` : ''}
 ---------------------------------
-_Sent via ${shopInfo.shopName} Online Portal_`;
+_Sent via ${shopInfo.shopName} Doorstep Portal_`;
 
     const waUrl = createWhatsAppLink(message, shopInfo.whatsappPhone);
 
@@ -123,11 +186,11 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
     sendLeadToGoogleSheets(shopInfo.googleSheetWebhookUrl, {
       customerName,
       phoneNumber,
-      address,
+      address: mapsLink ? `${address} [GPS: ${mapsLink}]` : address,
       category: categoryName,
       serviceType,
       preferredTime: preferredTime || 'As soon as possible',
-      notes,
+      notes: notes ? (mapsLink ? `${notes} (GPS: ${mapsLink})` : notes) : (mapsLink ? `GPS: ${mapsLink}` : undefined),
       source: 'Doorstep Service Booking Form',
       status: 'Pending ⏳'
     });
@@ -416,19 +479,123 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
               </div>
             </div>
 
-            {/* Address & Landmark */}
+            {/* Address & Landmark with Live GPS Auto-Detect */}
             <div className="form-group">
-              <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <MapPin size={14} color="#d97706" /> Service Address / Area Landmark *
-              </label>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: 0 }}>
+                  <MapPin size={14} color="#d97706" /> Service Address / Area Landmark *
+                </label>
+
+                {/* GPS Auto-Detect Button */}
+                <button
+                  type="button"
+                  onClick={handleDetectLocation}
+                  disabled={isDetectingLocation}
+                  style={{
+                    background: gpsCoordinates ? '#ecfdf5' : '#eff6ff',
+                    border: gpsCoordinates ? '1px solid #a7f3d0' : '1px solid #bfdbfe',
+                    color: gpsCoordinates ? '#059669' : '#1d4ed8',
+                    padding: '4px 10px',
+                    borderRadius: '6px',
+                    fontSize: '0.74rem',
+                    fontWeight: 700,
+                    cursor: isDetectingLocation ? 'wait' : 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.03)'
+                  }}
+                  title="Detect and attach your current GPS coordinates to the WhatsApp message"
+                >
+                  {isDetectingLocation ? (
+                    <>
+                      <Loader2 size={12} className="spin" />
+                      <span>Detecting GPS...</span>
+                    </>
+                  ) : gpsCoordinates ? (
+                    <>
+                      <CheckCircle2 size={12} color="#059669" />
+                      <span>GPS Attached ✅</span>
+                    </>
+                  ) : (
+                    <>
+                      <Locate size={12} color="#1d4ed8" />
+                      <span>📍 Use Live GPS</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
               <input
                 type="text"
                 className="form-input"
-                placeholder="e.g. #45, 2nd Main, Near Post Office"
+                placeholder="e.g. #45, 2nd Main, Near Post Office (or click 'Use Live GPS')"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 required
               />
+
+              {/* GPS Confirmation Card */}
+              {gpsCoordinates && (
+                <div style={{
+                  marginTop: '6px',
+                  padding: '7px 12px',
+                  borderRadius: '8px',
+                  background: '#ecfdf5',
+                  border: '1px solid #a7f3d0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  fontSize: '0.76rem',
+                  color: '#065f46'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Navigation size={13} color="#059669" />
+                    <span>
+                      <strong>GPS Location Attached:</strong> ({gpsCoordinates.lat.toFixed(4)}, {gpsCoordinates.lng.toFixed(4)})
+                    </span>
+                  </div>
+                  <a 
+                    href={`https://maps.google.com/?q=${gpsCoordinates.lat},${gpsCoordinates.lng}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: '#047857',
+                      fontWeight: 700,
+                      textDecoration: 'none',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '3px',
+                      background: '#d1fae5',
+                      padding: '2px 8px',
+                      borderRadius: '4px'
+                    }}
+                  >
+                    <span>Test Map Pin</span>
+                    <ExternalLink size={10} />
+                  </a>
+                </div>
+              )}
+
+              {/* Location Error Message */}
+              {locationError && (
+                <div style={{
+                  marginTop: '6px',
+                  padding: '6px 10px',
+                  borderRadius: '6px',
+                  background: '#fef2f2',
+                  border: '1px solid #fecaca',
+                  fontSize: '0.74rem',
+                  color: '#991b1b',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}>
+                  <AlertCircle size={14} color="#dc2626" style={{ flexShrink: 0 }} />
+                  <span>{locationError}</span>
+                </div>
+              )}
             </div>
 
             {/* Preferred Time Custom Dropdown - 100% Contained */}

@@ -45,6 +45,8 @@ export interface BookingFormData {
   serviceType: string;
   preferredTime: string;
   notes?: string;
+  locationMapUrl?: string;
+  gpsCoordinates?: { lat: number; lng: number };
 }
 
 export interface ShopContactInfo {

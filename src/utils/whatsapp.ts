@@ -38,19 +38,21 @@ export function formatBookingMessage(booking: BookingFormData): string {
   };
 
   const categoryName = categoryLabels[booking.category] || booking.category;
+  const mapsLink = booking.locationMapUrl || (booking.gpsCoordinates ? `https://maps.google.com/?q=${booking.gpsCoordinates.lat},${booking.gpsCoordinates.lng}` : null);
 
   return `🛠️ *NEW SERVICE / INSTALLATION BOOKING*
 *Shop:* ${SHOP_INFO.shopName}
 ---------------------------------
 👤 *Customer Name:* ${booking.customerName}
 📞 *Phone Number:* ${booking.phoneNumber}
-📍 *Location / Address:* ${booking.address}
+📍 *Service Address:* ${booking.address}
+${mapsLink ? `🗺️ *Live GPS Map Location:* ${mapsLink}` : `📌 _(Tip: Tap 📎 > 'Location' in WhatsApp to send exact live pin)_`}
 🏷️ *Service Category:* ${categoryName}
 🔧 *Service Type:* ${booking.serviceType}
 ⏰ *Preferred Date / Time:* ${booking.preferredTime || 'As soon as possible'}
 ${booking.notes ? `📝 *Special Notes:* ${booking.notes}` : ''}
 ---------------------------------
-_Sent via ${SHOP_INFO.shopName} Online Portal_`;
+_Sent via ${SHOP_INFO.shopName} Doorstep Portal_`;
 }
 
 /**
