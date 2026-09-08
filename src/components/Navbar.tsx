@@ -14,14 +14,15 @@ import { createWhatsAppLink } from '../utils/whatsapp';
 
 interface NavbarProps {
   onOpenBooking: () => void;
+  onOpenProducts?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts }) => {
   const { shopInfo } = useShop();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { label: 'Products', href: '#products', icon: ShoppingBag },
+    { label: 'Products', href: '#products', icon: ShoppingBag, isProducts: true },
     { label: 'Cost Estimator', href: '#estimator', icon: Calculator },
     { label: 'Why Us', href: '#why-us', icon: Shield },
     { label: 'Contact', href: '#contact', icon: MapPin },
@@ -82,6 +83,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               <a
                 key={link.label}
                 href={link.href}
+                onClick={() => {
+                  if (link.isProducts && onOpenProducts) {
+                    onOpenProducts();
+                  }
+                }}
                 style={{
                   color: '#334155',
                   fontSize: '0.92rem',
@@ -157,7 +163,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
                 <a
                   key={link.label}
                   href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (link.isProducts && onOpenProducts) {
+                      onOpenProducts();
+                    }
+                  }}
                   style={{
                     display: 'flex',
                     alignItems: 'center',

@@ -9,7 +9,8 @@ import {
   Camera,
   BatteryCharging,
   Zap,
-  Eye
+  Eye,
+  X
 } from 'lucide-react';
 import { Product, CategoryType } from '../types';
 import { CATEGORIES } from '../data/shopData';
@@ -20,12 +21,14 @@ interface ProductCatalogProps {
   selectedCategory: CategoryType;
   onSelectCategory: (cat: CategoryType) => void;
   onViewProduct: (product: Product) => void;
+  onClose?: () => void;
 }
 
 export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   selectedCategory,
   onSelectCategory,
-  onViewProduct
+  onViewProduct,
+  onClose
 }) => {
   const { products, shopInfo } = useShop();
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,15 +54,52 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   };
 
   return (
-    <section id="products" className="section-padding" style={{ position: 'relative' }}>
+    <section id="products" className="section-padding" style={{ position: 'relative', scrollMarginTop: '80px' }}>
       <div className="container">
         {/* Section Header */}
-        <div className="section-header">
+        <div className="section-header" style={{ position: 'relative' }}>
+          {onClose && (
+            <div style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              marginBottom: '10px'
+            }}>
+              <button
+                onClick={onClose}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: '#f1f5f9',
+                  border: '1px solid #cbd5e1',
+                  color: '#475569',
+                  borderRadius: '9999px',
+                  padding: '6px 14px',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#e2e8f0';
+                  e.currentTarget.style.color = '#0f172a';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#f1f5f9';
+                  e.currentTarget.style.color = '#475569';
+                }}
+              >
+                <X size={15} />
+                <span>Hide Catalog</span>
+              </button>
+            </div>
+          )}
+
           <div className="section-badge">
-            <Tag size={14} /> Genuine Products & Authorized Warranties
+            <Tag size={14} /> Genuine Products &amp; Authorized Warranties
           </div>
           <h2 className="section-title">
-            Explore Our <span className="text-gradient">Products & Solutions</span>
+            Explore Our <span className="text-gradient">Products &amp; Solutions</span>
           </h2>
           <p className="section-subtitle">
             Browse bestselling CCTV cameras, vehicle batteries, and home inverter systems. Click to inquire or order directly via WhatsApp.

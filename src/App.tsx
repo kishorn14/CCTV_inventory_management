@@ -25,6 +25,7 @@ function MainApp() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [bookingCategory, setBookingCategory] = useState<CategoryType>('cctv');
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('all');
+  const [isCatalogVisible, setIsCatalogVisible] = useState<boolean>(false);
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
 
   useEffect(() => {
@@ -33,6 +34,10 @@ function MainApp() {
       const hash = window.location.hash.toLowerCase();
       const search = window.location.search.toLowerCase();
       setIsAdminRoute(path.includes('admin') || hash.includes('admin') || search.includes('admin'));
+
+      if (hash.includes('products')) {
+        setIsCatalogVisible(true);
+      }
     };
 
     window.addEventListener('popstate', handleUrlChange);
@@ -62,6 +67,13 @@ function MainApp() {
 
   const handleSelectCategory = (category: CategoryType) => {
     setSelectedCategory(category);
+    setIsCatalogVisible(true);
+    setTimeout(() => {
+      const el = document.getElementById('products');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 80);
   };
 
   if (isAdminRoute) {
@@ -71,7 +83,10 @@ function MainApp() {
   return (
     <div className="app-wrapper">
       {/* Top Navigation */}
-      <Navbar onOpenBooking={() => handleOpenBooking('cctv')} />
+      <Navbar 
+        onOpenBooking={() => handleOpenBooking('cctv')} 
+        onOpenProducts={() => handleSelectCategory('all')}
+      />
 
       {/* Hero Showcase */}
       <Hero
@@ -79,12 +94,15 @@ function MainApp() {
         onSelectCategory={handleSelectCategory}
       />
 
-      {/* Product Catalog & Category Filters */}
-      <ProductCatalog
-        selectedCategory={selectedCategory}
-        onSelectCategory={handleSelectCategory}
-        onViewProduct={(prod) => setViewProduct(prod)}
-      />
+      {/* Product Catalog & Category Filters - Only shown when user clicks Explore / Category */}
+      {isCatalogVisible && (
+        <ProductCatalog
+          selectedCategory={selectedCategory}
+          onSelectCategory={handleSelectCategory}
+          onViewProduct={(prod) => setViewProduct(prod)}
+          onClose={() => setIsCatalogVisible(false)}
+        />
+      )}
 
       {/* Interactive CCTV & Inverter Cost / Load Estimator */}
       <EstimatorCalculator />
