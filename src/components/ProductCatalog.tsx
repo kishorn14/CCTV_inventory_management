@@ -9,8 +9,6 @@ import {
   Camera,
   BatteryCharging,
   Zap,
-  Droplets,
-  Sun,
   Eye
 } from 'lucide-react';
 import { Product, CategoryType } from '../types';
@@ -48,8 +46,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
       case 'cctv': return Camera;
       case 'battery': return BatteryCharging;
       case 'inverter': return Zap;
-      case 'water_purifier': return Droplets;
-      case 'solar_heater': return Sun;
       default: return Sparkles;
     }
   };
@@ -66,7 +62,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             Explore Our <span className="text-gradient">Products & Solutions</span>
           </h2>
           <p className="section-subtitle">
-            Browse bestselling CCTV cameras, vehicle batteries, home inverters, RO water purifiers, and solar heaters. Click to inquire or order directly via WhatsApp.
+            Browse bestselling CCTV cameras, vehicle batteries, and home inverter systems. Click to inquire or order directly via WhatsApp.
           </p>
         </div>
 
@@ -221,6 +217,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       <img 
                         src={product.image} 
                         alt={product.name}
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80';
+                        }}
                         style={{
                           width: '100%',
                           height: '100%',

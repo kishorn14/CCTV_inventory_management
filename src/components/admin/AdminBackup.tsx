@@ -110,7 +110,7 @@ export const AdminBackup: React.FC = () => {
               Reset to Original Factory Defaults
             </h3>
             <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: '16px' }}>
-              Restores the default catalog of CCTV, Batteries, Inverters, RO purifiers, and Solar heaters.
+              Restores the default catalog of CCTV, Batteries, and Inverters.
             </p>
             <button
               onClick={handleReset}

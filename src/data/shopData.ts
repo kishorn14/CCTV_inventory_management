@@ -2,15 +2,13 @@ import { Product, ServiceItem } from '../types';
 
 export const CATEGORIES = [
   { id: 'all', label: 'All Products', icon: 'Sparkles' },
-  { id: 'cctv', label: 'CCTV Surveillance (Active)', icon: 'Camera', active: true },
-  { id: 'battery', label: 'Vehicle Batteries', icon: 'BatteryCharging', comingSoon: true },
-  { id: 'inverter', label: 'UPS & Inverters', icon: 'Zap', comingSoon: true },
-  { id: 'water_purifier', label: 'RO Water Purifiers', icon: 'Droplets', comingSoon: true },
-  { id: 'solar_heater', label: 'Solar Water Heaters', icon: 'Sun', comingSoon: true },
+  { id: 'cctv', label: 'CCTV Surveillance', icon: 'Camera', active: true },
+  { id: 'battery', label: 'Vehicle Batteries', icon: 'BatteryCharging', active: true },
+  { id: 'inverter', label: 'Inverters & UPS Power', icon: 'Zap', active: true },
 ] as const;
 
 export const PRODUCTS: Product[] = [
-  // CCTV Category (Fully Active)
+  // CCTV Category
   {
     id: 'cctv-1',
     name: 'Hikvision 4-Camera 1080P Full HD Security Kit',
@@ -103,74 +101,115 @@ export const PRODUCTS: Product[] = [
     description: 'Never miss details in black & white. Delivers crystal clear colorful video day and night for heightened security.'
   },
 
-  // Coming Soon Categories
+  // Vehicle Batteries Category (Fully Active)
   {
     id: 'bat-1',
-    name: 'Amaron & Exide Automotive Car Batteries',
+    name: 'Amaron & Exide Four-Wheeler Car Batteries',
     category: 'battery',
     brand: 'Amaron / Exide',
     image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=800&q=80',
-    badge: '🚀 Coming Soon',
-    priceRange: 'Pre-Inquire on WhatsApp',
-    warranty: 'Up to 66 Months Warranty',
+    badge: 'Doorstep Fitment',
+    priceRange: '₹3,600 - ₹7,800 (with Old Battery Scrap Exchange)',
+    warranty: '36 to 66 Months Manufacturer Warranty',
     features: [
-      'Doorstep Delivery & Fitment (Launching Soon)',
-      'Zero Maintenance Factory Charged',
-      'Old Battery Scrap Exchange Value'
+      'Free Doorstep Delivery & Professional Installation',
+      'Zero-Maintenance Silver Alloy Technology',
+      'High Cranking Power (CCA) for Instant Cold Starts',
+      'Best Trade-in Cash Discount for Old Scrap Battery',
+      'Official Warranty Card & Digital Tax Invoice'
     ],
-    description: 'Automotive battery sales and doorstep replacement service launching soon.',
-    comingSoon: true
+    description: 'Authorized automotive battery sales for hatchback, sedan, SUV, and commercial vehicles with free doorstep fitment across the city.',
+    popular: true
   },
   {
+    id: 'bat-2',
+    name: 'Two-Wheeler Bike & Scooter Batteries',
+    category: 'battery',
+    brand: 'Exide / Amaron Pro',
+    image: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80',
+    badge: 'High Performance',
+    priceRange: '₹950 - ₹1,850',
+    warranty: '24 to 48 Months Warranty',
+    features: [
+      'Factory Charged & Ready to Ride (VRLA / AGM)',
+      'Spill-Proof & Vibration Resistant Design',
+      'Superior Cranking for Quick Push-Button Ignition',
+      'Suitable for Activa, Pulsar, Splendor, Bullet, EV 2-wheelers'
+    ],
+    description: 'Maintenance-free two-wheeler batteries delivering high cranking reliability and long service life.'
+  },
+  {
+    id: 'bat-3',
+    name: 'Commercial Vehicle, Tractor & Auto Batteries',
+    category: 'battery',
+    brand: 'Exide / PowerZone',
+    image: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=800&q=80',
+    badge: 'Heavy Duty',
+    priceRange: '₹4,500 - ₹14,000',
+    warranty: '24 to 36 Months Warranty',
+    features: [
+      'Heavy Deep-Cycle Lead-Antimony Alloy Plates',
+      'Engineered for Indian Rough Roads & Heavy Loads',
+      'Instant Emergency Jumpstart & Fitment Available'
+    ],
+    description: 'Tough commercial batteries designed for trucks, mini-trucks, tractors, commercial generators, and passenger auto-rickshaws.'
+  },
+
+  // Inverters & UPS Power Category (Fully Active)
+  {
     id: 'inv-1',
-    name: 'Home UPS & Pure Sine Wave Inverters',
+    name: 'Pure Sine Wave Home Inverter + Tall Tubular Battery Combo',
     category: 'inverter',
     brand: 'Luminous / Microtek',
     image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
-    badge: '🚀 Coming Soon',
-    priceRange: 'Pre-Inquire on WhatsApp',
+    badge: 'Home & Office Power',
+    priceRange: '₹14,500 - ₹24,500 (Installed Combo)',
     warranty: 'Up to 5 Years Warranty',
     features: [
-      'Sine Wave Inverter + Tall Tubular Battery Combos',
-      'Silent Power Backup for Home & Office',
-      'Doorstep Setup & Battery Water Topping'
+      '900VA - 1500VA Pure Sine Wave Inverter System',
+      '150Ah - 220Ah Heavy Tall Tubular Battery',
+      'Silent Operation for Fans, Lights, TV, Laptops & Mixers',
+      'Fast Battery Charging with Low-Voltage Grid Support',
+      'Neat Concealed Wiring & Bypass Switch Setup'
     ],
-    description: 'Home power backup solutions and inverter installation service launching soon.',
-    comingSoon: true
+    description: 'Reliable uninterrupted power backup systems for homes and offices. Keep your lights, fans, and work-from-home setup running smoothly during power cuts.',
+    popular: true
   },
   {
-    id: 'ro-1',
-    name: 'RO + UV + Copper Water Purifiers',
-    category: 'water_purifier',
-    brand: 'Kent / Aquaguard',
-    image: 'https://images.unsplash.com/photo-1548839140-29a749e1bc4e?auto=format&fit=crop&w=800&q=80',
-    badge: '🚀 Coming Soon',
-    priceRange: 'Pre-Inquire on WhatsApp',
-    warranty: '1 Year Comprehensive Warranty',
+    id: 'inv-2',
+    name: 'Mini DC UPS for Wi-Fi Routers & Broadband Modems',
+    category: 'inverter',
+    brand: 'Meksha Pro Power',
+    image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
+    badge: 'Zero Internet Downtime',
+    priceRange: '₹1,299 - ₹1,850',
+    warranty: '1 Year Replacement Warranty',
     features: [
-      'Multi-Stage RO + UV + TDS Controller',
-      'Filter Replacement & Membrane Service',
-      'Free Digital TDS Testing'
+      '4 to 6 Hours Continuous Internet Backup during Power Cuts',
+      'Zero-Delay Switchover (No Wi-Fi disconnection on Zoom/Teams)',
+      'Compatible with JioFiber, Airtel Xstream, ACT, BSNL, TP-Link',
+      'Smart Microprocessor Charging with Overcharge Protection',
+      'Compact Plug-and-Play Design with Universal Connector Pins'
     ],
-    description: 'Pure and healthy drinking water purifier systems and filter servicing launching soon.',
-    comingSoon: true
+    description: 'Never get disconnected during important work meetings, online classes, or transactions. Essential power backup for Wi-Fi routers, optical network units (ONU), and broadband modems.',
+    popular: true
   },
   {
-    id: 'sol-1',
-    name: 'Rooftop Solar Water Heating Systems',
-    category: 'solar_heater',
-    brand: 'Racold / Supreme',
-    image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=800&q=80',
-    badge: '🚀 Coming Soon',
-    priceRange: 'Pre-Inquire on WhatsApp',
-    warranty: '5 Years Tank Warranty',
+    id: 'inv-3',
+    name: 'Dedicated CCTV Surveillance Centralized UPS Power Backup',
+    category: 'inverter',
+    brand: 'Meksha SecurePower',
+    image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80',
+    badge: '24/7 Security Backup',
+    priceRange: '₹2,400 - ₹6,500',
+    warranty: '2 Years Warranty',
     features: [
-      '100L - 500L ETC Glass Lined Solar Systems',
-      'Saves up to 80% on Electricity Bills',
-      'Tank Descaling & Heating Element Repair'
+      'Guarantees 24/7 Continuous CCTV & DVR Recording during Power Outages',
+      '4-Port / 8-Port / 16-Port Centralized Regulated Output',
+      'Built-in Voltage Spike, Lightning Surge & Short-Circuit Protection',
+      'Prevents Hard Disk Corruptions and Security Blind Spots'
     ],
-    description: 'Eco-friendly rooftop solar water heaters and maintenance services launching soon.',
-    comingSoon: true
+    description: 'Specialized power backup engineered for CCTV DVRs, NVRs, and security cameras to guarantee continuous surveillance even during power cuts and tampering attempts.'
   }
 ];
 
@@ -189,82 +228,52 @@ export const SERVICES: ServiceItem[] = [
       'Annual Maintenance Contracts (AMC) for shops & homes'
     ],
     startingPrice: '₹350 / camera install',
-    responseTime: 'Doorstep Service',
+    responseTime: 'Doorstep Service (Same Day)',
     comingSoon: false
   },
   {
     id: 'srv-battery',
-    title: 'Doorstep Vehicle Battery Delivery & Jumpstart',
+    title: 'Doorstep Vehicle Battery Delivery, Fitment & Jumpstart',
     category: 'battery',
     iconName: 'BatteryCharging',
-    shortDesc: 'Doorstep battery delivery, fitting, and jumpstart breakdown support launching soon.',
+    shortDesc: 'Instant doorstep delivery and installation for cars, bikes, and commercial vehicles with old battery exchange and emergency jumpstart.',
     bulletPoints: [
-      'Doorstep fitment & computerized battery testing',
-      'Emergency car jumpstart breakdown service',
-      'Free battery health & alternator voltage check'
+      'Free doorstep delivery & professional computerized fitment',
+      'Highest scrap exchange cash discount for old batteries',
+      'Emergency car & bike jumpstart breakdown support',
+      'Free alternator voltage & battery health diagnostic check'
     ],
-    startingPrice: 'Launching Soon',
-    responseTime: 'Coming Soon 🚀',
-    comingSoon: true
+    startingPrice: 'Free Fitment with Battery',
+    responseTime: 'Doorstep in 30-45 Mins',
+    comingSoon: false
   },
   {
     id: 'srv-inverter',
-    title: 'Inverter & UPS Setup, Repair & Water Topping',
+    title: 'Home Inverter, Wi-Fi Mini UPS & CCTV Power Backup Setup',
     category: 'inverter',
     iconName: 'Zap',
-    shortDesc: 'Load calculation, home inverter wiring, PCB repairs, and battery maintenance launching soon.',
+    shortDesc: 'Complete power backup planning, pure sine wave inverter wiring, Wi-Fi modem UPS setup, and regular battery distilled water maintenance.',
     bulletPoints: [
-      'Pure sine wave inverter installation',
-      'Battery distilled water top-up and terminal care',
-      'High-capacity office UPS maintenance'
+      'Expert load calculation & pure sine wave inverter sizing',
+      'Dedicated backup setup for Wi-Fi routers & CCTV security systems',
+      'Battery distilled water top-up, terminal descaling & health check',
+      'PCB repair, bypass switch installation & office UPS support'
     ],
-    startingPrice: 'Launching Soon',
-    responseTime: 'Coming Soon 🚀',
-    comingSoon: true
-  },
-  {
-    id: 'srv-ro',
-    title: 'RO Water Purifier Service & Filter Change',
-    category: 'water_purifier',
-    iconName: 'Droplets',
-    shortDesc: 'Complete servicing for Kent, Aquaguard, and all brands with genuine NSF certified filters launching soon.',
-    bulletPoints: [
-      'Filter cartridge and RO membrane replacement',
-      'Free digital TDS water purity testing',
-      'Booster pump and leakage repair'
-    ],
-    startingPrice: 'Launching Soon',
-    responseTime: 'Coming Soon 🚀',
-    comingSoon: true
-  },
-  {
-    id: 'srv-solar',
-    title: 'Solar Water Heater Installation & Descaling',
-    category: 'solar_heater',
-    iconName: 'Sun',
-    shortDesc: 'Rooftop solar water heater installation, chemical tank descaling, and tube repair launching soon.',
-    bulletPoints: [
-      'Chemical descaling for hard-water borewell scale',
-      'Replacement of broken glass ETC tubes',
-      'Electric backup element and thermostat fix'
-    ],
-    startingPrice: 'Launching Soon',
-    responseTime: 'Coming Soon 🚀',
-    comingSoon: true
+    startingPrice: '₹450 / service visit',
+    responseTime: 'Doorstep Service (Prompt)',
+    comingSoon: false
   }
 ];
 
 export const BRANDS = [
-  { name: 'Hikvision', category: 'CCTV' },
-  { name: 'CP PLUS', category: 'CCTV' },
-  { name: 'Dahua', category: 'CCTV' },
-  { name: 'Meksha Pro', category: 'CCTV' },
-  { name: 'Exide', category: 'Batteries (Upcoming)' },
-  { name: 'Amaron', category: 'Batteries (Upcoming)' },
-  { name: 'Luminous', category: 'Inverters (Upcoming)' },
-  { name: 'Microtek', category: 'Inverters (Upcoming)' },
-  { name: 'Kent RO', category: 'Purifiers (Upcoming)' },
-  { name: 'Racold', category: 'Solar (Upcoming)' }
+  { name: 'Hikvision', category: 'CCTV Surveillance' },
+  { name: 'CP PLUS', category: 'CCTV Surveillance' },
+  { name: 'Dahua', category: 'CCTV Surveillance' },
+  { name: 'Meksha Pro', category: 'CCTV & Power' },
+  { name: 'Exide', category: 'Vehicle Batteries' },
+  { name: 'Amaron', category: 'Vehicle Batteries' },
+  { name: 'Luminous', category: 'Inverters & UPS' },
+  { name: 'Microtek', category: 'Inverters & UPS' }
 ];
 
 export const FAQS = [
@@ -281,11 +290,12 @@ export const FAQS = [
     a: 'Yes! All our Hikvision, CP PLUS, and Dahua cameras and DVRs come with 2 to 3 years official manufacturer warranty with original tax invoices.'
   },
   {
-    q: 'Do you offer Annual Maintenance Contracts (AMC) for shops and apartments?',
-    a: 'Yes, we provide comprehensive AMC services including quarterly health checks, lens cleaning, cable testing, power supply checkups, and priority breakdown resolution.'
+    q: 'Do you offer doorstep delivery and fitment for vehicle batteries?',
+    a: 'Yes! We deliver and professionally install genuine Exide and Amaron batteries for cars, bikes, and commercial vehicles right at your doorstep with instant old scrap exchange discounts.'
   },
   {
-    q: 'When are other services like Batteries, Inverters & RO launching?',
-    a: 'We are expanding our catalog soon! You can contact us on WhatsApp anytime to pre-inquire or request special orders.'
+    q: 'Do you supply inverters for Wi-Fi modems and CCTV cameras?',
+    a: 'Yes! In addition to whole-home sine wave inverters, we supply dedicated Mini DC UPS for Wi-Fi routers (4-6 hours internet backup) and specialized centralized CCTV power backup systems to ensure continuous security recording during power cuts.'
   }
 ];
+

@@ -49,7 +49,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
               </div>
             </div>
             <p style={{ lineHeight: 1.6, marginBottom: '20px', color: '#9ca3af' }}>
-              Your trusted partner for CCTV Security, Automotive Car/Bike Batteries, Home Inverter UPS, RO Water Purifiers, and Solar Water Heaters.
+              Your trusted partner for CCTV Security Surveillance, Automotive Car/Bike Batteries, and Home Inverters & UPS Power Systems.
             </p>
             <div style={{ display: 'flex', gap: '10px' }}>
               <a
@@ -76,8 +76,6 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
                 { label: 'CCTV Security Systems', id: 'cctv' as CategoryType },
                 { label: 'Vehicle Batteries (Car & Bike)', id: 'battery' as CategoryType },
                 { label: 'UPS & Pure Sine Wave Inverters', id: 'inverter' as CategoryType },
-                { label: 'RO & Alkaline Water Purifiers', id: 'water_purifier' as CategoryType },
-                { label: 'Solar Water Heaters (ETC/FPC)', id: 'solar_heater' as CategoryType },
               ].map((item) => (
                 <li key={item.id}>
                   <a
@@ -117,12 +115,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
               </li>
               <li>
                 <button onClick={onOpenBooking} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
-                  • RO Purifier Filter Replacement
-                </button>
-              </li>
-              <li>
-                <button onClick={onOpenBooking} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
-                  • Solar Tank Chemical Descaling
+                  • Annual Maintenance Contracts (AMC)
                 </button>
               </li>
               <li>

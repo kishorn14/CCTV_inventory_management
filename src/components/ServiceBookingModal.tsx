@@ -5,14 +5,14 @@ import {
   Camera, 
   BatteryCharging, 
   Zap, 
-  Droplets, 
-  Sun, 
   Wrench, 
   CheckCircle, 
   MapPin, 
   Calendar, 
   Phone, 
-  User 
+  User,
+  ChevronDown,
+  Check
 } from 'lucide-react';
 import { CategoryType } from '../types';
 import { useShop } from '../context/ShopContext';
@@ -27,45 +27,32 @@ interface ServiceBookingModalProps {
 
 const DEFAULT_SERVICE_OPTIONS: Record<CategoryType, string[]> = {
   all: [
-    'General Site Inspection / Consultation',
-    'Multiple Equipment Service & AMC',
-    'Emergency Breakdown Repair'
+    'General Site Inspection & Consultation',
+    'Multi-Equipment Service & AMC',
+    'Emergency Breakdown Service'
   ],
   cctv: [
-    'New CCTV System Installation (Home / Shop / Factory)',
-    'Camera Offline / No Display / Black Screen Fix',
-    'Mobile Live Viewing App Configuration',
+    'New CCTV System Installation',
+    'Camera Offline / Black Screen Fix',
+    'Mobile Live Viewing Configuration',
     'DVR / NVR Hard Disk & Recording Repair',
-    'Cable Fault & Power Supply Troubleshooting',
+    'Cable Fault & Power Supply Repair',
     'Annual Maintenance Contract (AMC)'
   ],
   battery: [
-    'Doorstep Car Battery Replacement',
-    'Two-Wheeler / Bike Battery Replacement',
-    'Emergency Car Jumpstart Breakdown Service',
-    'Free Battery Health & Alternator Voltage Check',
-    'Commercial Truck / Tractor Battery Service'
+    'Car Battery Replacement & Doorstep Fitment',
+    'Bike & Scooter Battery Replacement',
+    'Commercial Vehicle & Tractor Battery Service',
+    'Emergency Vehicle Jumpstart Support',
+    'Free Battery & Alternator Health Check'
   ],
   inverter: [
-    'New Home Inverter & Tubular Battery Installation',
-    'Inverter Beeping / Not Charging / PCB Repair',
-    'Battery Distilled Water Top-Up & Maintenance',
-    'Old Battery Replacement & High-Backup Upgrade',
-    'Office High-Capacity UPS Maintenance'
-  ],
-  water_purifier: [
-    'Complete RO Service & Filter Replacement',
-    'RO Membrane Replacement & TDS Adjustment',
-    'Water Leakage / Booster Pump Repair',
-    'New RO Purifier Installation / Uninstallation',
-    'Commercial 50 LPH / 100 LPH Plant Service'
-  ],
-  solar_heater: [
-    'New Rooftop Solar Water Heater Installation',
-    'Chemical Descaling & Hard-Water Salt Removal',
-    'Broken ETC Glass Tube / Tank Leakage Repair',
-    'Electric Backup Element & Thermostat Fix',
-    'Rooftop Plumbing & Pressure Pump Setup'
+    'Home Inverter & Tall Tubular Battery Setup',
+    'Mini DC UPS for Wi-Fi Router & Modem',
+    'CCTV Centralized UPS Power Backup',
+    'Inverter Beeping / PCB Repair',
+    'Battery Distilled Water Top-Up & Descaling',
+    'Commercial Office UPS Maintenance'
   ]
 };
 
@@ -80,9 +67,11 @@ export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
   const [customerName, setCustomerName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [address, setAddress] = useState<string>('');
-  const [preferredTime, setPreferredTime] = useState<string>('As soon as possible (Today)');
+  const [preferredTime, setPreferredTime] = useState<string>('⚡ As soon as possible / Urgent');
   const [notes, setNotes] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState<boolean>(false);
+  const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (initialCategory) {
@@ -110,8 +99,6 @@ export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
       cctv: '📹 CCTV Surveillance System',
       battery: '🔋 Vehicle / Automotive Battery',
       inverter: '⚡ UPS & Inverter Power System',
-      water_purifier: '💧 Water Purifier / RO System',
-      solar_heater: '☀️ Solar Water Heater',
       all: '🛠️ General Inquiry / Multi-Service'
     };
 
@@ -159,7 +146,10 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
     <div className="modal-overlay" onClick={onClose}>
       <div 
         className="modal-content" 
-        onClick={(e) => e.stopPropagation()}
+        onClick={() => {
+          setIsServiceDropdownOpen(false);
+          setIsTimeDropdownOpen(false);
+        }}
         style={{ background: '#ffffff', color: '#0f172a' }}
       >
         <div className="modal-drag-handle" />
@@ -254,11 +244,9 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
                 marginTop: '6px'
               }}>
                 {[
-                  { id: 'cctv' as CategoryType, label: 'CCTV (Active)', icon: Camera },
-                  { id: 'battery' as CategoryType, label: 'Battery (Soon)', icon: BatteryCharging },
-                  { id: 'inverter' as CategoryType, label: 'Inverter (Soon)', icon: Zap },
-                  { id: 'water_purifier' as CategoryType, label: 'RO (Soon)', icon: Droplets },
-                  { id: 'solar_heater' as CategoryType, label: 'Solar (Soon)', icon: Sun },
+                  { id: 'cctv' as CategoryType, label: 'CCTV Security', icon: Camera },
+                  { id: 'battery' as CategoryType, label: 'Vehicle Battery', icon: BatteryCharging },
+                  { id: 'inverter' as CategoryType, label: 'Inverter & UPS', icon: Zap },
                 ].map((item) => {
                   const Icon = item.icon;
                   const isSelected = category === item.id;
@@ -266,7 +254,12 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
                     <button
                       type="button"
                       key={item.id}
-                      onClick={() => setCategory(item.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setCategory(item.id);
+                        setIsServiceDropdownOpen(false);
+                        setIsTimeDropdownOpen(false);
+                      }}
                       style={{
                         padding: '10px 6px',
                         borderRadius: '8px',
@@ -290,37 +283,105 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
                   );
                 })}
               </div>
-              {category !== 'cctv' && (
-                <div style={{
-                  marginTop: '8px',
-                  fontSize: '0.78rem',
-                  color: '#b45309',
-                  background: '#fffbeb',
-                  border: '1px solid #fde68a',
-                  borderRadius: '6px',
-                  padding: '6px 10px',
-                  fontWeight: 600
-                }}>
-                  ℹ️ This service is launching soon. Submitting this form sends a pre-inquiry directly to our shop via WhatsApp.
-                </div>
-              )}
             </div>
 
-            {/* Service Type Dropdown */}
-            <div className="form-group">
+            {/* Custom Service Type Dropdown - 100% Contained inside modal */}
+            <div className="form-group" style={{ position: 'relative' }}>
               <label className="form-label">Specific Service Needed *</label>
-              <select
-                className="form-select"
-                value={serviceType}
-                onChange={(e) => setServiceType(e.target.value)}
-                required
+              
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsServiceDropdownOpen(!isServiceDropdownOpen);
+                  setIsTimeDropdownOpen(false);
+                }}
+                className="form-input"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  background: '#ffffff',
+                  border: isServiceDropdownOpen ? '1.5px solid #1d4ed8' : '1px solid #cbd5e1',
+                  boxShadow: isServiceDropdownOpen ? '0 0 0 3px rgba(37, 99, 235, 0.15)' : 'none',
+                  padding: '11px 14px',
+                  fontWeight: 600,
+                  fontSize: '0.88rem',
+                  color: '#0f172a',
+                  width: '100%',
+                  boxSizing: 'border-box'
+                }}
               >
-                {(DEFAULT_SERVICE_OPTIONS[category] || DEFAULT_SERVICE_OPTIONS.all).map((opt, i) => (
-                  <option key={i} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
+                <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', paddingRight: '8px' }}>
+                  {serviceType || 'Select a service'}
+                </span>
+                <ChevronDown 
+                  size={18} 
+                  color={isServiceDropdownOpen ? '#1d4ed8' : '#64748b'} 
+                  style={{
+                    transform: isServiceDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.2s ease',
+                    flexShrink: 0
+                  }}
+                />
+              </button>
+
+              {/* Contained Dropdown Popup */}
+              {isServiceDropdownOpen && (
+                <div style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 4px)',
+                  left: 0,
+                  right: 0,
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  zIndex: 100,
+                  background: '#ffffff',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '10px',
+                  boxShadow: '0 10px 25px -4px rgba(15, 23, 42, 0.16), 0 4px 10px -2px rgba(15, 23, 42, 0.06)',
+                  maxHeight: '220px',
+                  overflowY: 'auto',
+                  padding: '4px 0'
+                }}>
+                  {(DEFAULT_SERVICE_OPTIONS[category] || DEFAULT_SERVICE_OPTIONS.all).map((opt, i) => {
+                    const isSelected = serviceType === opt;
+                    return (
+                      <div
+                        key={i}
+                        onClick={() => {
+                          setServiceType(opt);
+                          setIsServiceDropdownOpen(false);
+                        }}
+                        style={{
+                          padding: '10px 14px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          cursor: 'pointer',
+                          fontSize: '0.85rem',
+                          fontWeight: isSelected ? 700 : 500,
+                          color: isSelected ? '#1d4ed8' : '#1e293b',
+                          background: isSelected ? '#eff6ff' : 'transparent',
+                          transition: 'background 0.15s ease',
+                          borderBottom: i === (DEFAULT_SERVICE_OPTIONS[category] || []).length - 1 ? 'none' : '1px solid #f1f5f9'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isSelected) e.currentTarget.style.background = '#f8fafc';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSelected) e.currentTarget.style.background = 'transparent';
+                        }}
+                      >
+                        <span style={{ lineHeight: 1.35 }}>{opt}</span>
+                        {isSelected && <Check size={16} color="#1d4ed8" style={{ flexShrink: 0, marginLeft: '8px' }} />}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Name & Phone */}
@@ -369,23 +430,110 @@ _Sent via ${shopInfo.shopName} Online Portal_`;
               />
             </div>
 
-            {/* Preferred Time */}
-            <div className="form-group">
+            {/* Preferred Time Custom Dropdown - 100% Contained */}
+            <div className="form-group" style={{ position: 'relative' }}>
               <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <Calendar size={14} color="#0284c7" /> Preferred Date / Time Slot
               </label>
-              <select
-                className="form-select"
-                value={preferredTime}
-                onChange={(e) => setPreferredTime(e.target.value)}
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsTimeDropdownOpen(!isTimeDropdownOpen);
+                  setIsServiceDropdownOpen(false);
+                }}
+                className="form-input"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  background: '#ffffff',
+                  border: isTimeDropdownOpen ? '1.5px solid #1d4ed8' : '1px solid #cbd5e1',
+                  boxShadow: isTimeDropdownOpen ? '0 0 0 3px rgba(37, 99, 235, 0.15)' : 'none',
+                  padding: '11px 14px',
+                  fontWeight: 600,
+                  fontSize: '0.88rem',
+                  color: '#0f172a',
+                  width: '100%',
+                  boxSizing: 'border-box'
+                }}
               >
-                <option value="As soon as possible / Urgent">⚡ As soon as possible / Urgent</option>
-                <option value="Today Morning (9 AM - 1 PM)">Today Morning (9 AM - 1 PM)</option>
-                <option value="Today Afternoon (1 PM - 5 PM)">Today Afternoon (1 PM - 5 PM)</option>
-                <option value="Today Evening (5 PM - 8 PM)">Today Evening (5 PM - 8 PM)</option>
-                <option value="Tomorrow Any Time">Tomorrow Any Time</option>
-                <option value="Weekend Appointment">Weekend Appointment</option>
-              </select>
+                <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', paddingRight: '8px' }}>
+                  {preferredTime}
+                </span>
+                <ChevronDown 
+                  size={18} 
+                  color={isTimeDropdownOpen ? '#1d4ed8' : '#64748b'} 
+                  style={{
+                    transform: isTimeDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.2s ease',
+                    flexShrink: 0
+                  }}
+                />
+              </button>
+
+              {isTimeDropdownOpen && (
+                <div style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 4px)',
+                  left: 0,
+                  right: 0,
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  zIndex: 100,
+                  background: '#ffffff',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '10px',
+                  boxShadow: '0 10px 25px -4px rgba(15, 23, 42, 0.16), 0 4px 10px -2px rgba(15, 23, 42, 0.06)',
+                  maxHeight: '200px',
+                  overflowY: 'auto',
+                  padding: '4px 0'
+                }}>
+                  {[
+                    '⚡ As soon as possible / Urgent',
+                    'Today Morning (9:00 AM - 1:00 PM)',
+                    'Today Afternoon (1:00 PM - 5:00 PM)',
+                    'Today Evening (5:00 PM - 9:00 PM)',
+                    'Tomorrow (Anytime)',
+                    'Weekend Appointment (Sat / Sun)'
+                  ].map((timeOpt, i) => {
+                    const isSelected = preferredTime === timeOpt;
+                    return (
+                      <div
+                        key={i}
+                        onClick={() => {
+                          setPreferredTime(timeOpt);
+                          setIsTimeDropdownOpen(false);
+                        }}
+                        style={{
+                          padding: '10px 14px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          cursor: 'pointer',
+                          fontSize: '0.85rem',
+                          fontWeight: isSelected ? 700 : 500,
+                          color: isSelected ? '#1d4ed8' : '#1e293b',
+                          background: isSelected ? '#eff6ff' : 'transparent',
+                          transition: 'background 0.15s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isSelected) e.currentTarget.style.background = '#f8fafc';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSelected) e.currentTarget.style.background = 'transparent';
+                        }}
+                      >
+                        <span>{timeOpt}</span>
+                        {isSelected && <Check size={16} color="#1d4ed8" style={{ flexShrink: 0, marginLeft: '8px' }} />}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Additional Notes */}

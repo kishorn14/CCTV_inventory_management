@@ -29,15 +29,6 @@ const PRESET_IMAGES: Record<CategoryType, string[]> = {
     'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
     'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
     'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=800&q=80'
-  ],
-  water_purifier: [
-    'https://images.unsplash.com/photo-1548839140-29a749e1bc4e?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1585842378019-5c6438add3fe?auto=format&fit=crop&w=800&q=80'
-  ],
-  solar_heater: [
-    'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=800&q=80'
   ]
 };
 
@@ -440,8 +431,6 @@ export const AdminProducts: React.FC = () => {
                     <option value="cctv">CCTV</option>
                     <option value="battery">Vehicle Battery</option>
                     <option value="inverter">UPS & Inverter</option>
-                    <option value="water_purifier">RO Water Purifier</option>
-                    <option value="solar_heater">Solar Water Heater</option>
                   </select>
                 </div>
 

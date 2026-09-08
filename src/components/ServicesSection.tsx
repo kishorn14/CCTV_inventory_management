@@ -3,8 +3,6 @@ import {
   Camera, 
   BatteryCharging, 
   Zap, 
-  Droplets, 
-  Sun, 
   Wrench, 
   Clock, 
   CheckCircle2, 
@@ -25,8 +23,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
       case 'cctv': return Camera;
       case 'battery': return BatteryCharging;
       case 'inverter': return Zap;
-      case 'water_purifier': return Droplets;
-      case 'solar_heater': return Sun;
       default: return Wrench;
     }
   };
@@ -36,8 +32,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
       case 'cctv': return '#1d4ed8';
       case 'battery': return '#059669';
       case 'inverter': return '#d97706';
-      case 'water_purifier': return '#0284c7';
-      case 'solar_heater': return '#ea580c';
       default: return '#1d4ed8';
     }
   };
@@ -47,8 +41,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
       case 'cctv': return '#eff6ff';
       case 'battery': return '#ecfdf5';
       case 'inverter': return '#fffbeb';
-      case 'water_purifier': return '#f0f9ff';
-      case 'solar_heater': return '#fff7ed';
       default: return '#eff6ff';
     }
   };

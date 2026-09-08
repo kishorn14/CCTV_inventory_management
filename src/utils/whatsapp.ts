@@ -2,7 +2,7 @@ import { BookingFormData, Product } from '../types';
 
 export const SHOP_INFO = {
   shopName: "Meksha Solutions",
-  tagline: "CCTV, Vehicle Batteries, Inverters, RO & Solar Systems",
+  tagline: "CCTV, Vehicle Batteries & Inverters",
   phone: "+91 98450 12345",
   whatsappNumber: "919845012345", // Phone without + or symbols for WhatsApp API
   address: "Main Road, Opp. Bus Stand / City Center",
@@ -28,8 +28,6 @@ export function formatBookingMessage(booking: BookingFormData): string {
     cctv: '📹 CCTV Surveillance System',
     battery: '🔋 Vehicle / Automotive Battery',
     inverter: '⚡ UPS & Inverter Power System',
-    water_purifier: '💧 Water Purifier / RO System',
-    solar_heater: '☀️ Solar Water Heater',
     all: '🛠️ General Inquiry / Multi-Service'
   };
 

@@ -24,20 +24,32 @@ interface ShopContextType {
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  PRODUCTS: 'meksha_shop_products_v2',
-  SERVICES: 'meksha_shop_services_v2',
-  SHOP_INFO: 'meksha_shop_info_v2',
-  ADMIN_PASS: 'meksha_shop_admin_pass_v2'
+  PRODUCTS: 'meksha_shop_products_v3',
+  SERVICES: 'meksha_shop_services_v3',
+  SHOP_INFO: 'meksha_shop_info_v3',
+  ADMIN_PASS: 'meksha_shop_admin_pass_v3'
 };
 
 const DEFAULT_PASS = 'meksha@2026';
 
 export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // 1. Products state
+  // 1. Products state with auto-migration / cleanup
   const [products, setProducts] = useState<Product[]>(() => {
     try {
+      // Clean up legacy v2 storage if present
+      localStorage.removeItem('meksha_shop_products_v2');
+      localStorage.removeItem('meksha_shop_services_v2');
+      localStorage.removeItem('meksha_shop_products_v1');
+      localStorage.removeItem('cctv_products_data');
+
       const saved = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
-      return saved ? JSON.parse(saved) : DEFAULT_PRODUCTS;
+      if (saved) {
+        const parsed: Product[] = JSON.parse(saved);
+        // Ensure no deprecated categories (water_purifier / solar_heater) linger
+        const valid = parsed.filter(p => p.category === 'cctv' || p.category === 'battery' || p.category === 'inverter');
+        if (valid.length >= 6) return valid;
+      }
+      return DEFAULT_PRODUCTS;
     } catch {
       return DEFAULT_PRODUCTS;
     }
@@ -47,7 +59,12 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [services, setServices] = useState<ServiceItem[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.SERVICES);
-      return saved ? JSON.parse(saved) : DEFAULT_SERVICES;
+      if (saved) {
+        const parsed: ServiceItem[] = JSON.parse(saved);
+        const valid = parsed.filter(s => s.category === 'cctv' || s.category === 'battery' || s.category === 'inverter');
+        if (valid.length >= 3) return valid;
+      }
+      return DEFAULT_SERVICES;
     } catch {
       return DEFAULT_SERVICES;
     }

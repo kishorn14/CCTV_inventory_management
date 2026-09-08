@@ -14,7 +14,7 @@ export const WhyChooseUs: React.FC = () => {
     {
       icon: ShieldCheck,
       title: '100% Genuine Authorized Brands',
-      desc: 'Direct brand warranty cards and GST tax invoices with every battery, inverter, CCTV, and water purifier.'
+      desc: 'Direct brand warranty cards and GST tax invoices with every battery, inverter, and CCTV installation.'
     },
     {
       icon: Truck,

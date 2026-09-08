@@ -1,4 +1,4 @@
-export type CategoryType = 'all' | 'cctv' | 'battery' | 'inverter' | 'water_purifier' | 'solar_heater';
+export type CategoryType = 'all' | 'cctv' | 'battery' | 'inverter';
 
 export interface Product {
   id: string;

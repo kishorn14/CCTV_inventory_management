@@ -46,7 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          height: '74px'
+          height: '66px'
         }}>
           {/* Logo */}
           <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -73,15 +73,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
                 lineHeight: 1.1
               }}>
                 {shopInfo.shopName.split(' ')[0]} <span className="text-gradient">{shopInfo.shopName.split(' ').slice(1).join(' ') || 'SOLUTIONS'}</span>
-              </div>
-              <div style={{
-                fontSize: '0.72rem',
-                color: '#64748b',
-                fontWeight: 600,
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase'
-              }}>
-                {shopInfo.tagline}
               </div>
             </div>
           </a>

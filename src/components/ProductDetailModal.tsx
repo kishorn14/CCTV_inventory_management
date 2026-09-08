@@ -30,10 +30,13 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
         style={{ maxWidth: '680px', padding: '0', background: '#ffffff', color: '#0f172a' }}
       >
         {/* Product Image Header */}
-        <div style={{ position: 'relative', height: '260px', width: '100%', overflow: 'hidden', background: '#f1f5f9' }}>
+        <div style={{ position: 'relative', height: '260px', width: '100%', overflow: 'hidden', background: '#f8fafc' }}>
           <img 
             src={product.image} 
             alt={product.name}
+            onError={(e) => {
+              e.currentTarget.src = 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80';
+            }}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
           <div style={{
