@@ -6,11 +6,13 @@ import {
   Database,
   Store,
   LogOut,
-  ShieldCheck
+  ShieldCheck,
+  Video
 } from 'lucide-react';
 import { AdminLogin } from './AdminLogin';
 import { AdminProducts } from './AdminProducts';
 import { AdminServices } from './AdminServices';
+import { AdminCctvPricing } from './AdminCctvPricing';
 import { AdminSettings } from './AdminSettings';
 import { AdminBackup } from './AdminBackup';
 import { useShop } from '../../context/ShopContext';
@@ -25,7 +27,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
     return sessionStorage.getItem('mekha_admin_logged_in') === 'true';
   });
 
-  const [activeTab, setActiveTab] = useState<'products' | 'services' | 'settings' | 'backup'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'services' | 'cctv_pricing' | 'settings' | 'backup'>('products');
 
   const handleLogout = () => {
     sessionStorage.removeItem('mekha_admin_logged_in');
@@ -38,6 +40,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
 
   const navTabs = [
     { id: 'products', label: 'Products & Pricing', icon: ShoppingBag },
+    { id: 'cctv_pricing', label: 'CCTV Estimator Pricing', icon: Video },
     { id: 'services', label: 'Services & AMC', icon: Wrench },
     { id: 'settings', label: 'Shop & WhatsApp Details', icon: Settings },
     { id: 'backup', label: 'Backup & Reset', icon: Database },
@@ -83,7 +86,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
                 {shopInfo.shopName} <span style={{ color: '#1d4ed8', fontSize: '0.8rem', fontWeight: 700 }}>[ADMIN]</span>
               </div>
               <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                Store Management & Pricing Portal
+                Store Management &amp; Pricing Portal
               </div>
             </div>
           </div>
@@ -164,6 +167,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
 
         {/* Tab Content */}
         {activeTab === 'products' && <AdminProducts />}
+        {activeTab === 'cctv_pricing' && <AdminCctvPricing />}
         {activeTab === 'services' && <AdminServices />}
         {activeTab === 'settings' && <AdminSettings />}
         {activeTab === 'backup' && <AdminBackup />}
@@ -171,3 +175,4 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
     </div>
   );
 };
+

@@ -4,15 +4,20 @@ import {
   MessageCircle, 
   CheckCircle2, 
   Plus, 
-  Minus,
-  AlertCircle
+  Minus, 
+  AlertCircle,
+  Video,
+  ArrowRight,
+  Sparkles
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { formatEstimateMessage, createWhatsAppLink } from '../utils/whatsapp';
 import { sendLeadToGoogleSheets } from '../utils/googleSheets';
+import { CctvEstimatorModal } from './CctvEstimatorModal';
 
 export const EstimatorCalculator: React.FC = () => {
   const { products, shopInfo } = useShop();
+  const [isCustomModalOpen, setIsCustomModalOpen] = useState<boolean>(false);
 
   // Only take CCTV products added by admin
   const cctvProducts = products.filter(p => p.category === 'cctv');
@@ -101,11 +106,94 @@ export const EstimatorCalculator: React.FC = () => {
             <Calculator size={14} /> Dynamic CCTV Package Planner
           </div>
           <h2 className="section-title">
-            Calculate Your <span className="text-gradient">CCTV Requirement & Cost</span>
+            Calculate Your <span className="text-gradient">CCTV Requirement &amp; Cost</span>
           </h2>
           <p className="section-subtitle">
-            Prices are derived directly from verified products and packages in our catalog. Select your preferred camera model and quantity to get an instant quote.
+            Configure custom camera types, DVR/NVR channels &amp; hard disk storage, or select ready-made packages from our catalog.
           </p>
+        </div>
+
+        {/* Custom Component Builder Trigger Banner */}
+        <div 
+          onClick={() => setIsCustomModalOpen(true)}
+          style={{
+            maxWidth: '900px',
+            margin: '0 auto 28px auto',
+            background: 'linear-gradient(135deg, #04647a 0%, #064e3b 100%)',
+            borderRadius: '20px',
+            padding: '20px 24px',
+            color: '#ffffff',
+            boxShadow: '0 8px 24px rgba(4, 100, 122, 0.22)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '16px',
+            transition: 'all 0.2s ease',
+            border: '1px solid rgba(255, 255, 255, 0.12)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 12px 30px rgba(4, 100, 122, 0.3)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 8px 24px rgba(4, 100, 122, 0.22)';
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '14px',
+              background: 'rgba(255, 255, 255, 0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0
+            }}>
+              <Video size={24} color="#67e8f9" />
+            </div>
+            <div>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                color: '#67e8f9',
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                marginBottom: '4px'
+              }}>
+                <Sparkles size={13} />
+                <span>Interactive Custom System Builder</span>
+              </div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: '0 0 2px 0' }}>
+                Build a Custom Setup: Select Cameras, DVR/NVR &amp; Hard Disk
+              </h3>
+              <p style={{ fontSize: '0.82rem', color: '#e2e8f0', margin: 0, opacity: 0.9 }}>
+                Customize indoor/outdoor cameras (HD/IP/WiFi), 4CH/8CH/16CH channels &amp; 1TB/2TB/4TB storage with real-time price estimation.
+              </p>
+            </div>
+          </div>
+
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: '#eab308',
+            color: '#0f172a',
+            fontWeight: 800,
+            fontSize: '0.88rem',
+            padding: '10px 20px',
+            borderRadius: '9999px',
+            boxShadow: '0 4px 12px rgba(234, 179, 8, 0.35)'
+          }}>
+            <span>Open Custom Builder</span>
+            <ArrowRight size={16} strokeWidth={2.5} />
+          </div>
         </div>
 
         {/* Empty State if Admin has not added CCTV products yet */}
@@ -397,6 +485,12 @@ export const EstimatorCalculator: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Interactive Custom CCTV System Builder Modal */}
+      <CctvEstimatorModal
+        isOpen={isCustomModalOpen}
+        onClose={() => setIsCustomModalOpen(false)}
+      />
     </section>
   );
 };

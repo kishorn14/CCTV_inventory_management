@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product, ServiceItem, ShopContactInfo } from '../types';
+import { Product, ServiceItem, ShopContactInfo, CctvPricingConfig, DEFAULT_CCTV_PRICING } from '../types';
 import { PRODUCTS as DEFAULT_PRODUCTS, SERVICES as DEFAULT_SERVICES } from '../data/shopData';
 import { SHOP_INFO as DEFAULT_SHOP_INFO } from '../utils/whatsapp';
 
@@ -7,6 +7,7 @@ interface ShopContextType {
   products: Product[];
   services: ServiceItem[];
   shopInfo: ShopContactInfo;
+  cctvPricing: CctvPricingConfig;
   adminPassword: string;
   addProduct: (product: Omit<Product, 'id'>) => void;
   updateProduct: (id: string, updated: Partial<Product>) => void;
@@ -15,6 +16,8 @@ interface ShopContextType {
   updateService: (id: string, updated: Partial<ServiceItem>) => void;
   deleteService: (id: string) => void;
   updateShopInfo: (info: ShopContactInfo) => void;
+  updateCctvPricing: (pricing: CctvPricingConfig) => void;
+  resetCctvPricing: () => void;
   updateAdminPassword: (newPass: string) => void;
   resetToDefaults: () => void;
   exportDataJSON: () => string;
@@ -27,6 +30,7 @@ const STORAGE_KEYS = {
   PRODUCTS: 'meksha_shop_products_v4',
   SERVICES: 'meksha_shop_services_v4',
   SHOP_INFO: 'meksha_shop_info_v4',
+  CCTV_PRICING: 'meksha_cctv_pricing_v4',
   ADMIN_PASS: 'meksha_shop_admin_pass_v4'
 };
 
@@ -126,7 +130,21 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   });
 
-  // 4. Admin Password state
+  // 4. CCTV Estimator Pricing Config state
+  const [cctvPricing, setCctvPricing] = useState<CctvPricingConfig>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.CCTV_PRICING);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return { ...DEFAULT_CCTV_PRICING, ...parsed };
+      }
+      return DEFAULT_CCTV_PRICING;
+    } catch {
+      return DEFAULT_CCTV_PRICING;
+    }
+  });
+
+  // 5. Admin Password state
   const [adminPassword, setAdminPassword] = useState<string>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.ADMIN_PASS);
@@ -160,6 +178,14 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Failed to save shop info to localStorage', e);
     }
   }, [shopInfo]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.CCTV_PRICING, JSON.stringify(cctvPricing));
+    } catch (e) {
+      console.error('Failed to save CCTV pricing to localStorage', e);
+    }
+  }, [cctvPricing]);
 
   useEffect(() => {
     try {
@@ -197,9 +223,17 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setServices(prev => prev.filter(s => s.id !== id));
   };
 
-  // Shop Info & Password
+  // Shop Info, CCTV Pricing & Password
   const updateShopInfo = (newInfo: ShopContactInfo) => {
     setShopInfo(newInfo);
+  };
+
+  const updateCctvPricing = (newPricing: CctvPricingConfig) => {
+    setCctvPricing(newPricing);
+  };
+
+  const resetCctvPricing = () => {
+    setCctvPricing(DEFAULT_CCTV_PRICING);
   };
 
   const updateAdminPassword = (newPass: string) => {
@@ -210,6 +244,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const resetToDefaults = () => {
     setProducts(DEFAULT_PRODUCTS);
     setServices(DEFAULT_SERVICES);
+    setCctvPricing(DEFAULT_CCTV_PRICING);
     setShopInfo({
       shopName: DEFAULT_SHOP_INFO.shopName,
       tagline: DEFAULT_SHOP_INFO.tagline,
@@ -220,7 +255,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       city: DEFAULT_SHOP_INFO.city,
       googleMapsUrl: '',
       workingHours: DEFAULT_SHOP_INFO.workingHours,
-      workingDays: DEFAULT_SHOP_INFO.workingDays
+      workingDays: DEFAULT_SHOP_INFO.workingDays,
+      instagramUrl: DEFAULT_SHOP_INFO.instagramUrl,
+      googleSheetWebhookUrl: 'https://script.google.com/macros/s/AKfycbzXmQwZ0f3EzFWkvWy_hqNBRpBy8ETYI9Rdql9Q6P3RXxlJEaIN_jVl_Vnjgkb_2x13mw/exec',
+      googleSheetViewUrl: ''
     });
     setAdminPassword(DEFAULT_PASS);
   };
@@ -231,6 +269,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       products,
       services,
       shopInfo,
+      cctvPricing,
       exportedAt: new Date().toISOString()
     }, null, 2);
   };
@@ -247,6 +286,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (parsed.shopInfo) {
         setShopInfo(parsed.shopInfo);
       }
+      if (parsed.cctvPricing) {
+        setCctvPricing(parsed.cctvPricing);
+      }
       return true;
     } catch {
       return false;
@@ -258,6 +300,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       products,
       services,
       shopInfo,
+      cctvPricing,
       adminPassword,
       addProduct,
       updateProduct,
@@ -266,6 +309,8 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateService,
       deleteService,
       updateShopInfo,
+      updateCctvPricing,
+      resetCctvPricing,
       updateAdminPassword,
       resetToDefaults,
       exportDataJSON,

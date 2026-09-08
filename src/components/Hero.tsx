@@ -26,6 +26,7 @@ import { useShop } from '../context/ShopContext';
 import { createWhatsAppLink } from '../utils/whatsapp';
 import { CategoryType } from '../types';
 import { PowerPlannerModal } from './PowerPlannerModal';
+import { CctvEstimatorModal } from './CctvEstimatorModal';
 
 interface HeroProps {
   onOpenBooking: (category?: CategoryType) => void;
@@ -36,6 +37,7 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelectCategory }) => {
   const { shopInfo } = useShop();
   const [isPowerPlannerOpen, setIsPowerPlannerOpen] = useState<boolean>(false);
+  const [isCctvEstimatorOpen, setIsCctvEstimatorOpen] = useState<boolean>(false);
 
   const rangeCards = [
     {
@@ -521,12 +523,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
               onClick={() => setIsPowerPlannerOpen(true)}
               style={{
                 maxWidth: '480px',
-                margin: '20px auto 36px auto',
+                margin: '20px auto 14px auto',
                 background: 'linear-gradient(135deg, #024b86 0%, #03667c 100%)',
                 borderRadius: '24px',
-                padding: '22px 18px',
+                padding: '20px 18px',
                 color: '#ffffff',
-                boxShadow: '0 12px 30px rgba(2, 75, 134, 0.22)',
+                boxShadow: '0 10px 28px rgba(2, 75, 134, 0.2)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -538,11 +540,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 16px 36px rgba(2, 75, 134, 0.3)';
+                e.currentTarget.style.boxShadow = '0 14px 32px rgba(2, 75, 134, 0.28)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(2, 75, 134, 0.22)';
+                e.currentTarget.style.boxShadow = '0 10px 28px rgba(2, 75, 134, 0.2)';
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -577,7 +579,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                     <span>Power Planner</span>
                   </div>
                   <h3 style={{
-                    fontSize: '1.12rem',
+                    fontSize: '1.08rem',
                     fontWeight: 800,
                     color: '#ffffff',
                     lineHeight: 1.25,
@@ -587,7 +589,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                     Not sure what inverter size you need?
                   </h3>
                   <p style={{
-                    fontSize: '0.8rem',
+                    fontSize: '0.78rem',
                     color: '#e2e8f0',
                     lineHeight: 1.35,
                     margin: 0,
@@ -599,8 +601,106 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
               </div>
 
               <div style={{
-                width: '42px',
-                height: '42px',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                background: '#eab308',
+                color: '#0f172a',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: '0 4px 12px rgba(234, 179, 8, 0.35)'
+              }}>
+                <ArrowRight size={18} strokeWidth={2.5} />
+              </div>
+            </div>
+
+            {/* CCTV Estimator Banner Card (Interactive CCTV Package Calculator Trigger) */}
+            <div 
+              onClick={() => setIsCctvEstimatorOpen(true)}
+              style={{
+                maxWidth: '480px',
+                margin: '0 auto 36px auto',
+                background: 'linear-gradient(135deg, #04647a 0%, #064e3b 100%)',
+                borderRadius: '24px',
+                padding: '20px 18px',
+                color: '#ffffff',
+                boxShadow: '0 10px 28px rgba(4, 100, 122, 0.22)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '14px',
+                textAlign: 'left',
+                transition: 'all 0.2s ease',
+                border: '1px solid rgba(255, 255, 255, 0.12)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 14px 32px rgba(4, 100, 122, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 10px 28px rgba(4, 100, 122, 0.22)';
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '16px',
+                  background: 'rgba(255, 255, 255, 0.12)',
+                  backdropFilter: 'blur(6px)',
+                  WebkitBackdropFilter: 'blur(6px)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  <Video size={24} color="#67e8f9" />
+                </div>
+                <div>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    color: '#67e8f9',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    marginBottom: '4px'
+                  }}>
+                    <Video size={13} />
+                    <span>CCTV Estimator</span>
+                  </div>
+                  <h3 style={{
+                    fontSize: '1.08rem',
+                    fontWeight: 800,
+                    color: '#ffffff',
+                    lineHeight: 1.25,
+                    margin: '0 0 4px 0',
+                    letterSpacing: '-0.01em'
+                  }}>
+                    Planning a custom CCTV security setup?
+                  </h3>
+                  <p style={{
+                    fontSize: '0.78rem',
+                    color: '#e2e8f0',
+                    lineHeight: 1.35,
+                    margin: 0,
+                    opacity: 0.9
+                  }}>
+                    Choose HD/IP/WiFi cameras, DVR/NVR channels &amp; storage for an instant price quotation.
+                  </p>
+                </div>
+              </div>
+
+              <div style={{
+                width: '40px',
+                height: '40px',
                 borderRadius: '50%',
                 background: '#eab308',
                 color: '#0f172a',
@@ -1105,6 +1205,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
       <PowerPlannerModal
         isOpen={isPowerPlannerOpen}
         onClose={() => setIsPowerPlannerOpen(false)}
+      />
+
+      {/* Interactive CCTV Security Package Cost Estimator Modal */}
+      <CctvEstimatorModal
+        isOpen={isCctvEstimatorOpen}
+        onClose={() => setIsCctvEstimatorOpen(false)}
       />
     </section>
   );
