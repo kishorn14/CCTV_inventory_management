@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useShop } from '../../context/ShopContext';
 import { GOOGLE_APPS_SCRIPT_CODE, sendLeadToGoogleSheets } from '../../utils/googleSheets';
+import { isValidPhoneNumber } from '../../utils/validation';
 
 export const AdminSettings: React.FC = () => {
   const { shopInfo, updateShopInfo, adminPassword, updateAdminPassword } = useShop();
@@ -52,11 +53,22 @@ export const AdminSettings: React.FC = () => {
     e.preventDefault();
     setSuccessMsg('');
 
+    if (!isValidPhoneNumber(formData.whatsappPhone)) {
+      alert('WhatsApp Number must contain at least 10 digits (e.g. 918050426215).');
+      return;
+    }
+    if (!isValidPhoneNumber(formData.phone)) {
+      alert('Helpline Phone Number must contain at least 10 digits (e.g. +91 80504 26215).');
+      return;
+    }
+
+    const cleanWhatsApp = formData.whatsappPhone.replace(/[^0-9]/g, '');
+
     updateShopInfo({
       shopName: formData.shopName,
       tagline: formData.tagline,
       phone: formData.phone,
-      whatsappPhone: formData.whatsappPhone.replace(/[^0-9]/g, ''),
+      whatsappPhone: cleanWhatsApp,
       email: formData.email,
       address: formData.address,
       city: formData.city,

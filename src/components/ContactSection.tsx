@@ -10,26 +10,34 @@ import {
 import { useShop } from '../context/ShopContext';
 import { createWhatsAppLink } from '../utils/whatsapp';
 import { sendLeadToGoogleSheets } from '../utils/googleSheets';
+import { getPhoneValidationError } from '../utils/validation';
 
 export const ContactSection: React.FC = () => {
   const { shopInfo } = useShop();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [phoneError, setPhoneError] = useState('');
   const [message, setMessage] = useState('');
 
   const handleQuickInquiry = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !phone || !message) {
+    if (!name.trim() || !phone.trim() || !message.trim()) {
       alert('Please fill out all fields.');
+      return;
+    }
+
+    const phoneErr = getPhoneValidationError(phone);
+    if (phoneErr) {
+      setPhoneError(phoneErr);
       return;
     }
 
     const text = `👋 *QUICK INQUIRY / CONTACT*
 *Shop:* ${shopInfo.shopName}
 -------------------------
-👤 *Name:* ${name}
-📞 *Phone:* ${phone}
-💬 *Message:* ${message}
+👤 *Name:* ${name.trim()}
+📞 *Phone:* ${phone.trim()}
+💬 *Message:* ${message.trim()}
 -------------------------`;
 
     // Log to Google Sheets
@@ -208,15 +216,40 @@ export const ContactSection: React.FC = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Your Mobile Number</label>
+                <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>Your Mobile Number</span>
+                  <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 500 }}>Min 10 digits</span>
+                </label>
                 <input
                   type="tel"
+                  inputMode="tel"
                   className="form-input"
                   placeholder="e.g. 9876543210"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    if (phoneError) {
+                      const err = getPhoneValidationError(e.target.value);
+                      setPhoneError(err || '');
+                    }
+                  }}
+                  onBlur={() => {
+                    if (phone.trim()) {
+                      const err = getPhoneValidationError(phone);
+                      setPhoneError(err || '');
+                    }
+                  }}
+                  style={{
+                    borderColor: phoneError ? '#ef4444' : undefined,
+                    boxShadow: phoneError ? '0 0 0 1px #ef4444' : undefined
+                  }}
                   required
                 />
+                {phoneError && (
+                  <div style={{ color: '#ef4444', fontSize: '0.78rem', marginTop: '5px', display: 'flex', alignItems: 'center', gap: '5px', fontWeight: 500 }}>
+                    <span>⚠️</span> {phoneError}
+                  </div>
+                )}
               </div>
 
               <div className="form-group">

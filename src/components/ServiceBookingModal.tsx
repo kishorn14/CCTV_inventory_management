@@ -24,6 +24,7 @@ import { CategoryType } from '../types';
 import { useShop } from '../context/ShopContext';
 import { createWhatsAppLink } from '../utils/whatsapp';
 import { sendLeadToGoogleSheets } from '../utils/googleSheets';
+import { getPhoneValidationError } from '../utils/validation';
 
 interface ServiceBookingModalProps {
   isOpen: boolean;
@@ -72,6 +73,7 @@ export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
   const [serviceType, setServiceType] = useState<string>('');
   const [customerName, setCustomerName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [phoneError, setPhoneError] = useState<string>('');
   const [address, setAddress] = useState<string>('');
   const [preferredTime, setPreferredTime] = useState<string>('⚡ As soon as possible / Urgent');
   const [notes, setNotes] = useState<string>('');
@@ -151,8 +153,14 @@ export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!customerName || !phoneNumber || !address) {
+    if (!customerName.trim() || !phoneNumber.trim() || !address.trim()) {
       alert('Please fill in your Name, Phone Number, and Address.');
+      return;
+    }
+
+    const phoneErr = getPhoneValidationError(phoneNumber);
+    if (phoneErr) {
+      setPhoneError(phoneErr);
       return;
     }
 
@@ -465,17 +473,42 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
               </div>
 
               <div className="form-group">
-                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Phone size={14} color="#059669" /> Phone / Mobile *
-                </label>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                  <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: 0 }}>
+                    <Phone size={14} color="#059669" /> Phone / Mobile *
+                  </label>
+                  <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 500 }}>Min 10 digits</span>
+                </div>
                 <input
                   type="tel"
+                  inputMode="tel"
                   className="form-input"
                   placeholder="e.g. 9876543210"
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onChange={(e) => {
+                    setPhoneNumber(e.target.value);
+                    if (phoneError) {
+                      const err = getPhoneValidationError(e.target.value);
+                      setPhoneError(err || '');
+                    }
+                  }}
+                  onBlur={() => {
+                    if (phoneNumber.trim()) {
+                      const err = getPhoneValidationError(phoneNumber);
+                      setPhoneError(err || '');
+                    }
+                  }}
+                  style={{
+                    borderColor: phoneError ? '#ef4444' : undefined,
+                    boxShadow: phoneError ? '0 0 0 1px #ef4444' : undefined
+                  }}
                   required
                 />
+                {phoneError && (
+                  <div style={{ color: '#ef4444', fontSize: '0.74rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 500 }}>
+                    <span>⚠️</span> {phoneError}
+                  </div>
+                )}
               </div>
             </div>
 
