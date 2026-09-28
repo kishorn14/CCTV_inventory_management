@@ -14,27 +14,27 @@ export const WhyChooseUs: React.FC = () => {
     {
       icon: ShieldCheck,
       title: '100% Genuine Authorized Brands',
-      desc: 'Direct brand warranty cards and GST tax invoices with every battery, inverter, and CCTV installation.'
+      desc: 'Direct manufacturer warranty cards and original GST tax invoices with every Hikvision, CP PLUS, and Dahua camera.'
     },
     {
       icon: Truck,
       title: 'Doorstep Delivery & Installation',
-      desc: 'Our certified field technicians deliver and install genuine equipment right at your home or workplace.'
+      desc: 'Our certified field technicians deliver, mount, and configure complete security systems right at your premises.'
     },
     {
       icon: Award,
       title: 'Expert Certified Technicians',
-      desc: 'Clean, professional wiring for CCTV and inverter systems without damaging your walls or aesthetics.'
+      desc: 'Clean, professional concealed wiring, conduit casing, and optimal camera viewing angle alignment without wall damage.'
     },
     {
       icon: Banknote,
-      title: 'Best Old Scrap Exchange Value',
-      desc: 'Get the highest trade-in cash discount for your old car/bike batteries and inverter scrap.'
+      title: 'Transparent Pricing & Free Site Survey',
+      desc: 'No hidden charges. Clear itemized quotations for cameras, DVR/NVR storage, cables, and doorstep fitment.'
     },
     {
       icon: Headphones,
-      title: 'Dedicated After-Sales Support',
-      desc: 'Free regular maintenance reminders, battery water top-up assistance, and rapid breakdown response.'
+      title: 'Remote Live View & After-Sales Care',
+      desc: 'Instant mobile app setup on all smartphones, fast troubleshooting for offline cameras, and AMC maintenance.'
     },
     {
       icon: RotateCcw,
@@ -55,7 +55,7 @@ export const WhyChooseUs: React.FC = () => {
             Why Customers Trust <span className="text-gradient">Meksha Solutions</span>
           </h2>
           <p className="section-subtitle">
-            Over 10+ years of dedicated service providing reliable security, automotive power, and clean energy solutions.
+            Over 10+ years of dedicated service providing high-definition CCTV security surveillance and smart camera solutions.
           </p>
         </div>
 

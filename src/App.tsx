@@ -95,7 +95,7 @@ function MainApp() {
         onSelectCategory={handleSelectCategory}
       />
 
-      {/* Authorized Dealer & Trusted Brand Partners (Exide, Amaron, Luminous, CP Plus, Hikvision, Dahua) */}
+      {/* Authorized Dealer & Trusted CCTV Brand Partners (Hikvision, CP PLUS, Dahua, Uniview, Imou) */}
       <TrustedBrands />
 
       {/* Product Catalog & Category Filters - Only shown when user clicks Explore / Category */}
@@ -108,7 +108,7 @@ function MainApp() {
         />
       )}
 
-      {/* Interactive CCTV & Inverter Cost / Load Estimator */}
+      {/* Interactive CCTV Security Cost Estimator */}
       <EstimatorCalculator />
 
       {/* Google Reviews & Customer Testimonials (Connected to Google Maps Share Link) */}

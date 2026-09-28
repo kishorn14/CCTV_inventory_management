@@ -49,7 +49,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
               </div>
             </div>
             <p style={{ lineHeight: 1.6, marginBottom: '20px', color: '#9ca3af' }}>
-              Your trusted partner for CCTV Security Surveillance, Automotive Car/Bike Batteries, and Home Inverters & UPS Power Systems.
+              Your trusted authorized partner for high-definition CCTV security surveillance, smart AI cameras, and commercial NVR installations.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
               <a
@@ -89,13 +89,15 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
           {/* Col 2: Solutions & Categories */}
           <div>
             <h4 style={{ color: '#ffffff', fontSize: '1.05rem', fontWeight: 700, marginBottom: '16px' }}>
-              Products & Solutions
+              CCTV Cameras &amp; Kits
             </h4>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
-                { label: 'CCTV Security Systems', id: 'cctv' as CategoryType },
-                { label: 'Vehicle Batteries (Car & Bike)', id: 'battery' as CategoryType },
-                { label: 'UPS & Pure Sine Wave Inverters', id: 'inverter' as CategoryType },
+                { label: 'HD Dome & Bullet Kits', id: 'kits' as CategoryType },
+                { label: 'Smart Wi-Fi & PTZ Cameras', id: 'wifi' as CategoryType },
+                { label: '4K IP & Commercial NVR', id: 'ip_nvr' as CategoryType },
+                { label: '4G SIM & Solar Cameras', id: 'solar_4g' as CategoryType },
+                { label: 'All CCTV Packages', id: 'cctv' as CategoryType },
               ].map((item) => (
                 <li key={item.id}>
                   <a
@@ -115,22 +117,22 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
           {/* Col 3: Services & Quick Links */}
           <div>
             <h4 style={{ color: '#ffffff', fontSize: '1.05rem', fontWeight: 700, marginBottom: '16px' }}>
-              Quick Services
+              Installation &amp; Repair
             </h4>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <li>
                 <button onClick={onOpenBooking} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
-                  • Doorstep Battery Fitment
+                  • CCTV Camera Installation &amp; Wiring
                 </button>
               </li>
               <li>
                 <button onClick={onOpenBooking} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
-                  • CCTV Installation & Mobile View
+                  • Mobile App Remote Live View Setup
                 </button>
               </li>
               <li>
                 <button onClick={onOpenBooking} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
-                  • Inverter Repair & Water Topup
+                  • Offline Camera &amp; DVR Hard Disk Repair
                 </button>
               </li>
               <li>
@@ -139,7 +141,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
                 </button>
               </li>
               <li>
-                <a href="#estimator" style={{ color: '#9ca3af' }}>• Interactive Cost Estimator</a>
+                <a href="#estimator" style={{ color: '#9ca3af' }}>• Interactive CCTV Cost Estimator</a>
               </li>
             </ul>
           </div>

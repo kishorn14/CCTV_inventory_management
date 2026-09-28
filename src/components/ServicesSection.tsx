@@ -1,12 +1,12 @@
 import React from 'react';
 import { 
   Camera, 
-  BatteryCharging, 
-  Zap, 
   Wrench, 
   Clock, 
   CheckCircle2, 
-  ArrowRight 
+  ArrowRight,
+  Shield,
+  Award
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { CategoryType } from '../types';
@@ -18,32 +18,17 @@ interface ServicesSectionProps {
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking }) => {
   const { services } = useShop();
 
-  const getServiceIcon = (category: string) => {
-    switch (category) {
-      case 'cctv': return Camera;
-      case 'battery': return BatteryCharging;
-      case 'inverter': return Zap;
-      default: return Wrench;
+  const getServiceIcon = (iconName?: string) => {
+    switch (iconName) {
+      case 'Shield': return Shield;
+      case 'Award': return Award;
+      case 'Wrench': return Wrench;
+      default: return Camera;
     }
   };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'cctv': return '#1d4ed8';
-      case 'battery': return '#059669';
-      case 'inverter': return '#d97706';
-      default: return '#1d4ed8';
-    }
-  };
-
-  const getCategoryBg = (category: string) => {
-    switch (category) {
-      case 'cctv': return '#eff6ff';
-      case 'battery': return '#ecfdf5';
-      case 'inverter': return '#fffbeb';
-      default: return '#eff6ff';
-    }
-  };
+  const getCategoryColor = (_cat?: string) => '#1d4ed8';
+  const getCategoryBg = (_cat?: string) => '#eff6ff';
 
   return (
     <section id="services" className="section-padding" style={{ position: 'relative' }}>
@@ -68,7 +53,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenBooking 
           gap: '20px'
         }}>
           {services.map((srv) => {
-            const Icon = getServiceIcon(srv.category);
+            const Icon = getServiceIcon(srv.iconName);
             const accentColor = getCategoryColor(srv.category);
             const iconBg = getCategoryBg(srv.category);
 

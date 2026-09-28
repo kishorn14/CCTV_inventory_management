@@ -3,8 +3,10 @@ import {
   X, 
   MessageCircle, 
   Camera, 
-  BatteryCharging, 
-  Zap, 
+  Video,
+  Wifi,
+  Shield,
+  Sun,
   Wrench, 
   CheckCircle, 
   MapPin, 
@@ -34,32 +36,50 @@ interface ServiceBookingModalProps {
 
 const DEFAULT_SERVICE_OPTIONS: Record<CategoryType, string[]> = {
   all: [
-    'General Site Inspection & Consultation',
-    'Multi-Equipment Service & AMC',
-    'Emergency Breakdown Service'
-  ],
-  cctv: [
-    'New CCTV System Installation',
-    'Camera Offline / Black Screen Fix',
-    'Mobile Live Viewing Configuration',
+    'New CCTV System Installation (Home / Villa / Shop)',
+    'Commercial 4K IP & Multi-Channel NVR Setup',
+    'Smart Wi-Fi 360° / 4G Solar Camera Installation',
+    'Camera Offline, Video Loss & Blank Screen Fix',
     'DVR / NVR Hard Disk & Recording Repair',
-    'Cable Fault & Power Supply Repair',
+    'Mobile Live Viewing Configuration (Hik-Connect / DMSS / gCMOB)',
+    'Cable Fault & Power Supply (SMPS) Replacement',
+    'Camera Shifting / Re-Installation',
     'Annual Maintenance Contract (AMC)'
   ],
-  battery: [
-    'Car Battery Replacement & Doorstep Fitment',
-    'Bike & Scooter Battery Replacement',
-    'Commercial Vehicle & Tractor Battery Service',
-    'Emergency Vehicle Jumpstart Support',
-    'Free Battery & Alternator Health Check'
+  cctv: [
+    'New CCTV System Installation (Home / Villa / Shop)',
+    'Commercial 4K IP & Multi-Channel NVR Setup',
+    'Smart Wi-Fi 360° / 4G Solar Camera Installation',
+    'Camera Offline, Video Loss & Blank Screen Fix',
+    'DVR / NVR Hard Disk & Recording Repair',
+    'Mobile Live Viewing Configuration (Hik-Connect / DMSS / gCMOB)',
+    'Cable Fault & Power Supply (SMPS) Replacement',
+    'Camera Shifting / Re-Installation',
+    'Annual Maintenance Contract (AMC)'
   ],
-  inverter: [
-    'Home Inverter & Tall Tubular Battery Setup',
-    'Mini DC UPS for Wi-Fi Router & Modem',
-    'CCTV Centralized UPS Power Backup',
-    'Inverter Beeping / PCB Repair',
-    'Battery Distilled Water Top-Up & Descaling',
-    'Commercial Office UPS Maintenance'
+  kits: [
+    '4-Camera / 8-Camera Complete HD Package Installation',
+    'DVR Setup with 1TB / 2TB Surveillance Hard Disk',
+    'Concealed Cabling & Wall Fitting',
+    'Existing Camera Kit Relocation / Shifting'
+  ],
+  wifi: [
+    'Smart 360° Wi-Fi Camera Setup & Mobile Pairing',
+    'Memory Card Setup & Cloud Recording Support',
+    'Two-Way Audio & Motion Tracking Configuration',
+    'Wi-Fi Range Extension / Signal Troubleshooting'
+  ],
+  ip_nvr: [
+    'Commercial 4K IP Camera System Design & PoE Setup',
+    'Multi-Channel NVR Configuration with Enterprise Storage',
+    'AI Facial & Vehicle Perimeter Detection Setup',
+    'Multi-Branch Central CMS Remote Viewing'
+  ],
+  solar_4g: [
+    'Outdoor 4G SIM Standalone Solar Camera Installation',
+    'Farm / Construction Site Perimeter Security Setup',
+    'SIM Card Activation & Mobile Live Monitoring Test',
+    'Solar Panel Battery Angle & Surge Protection Check'
   ]
 };
 
@@ -165,10 +185,12 @@ export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
     }
 
     const categoryLabels: Record<string, string> = {
-      cctv: '📹 CCTV Surveillance System',
-      battery: '🔋 Vehicle / Automotive Battery',
-      inverter: '⚡ UPS & Inverter Power System',
-      all: '🛠️ General Inquiry / Multi-Service'
+      cctv: '📹 CCTV Camera System',
+      kits: '📦 HD CCTV Camera Kit',
+      wifi: '📶 Smart Wi-Fi / PTZ Camera',
+      ip_nvr: '🌐 4K IP & Commercial NVR',
+      solar_4g: '☀️ 4G SIM / Solar Camera',
+      all: '🛠️ General CCTV Inquiry'
     };
 
     const categoryName = categoryLabels[category] || category;
@@ -308,17 +330,19 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
           <form onSubmit={handleSubmit}>
             {/* Category Selector Tabs */}
             <div className="form-group">
-              <label className="form-label">Select Equipment / Category *</label>
+              <label className="form-label">Select CCTV Service Category *</label>
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
                 gap: '8px',
                 marginTop: '6px'
               }}>
                 {[
-                  { id: 'cctv' as CategoryType, label: 'CCTV Security', icon: Camera },
-                  { id: 'battery' as CategoryType, label: 'Vehicle Battery', icon: BatteryCharging },
-                  { id: 'inverter' as CategoryType, label: 'Inverter & UPS', icon: Zap },
+                  { id: 'cctv' as CategoryType, label: 'All CCTV Setup', icon: Camera },
+                  { id: 'kits' as CategoryType, label: 'HD Kits & DVR', icon: Video },
+                  { id: 'wifi' as CategoryType, label: 'Smart Wi-Fi', icon: Wifi },
+                  { id: 'ip_nvr' as CategoryType, label: '4K IP & NVR', icon: Shield },
+                  { id: 'solar_4g' as CategoryType, label: '4G Solar', icon: Sun },
                 ].map((item) => {
                   const Icon = item.icon;
                   const isSelected = category === item.id;
@@ -743,7 +767,7 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
               <textarea
                 className="form-textarea"
                 rows={2}
-                placeholder="e.g. Need urgent battery replacement or CCTV mobile view setup..."
+                placeholder="e.g. Need 4/8 camera installation quotation or offline camera repair..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
               />
