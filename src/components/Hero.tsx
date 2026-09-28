@@ -348,7 +348,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
               }}>
                 <img
                   src="/hero-smart-home.jpg"
-                  alt="Smart Home Security & Power Backup Solutions"
+                  alt="Smart CCTV Security & 24x7 HD Surveillance Solutions"
                   style={{
                     width: '100%',
                     height: 'auto',
