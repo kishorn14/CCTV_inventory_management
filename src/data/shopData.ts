@@ -1,4 +1,4 @@
-import { Product, ServiceItem } from '../types';
+import { Product, ServiceItem, Review } from '../types';
 
 export const CATEGORIES = [
   { id: 'all', label: 'All Cameras & Kits', icon: 'Sparkles' },
@@ -281,5 +281,86 @@ export const FAQS = [
   {
     q: 'What warranty is provided on CCTV cameras and recording equipment?',
     a: 'All our Hikvision, CP PLUS, and Dahua cameras, DVRs, and NVRs carry 2 to 3 years official manufacturer warranty with original GST tax invoices. Surveillance hard disks carry up to 3 years replacement warranty.'
+  }
+];
+
+export const REAL_GOOGLE_REVIEWS: Review[] = [
+  {
+    id: 'rev-sandeep',
+    name: 'sandeep mk',
+    badge: 'Local Guide · 10 reviews · 6 photos',
+    rating: 5,
+    service: 'HD CCTV Setup & Mobile Live App Config',
+    comment: 'Quick and clean installation with good camera coverage and clear video quality. The team was professional, explained everything well, and set up the mobile app perfectly. Very satisfied with the service!',
+    time: '10 months ago',
+    date: '10 months ago',
+    location: 'Davangere',
+    photos: ['/reviews/sandeep-1.jpg', '/reviews/sandeep-2.jpg'],
+    verified: true
+  },
+  {
+    id: 'rev-praveen',
+    name: 'Praveen MS',
+    badge: '3 reviews · 2 photos',
+    rating: 5,
+    service: 'Farm & Home 4G Solar PTZ Cameras',
+    comment: 'I installed 4 solar cameras and CCTV system on my farm and home through Mekha Solutions & Services in Davanagere, and I am highly impressed. Their service was excellent, with quick installation and a very reasonable price. The solar camera setup has been working seamlessly.',
+    time: 'a year ago',
+    date: '1 year ago',
+    location: 'Davangere',
+    photos: ['/reviews/praveen-1.jpg', '/reviews/praveen-2.jpg'],
+    verified: true
+  },
+  {
+    id: 'rev-shruthi',
+    name: 'Shruthi N',
+    badge: '4 reviews · 2 photos',
+    rating: 5,
+    service: 'Outdoor Full HD Security Camera Installation',
+    comment: 'Great CCTV camera with clear footage. The Installation service was on time and very professional. They explained everything nicely and made sure the system was running perfectly. Totally satisfied with the product and service!',
+    time: '10 months ago',
+    date: '10 months ago',
+    location: 'Davangere',
+    photos: ['/reviews/shruthi-1.jpg', '/reviews/shruthi-2.jpg'],
+    verified: true
+  },
+  {
+    id: 'rev-lakshman',
+    name: 'Lakshman Jasthi',
+    badge: 'Local Guide · 15 reviews · 87 photos',
+    rating: 5,
+    service: 'Farm Pond Solar PTZ Camera System',
+    comment: 'Installed solar PTZ camera for my farm pond and 2 other cameras for my farm, excellent service and they are working seamlessly. Prices are reasonable. Highly recommend them for CCTV installation and service.',
+    time: '3 years ago',
+    date: '3 years ago',
+    location: 'Davangere',
+    photos: ['/reviews/lakshman-1.jpg'],
+    verified: true
+  },
+  {
+    id: 'rev-bharath',
+    name: 'Bharath Kumar',
+    badge: 'Local Guide · 12 reviews · 2 photos',
+    rating: 5,
+    service: 'Farmland 4G Solar CCTV Camera Installation',
+    comment: 'Got solar camera installed in my farm. Very good quality and fair pricing. Timely installation and no hidden prices. I highly recommend Mekha solutions.',
+    time: 'a year ago',
+    date: '1 year ago',
+    location: 'Davangere',
+    photos: ['/reviews/bharath-1.jpg', '/reviews/bharath-2.jpg'],
+    verified: true
+  },
+  {
+    id: 'rev-rasheed',
+    name: 'Rasheed Rashe',
+    badge: '5 reviews · 2 photos',
+    rating: 5,
+    service: 'CCTV Camera Installation & AMC Service',
+    comment: 'Prompt CCTV installation and excellent after-sales customer support. Very fair pricing and trustworthy service in Davangere.',
+    time: '2 years ago',
+    date: '2 years ago',
+    location: 'Davangere',
+    photos: [],
+    verified: true
   }
 ];

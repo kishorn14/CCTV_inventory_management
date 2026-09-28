@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Star, ChevronLeft, ChevronRight, MapPin, ExternalLink, MessageSquareQuote } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight, MapPin, ExternalLink, MessageSquareQuote, CheckCircle2, Image as ImageIcon, X, PenSquare } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { REAL_GOOGLE_REVIEWS } from '../data/shopData';
 
 // Authentic Google G Logo SVG
 const GoogleGIcon: React.FC<{ size?: number }> = ({ size = 20 }) => (
@@ -13,74 +14,36 @@ const GoogleGIcon: React.FC<{ size?: number }> = ({ size = 20 }) => (
 );
 
 const AVATAR_COLORS = [
-  { bg: '#ef4444', text: '#ffffff' }, // Coral Red
-  { bg: '#3b82f6', text: '#ffffff' }, // Royal Blue
-  { bg: '#10b981', text: '#ffffff' }, // Emerald Green
-  { bg: '#8b5cf6', text: '#ffffff' }, // Purple
-  { bg: '#f59e0b', text: '#ffffff' }, // Amber Gold
+  { bg: '#ef4444', text: '#ffffff' }, // Red
+  { bg: '#2563eb', text: '#ffffff' }, // Royal Blue
+  { bg: '#059669', text: '#ffffff' }, // Emerald
+  { bg: '#7c3aed', text: '#ffffff' }, // Violet
+  { bg: '#d97706', text: '#ffffff' }, // Amber
+  { bg: '#0891b2', text: '#ffffff' }, // Cyan
 ];
 
 export const GoogleReviews: React.FC = () => {
   const { shopInfo } = useShop();
 
-  const googleMapsLink = shopInfo.googleMapsUrl || 'https://share.google/Qdy82hkQa2UO5Axtj';
+  const googleMapsLink = shopInfo.googleMapsUrl || 'https://www.google.com/search?q=Meksha+CCTV+Solutions+%26+Services+Davangere&kgmid=/g/11n09cskt5';
+  const writeReviewLink = 'https://www.google.com/search?q=Meksha+CCTV+Solutions+%26+Services+Davangere&kgmid=/g/11n09cskt5#lrd=0x3bba257406a44d2d:0xc752ee16d1ba5293,3,,,';
 
-  const reviews = [
-    {
-      id: '1',
-      name: 'Rajesh Kumar',
-      service: 'Hikvision 4-Camera ColorVu Setup',
-      comment: 'Got 4 Hikvision ColorVu night vision cameras installed at my residence last month — incredible colorful night video, neat concealed cabling, and the technicians configured the phone app in 10 minutes!',
-      rating: 5,
-      time: '3 weeks ago'
-    },
-    {
-      id: '2',
-      name: 'Suresh Gowda',
-      service: 'CP PLUS 8-Camera Retail Setup',
-      comment: 'Purchased CP PLUS 8-camera CCTV setup for our grocery supermarket. Mobile live view configuration was completed immediately. Super clear video and very prompt service.',
-      rating: 5,
-      time: '1 month ago'
-    },
-    {
-      id: '3',
-      name: 'Priya Sharma',
-      service: 'Smart 360° Wi-Fi PTZ Cameras',
-      comment: 'Needed indoor cameras for monitoring my parents and children. They recommended and installed 360° smart Wi-Fi cameras with two-way audio. Works like a charm and very easy to use!',
-      rating: 5,
-      time: '2 weeks ago'
-    },
-    {
-      id: '4',
-      name: 'Karthik N.',
-      service: 'CCTV AMC & DVR Hard Disk Repair',
-      comment: 'Reliable doorstep service. Technicians fixed our office DVR recording issue and replaced the hard disk cleanly on the same day. Transparent pricing and verified technicians.',
-      rating: 5,
-      time: '1 month ago'
-    },
-    {
-      id: '5',
-      name: 'Manjunath B.',
-      service: 'Dahua 4K IP Commercial Surveillance',
-      comment: 'Best team in town for commercial CCTV security. Installed Dahua 4K IP cameras with AI perimeter detection for our warehouse. Genuine products with official warranty card and GST bill.',
-      rating: 5,
-      time: '2 months ago'
-    }
-  ];
+  const reviews = REAL_GOOGLE_REVIEWS;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
 
-  // Auto-advance carousel every 5.5 seconds if not paused
+  // Auto-advance carousel every 6 seconds if not paused and lightbox closed
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || previewImage) return;
     const interval = setInterval(() => {
       setCurrentIndex(prev => (prev + 1) % reviews.length);
-    }, 5500);
+    }, 6000);
     return () => clearInterval(interval);
-  }, [isPaused, reviews.length]);
+  }, [isPaused, previewImage, reviews.length]);
 
   const handleNext = () => {
     setCurrentIndex(prev => (prev + 1) % reviews.length);
@@ -111,44 +74,49 @@ export const GoogleReviews: React.FC = () => {
     <section 
       id="reviews" 
       style={{
-        padding: '50px 16px 45px',
+        padding: '55px 16px 50px',
         background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%)',
         position: 'relative',
         overflow: 'hidden'
       }}
     >
-      <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+      <div style={{ maxWidth: '840px', margin: '0 auto', textAlign: 'center' }}>
         
-        {/* Section Pill Badge */}
+        {/* Google Reviews Live Badge */}
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: '7px',
-          padding: '6px 14px',
+          gap: '8px',
+          padding: '6px 16px',
           borderRadius: '9999px',
-          background: '#fef3c7',
-          border: '1px solid #fde68a',
-          color: '#b45309',
-          fontSize: '0.75rem',
-          fontWeight: 800,
-          letterSpacing: '0.06em',
-          textTransform: 'uppercase',
-          marginBottom: '14px',
-          boxShadow: '0 2px 6px rgba(245, 158, 11, 0.12)'
+          background: '#ffffff',
+          border: '1.5px solid #e2e8f0',
+          boxShadow: '0 2px 8px rgba(15, 23, 42, 0.06)',
+          marginBottom: '14px'
         }}>
-          <GoogleGIcon size={14} />
-          <span>Google Reviews • 4.9 ★ (81 Reviews)</span>
+          <GoogleGIcon size={18} />
+          <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a' }}>
+            Google Rating 4.9
+          </span>
+          <div style={{ display: 'flex', gap: '1px' }}>
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} size={13} fill="#f59e0b" color="#f59e0b" />
+            ))}
+          </div>
+          <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 600 }}>
+            (82 Verified Reviews)
+          </span>
         </div>
 
         {/* Section Heading */}
         <h2 style={{
-          fontSize: 'clamp(1.4rem, 4vw, 2.1rem)',
+          fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
           fontWeight: 800,
           color: '#0f172a',
           lineHeight: 1.25,
           marginBottom: '10px'
         }}>
-          Loved by Customers Across Davangere &amp; Karnataka
+          Real Reviews from Davangere Customers
         </h2>
 
         {/* Section Subtitle */}
@@ -156,12 +124,53 @@ export const GoogleReviews: React.FC = () => {
           fontSize: 'clamp(0.85rem, 2.2vw, 0.95rem)',
           color: '#64748b',
           lineHeight: 1.55,
-          marginBottom: '28px',
-          maxWidth: '580px',
+          maxWidth: '620px',
           margin: '0 auto 28px'
         }}>
-          Real reviews from verified Google Maps customers — see why people trust {shopInfo.shopName} for CCTV cameras &amp; surveillance security installations.
+          Directly from our verified <strong>Google Business Profile</strong> — see genuine customer feedback, farm installations, and home CCTV setups across Davangere &amp; Karnataka.
         </p>
+
+        {/* Quick Reviewer Switcher Chips */}
+        <div style={{
+          display: 'flex',
+          gap: '8px',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+          marginBottom: '20px'
+        }}>
+          {reviews.map((rev, idx) => (
+            <button
+              key={rev.id}
+              onClick={() => setCurrentIndex(idx)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 12px',
+                borderRadius: '9999px',
+                fontSize: '0.78rem',
+                fontWeight: currentIndex === idx ? 800 : 600,
+                background: currentIndex === idx ? '#0f172a' : '#ffffff',
+                color: currentIndex === idx ? '#ffffff' : '#475569',
+                border: currentIndex === idx ? '1px solid #0f172a' : '1px solid #e2e8f0',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: currentIndex === idx ? '0 4px 12px rgba(15, 23, 42, 0.15)' : 'none'
+              }}
+            >
+              <span style={{
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                background: currentIndex === idx ? '#38bdf8' : '#cbd5e1'
+              }} />
+              <span>{rev.name}</span>
+              {rev.photos && rev.photos.length > 0 && (
+                <ImageIcon size={11} color={currentIndex === idx ? '#38bdf8' : '#94a3b8'} />
+              )}
+            </button>
+          ))}
+        </div>
 
         {/* Testimonial Card Container */}
         <div 
@@ -179,37 +188,51 @@ export const GoogleReviews: React.FC = () => {
           <div 
             style={{
               background: '#ffffff',
-              borderRadius: '26px',
-              border: '1px solid #e2e8f0',
-              padding: '32px 28px 26px',
-              boxShadow: '0 12px 36px -8px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03)',
+              borderRadius: '24px',
+              border: '1.5px solid #e2e8f0',
+              padding: '28px 26px 24px',
+              boxShadow: '0 14px 38px -10px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03)',
               textAlign: 'left',
               position: 'relative',
               transition: 'all 0.3s ease',
-              minHeight: '210px',
+              minHeight: '230px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between'
             }}
           >
-            {/* Top Quote Icon */}
+            {/* Top Bar: Quote + Stars + Service Tag */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginBottom: '14px'
+              marginBottom: '14px',
+              flexWrap: 'wrap',
+              gap: '10px'
             }}>
-              <div style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                background: '#eff6ff',
-                color: '#3b82f6',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <MessageSquareQuote size={20} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  background: '#eff6ff',
+                  color: '#2563eb',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <MessageSquareQuote size={20} />
+                </div>
+                <div style={{
+                  background: '#f1f5f9',
+                  color: '#0f172a',
+                  padding: '3px 10px',
+                  borderRadius: '6px',
+                  fontSize: '0.74rem',
+                  fontWeight: 700
+                }}>
+                  {currentReview.service}
+                </div>
               </div>
 
               {/* Star Rating Badge */}
@@ -218,12 +241,12 @@ export const GoogleReviews: React.FC = () => {
                 alignItems: 'center',
                 gap: '2px',
                 background: '#fef3c7',
-                padding: '4px 8px',
+                padding: '4px 10px',
                 borderRadius: '9999px',
                 border: '1px solid #fde68a'
               }}>
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={12} fill="#f59e0b" color="#f59e0b" />
+                  <Star key={i} size={13} fill="#f59e0b" color="#f59e0b" />
                 ))}
               </div>
             </div>
@@ -232,13 +255,80 @@ export const GoogleReviews: React.FC = () => {
             <p style={{
               fontSize: '0.96rem',
               color: '#1e293b',
-              lineHeight: 1.6,
+              lineHeight: 1.65,
               fontWeight: 500,
               fontStyle: 'normal',
-              marginBottom: '20px'
+              marginBottom: currentReview.photos && currentReview.photos.length > 0 ? '14px' : '20px'
             }}>
               “{currentReview.comment}”
             </p>
+
+            {/* Customer Installation Photos Attached to Review */}
+            {currentReview.photos && currentReview.photos.length > 0 && (
+              <div style={{
+                marginBottom: '18px',
+                padding: '12px 14px',
+                borderRadius: '14px',
+                background: '#f8fafc',
+                border: '1px dashed #cbd5e1'
+              }}>
+                <div style={{
+                  fontSize: '0.72rem',
+                  color: '#475569',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  marginBottom: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}>
+                  <ImageIcon size={13} color="#2563eb" />
+                  <span>Real Installation Photos ({currentReview.photos.length}) • Click to Enlarge</span>
+                </div>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  {currentReview.photos.map((photo, pIdx) => (
+                    <button
+                      key={pIdx}
+                      onClick={() => setPreviewImage(photo)}
+                      title="Click to view full photo"
+                      style={{
+                        position: 'relative',
+                        width: '74px',
+                        height: '74px',
+                        borderRadius: '10px',
+                        overflow: 'hidden',
+                        border: '2px solid #ffffff',
+                        boxShadow: '0 2px 8px rgba(15, 23, 42, 0.12)',
+                        padding: 0,
+                        background: '#0f172a',
+                        cursor: 'pointer',
+                        transition: 'transform 0.18s ease, box-shadow 0.18s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.08)';
+                        e.currentTarget.style.boxShadow = '0 6px 16px rgba(37, 99, 235, 0.25)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.boxShadow = '0 2px 8px rgba(15, 23, 42, 0.12)';
+                      }}
+                    >
+                      <img
+                        src={photo}
+                        alt={`${currentReview.name} CCTV installation photo`}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block'
+                        }}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Reviewer Details Footer */}
             <div style={{
@@ -265,15 +355,39 @@ export const GoogleReviews: React.FC = () => {
                   boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
                   flexShrink: 0
                 }}>
-                  {currentReview.name.charAt(0)}
+                  {currentReview.name.charAt(0).toUpperCase()}
                 </div>
 
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.98rem', color: '#0f172a', lineHeight: 1.2 }}>
-                    {currentReview.name}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                    <span style={{ fontWeight: 800, fontSize: '0.98rem', color: '#0f172a', lineHeight: 1.2 }}>
+                      {currentReview.name}
+                    </span>
+                    {currentReview.badge?.includes('Local Guide') && (
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '3px',
+                        background: '#fff7ed',
+                        border: '1px solid #fed7aa',
+                        color: '#c2410c',
+                        padding: '1px 6px',
+                        borderRadius: '4px',
+                        fontSize: '0.68rem',
+                        fontWeight: 700
+                      }}>
+                        ★ Local Guide
+                      </span>
+                    )}
                   </div>
-                  <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '2px' }}>
-                    {currentReview.service} • <span style={{ color: '#059669', fontWeight: 600 }}>Verified Review</span>
+                  <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                    {currentReview.badge && <span>{currentReview.badge}</span>}
+                    <span>•</span>
+                    <span style={{ color: '#475569' }}>{currentReview.time || currentReview.date}</span>
+                    <span>•</span>
+                    <span style={{ color: '#059669', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                      <CheckCircle2 size={12} color="#059669" /> Verified Google Review
+                    </span>
                   </div>
                 </div>
               </div>
@@ -283,21 +397,27 @@ export const GoogleReviews: React.FC = () => {
                 href={googleMapsLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                title="View on Google Maps"
+                title="View verified review on Google"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  width: '36px',
-                  height: '36px',
+                  width: '38px',
+                  height: '38px',
                   borderRadius: '50%',
                   background: '#f8fafc',
                   border: '1px solid #e2e8f0',
-                  transition: 'transform 0.2s ease',
+                  transition: 'all 0.2s ease',
                   flexShrink: 0
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                  e.currentTarget.style.borderColor = '#4285F4';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.borderColor = '#e2e8f0';
+                }}
               >
                 <GoogleGIcon size={20} />
               </a>
@@ -313,22 +433,23 @@ export const GoogleReviews: React.FC = () => {
               left: '-20px',
               top: '50%',
               transform: 'translateY(-50%)',
-              width: '38px',
-              height: '38px',
+              width: '40px',
+              height: '40px',
               borderRadius: '50%',
               background: '#ffffff',
-              border: '1px solid #e2e8f0',
-              boxShadow: '0 4px 12px rgba(15, 23, 42, 0.1)',
+              border: '1px solid #cbd5e1',
+              boxShadow: '0 4px 14px rgba(15, 23, 42, 0.12)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#334155',
-              zIndex: 2
+              color: '#1e293b',
+              zIndex: 2,
+              transition: 'all 0.15s ease'
             }}
             className="hide-mobile"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={20} />
           </button>
 
           <button
@@ -339,22 +460,23 @@ export const GoogleReviews: React.FC = () => {
               right: '-20px',
               top: '50%',
               transform: 'translateY(-50%)',
-              width: '38px',
-              height: '38px',
+              width: '40px',
+              height: '40px',
               borderRadius: '50%',
               background: '#ffffff',
-              border: '1px solid #e2e8f0',
-              boxShadow: '0 4px 12px rgba(15, 23, 42, 0.1)',
+              border: '1px solid #cbd5e1',
+              boxShadow: '0 4px 14px rgba(15, 23, 42, 0.12)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#334155',
-              zIndex: 2
+              color: '#1e293b',
+              zIndex: 2,
+              transition: 'all 0.15s ease'
             }}
             className="hide-mobile"
           >
-            <ChevronRight size={18} />
+            <ChevronRight size={20} />
           </button>
         </div>
 
@@ -366,12 +488,12 @@ export const GoogleReviews: React.FC = () => {
               <button
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
-                aria-label={`Go to slide ${idx + 1}`}
+                aria-label={`Go to review ${idx + 1}`}
                 style={{
-                  width: currentIndex === idx ? '22px' : '8px',
+                  width: currentIndex === idx ? '24px' : '8px',
                   height: '8px',
                   borderRadius: '9999px',
-                  background: currentIndex === idx ? '#1d4ed8' : '#cbd5e1',
+                  background: currentIndex === idx ? '#2563eb' : '#cbd5e1',
                   border: 'none',
                   padding: 0,
                   cursor: 'pointer',
@@ -382,13 +504,13 @@ export const GoogleReviews: React.FC = () => {
           </div>
 
           <span style={{ fontSize: '0.74rem', color: '#94a3b8', letterSpacing: '0.02em' }}>
-            ‹ Swipe to read more ›
+            ‹ Swipe to see more verified reviews ›
           </span>
         </div>
 
-        {/* Action Buttons (View Google Reviews & Get Directions) */}
+        {/* Action Buttons: View All Reviews, Write a Review, Get Directions */}
         <div style={{
-          marginTop: '22px',
+          marginTop: '24px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -416,9 +538,9 @@ export const GoogleReviews: React.FC = () => {
               transition: 'all 0.2s ease'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#3b82f6';
-              e.currentTarget.style.color = '#1d4ed8';
-              e.currentTarget.style.boxShadow = '0 4px 14px rgba(59, 130, 246, 0.15)';
+              e.currentTarget.style.borderColor = '#4285F4';
+              e.currentTarget.style.color = '#2563eb';
+              e.currentTarget.style.boxShadow = '0 4px 14px rgba(37, 99, 235, 0.15)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = '#cbd5e1';
@@ -427,8 +549,42 @@ export const GoogleReviews: React.FC = () => {
             }}
           >
             <GoogleGIcon size={16} />
-            <span>View All Google Reviews</span>
+            <span>View All 82 Google Reviews</span>
             <ExternalLink size={14} color="#64748b" />
+          </a>
+
+          {/* Write a Review on Google */}
+          <a
+            href={writeReviewLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              background: '#f8fafc',
+              border: '1.5px solid #e2e8f0',
+              padding: '10px 18px',
+              borderRadius: '9999px',
+              fontSize: '0.86rem',
+              fontWeight: 700,
+              color: '#334155',
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '7px',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#eff6ff';
+              e.currentTarget.style.borderColor = '#bfdbfe';
+              e.currentTarget.style.color = '#1d4ed8';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#f8fafc';
+              e.currentTarget.style.borderColor = '#e2e8f0';
+              e.currentTarget.style.color = '#334155';
+            }}
+          >
+            <PenSquare size={15} color="#2563eb" />
+            <span>Write a Review</span>
           </a>
 
           {/* Get Directions on Google Maps */}
@@ -460,11 +616,77 @@ export const GoogleReviews: React.FC = () => {
             }}
           >
             <MapPin size={15} color="#1d4ed8" />
-            <span>Get Directions</span>
+            <span>Davangere Store</span>
           </a>
         </div>
 
       </div>
+
+      {/* Full-size Photo Lightbox Modal */}
+      {previewImage && (
+        <div
+          onClick={() => setPreviewImage(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.88)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            zIndex: 99999
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              maxWidth: '90vw',
+              maxHeight: '85vh',
+              background: '#ffffff',
+              borderRadius: '20px',
+              overflow: 'hidden',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+            }}
+          >
+            <button
+              onClick={() => setPreviewImage(null)}
+              aria-label="Close photo preview"
+              style={{
+                position: 'absolute',
+                top: '12px',
+                right: '12px',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                background: 'rgba(15, 23, 42, 0.75)',
+                color: '#ffffff',
+                border: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 2,
+                transition: 'background 0.2s ease'
+              }}
+            >
+              <X size={20} />
+            </button>
+            <img
+              src={previewImage}
+              alt="Customer Installation CCTV Photo"
+              style={{
+                display: 'block',
+                maxWidth: '100%',
+                maxHeight: '80vh',
+                objectFit: 'contain'
+              }}
+            />
+          </div>
+        </div>
+      )}
 
       <style>{`
         @media (max-width: 640px) {

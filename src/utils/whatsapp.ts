@@ -7,9 +7,10 @@ export const SHOP_INFO = {
   whatsappNumber: "916366406305", // Phone without + or symbols for WhatsApp API
   address: "#536/10, No. 4B Cross, Dollars Colony, Shamanur",
   city: "Davangere, Karnataka 577004",
-  email: "support@mekshasolutions.com",
+  email: "info@mekshacctv.in",
   instagramUrl: "https://www.instagram.com/mekhasolutions?stkn=MWFlcnhkbzlpZmEybg==",
-  googleMapsUrl: "https://share.google/Qdy82hkQa2UO5Axtj",
+  googleMapsUrl: "https://www.google.com/search?q=Meksha+CCTV+Solutions+%26+Services+Davangere&kgmid=/g/11n09cskt5",
+  googleReviewUrl: "https://www.google.com/search?q=Meksha+CCTV+Solutions+%26+Services+Davangere&kgmid=/g/11n09cskt5#lrd=0x3bba257406a44d2d:0xc752ee16d1ba5293,3,,,",
   workingHours: "8:00 AM – 8:00 PM",
   workingDays: "All 7 Days Open (Doorstep Service Available)"
 };

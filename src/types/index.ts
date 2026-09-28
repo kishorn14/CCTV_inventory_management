@@ -30,11 +30,15 @@ export interface ServiceItem {
 export interface Review {
   id: string;
   name: string;
-  location: string;
+  location?: string;
+  badge?: string;
   rating: number;
   service: string;
   comment: string;
-  date: string;
+  date?: string;
+  time?: string;
+  photos?: string[];
+  verified?: boolean;
 }
 
 export interface BookingFormData {
