@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
   Sparkles,
-  Zap, 
   MessageCircle, 
   Phone,
   ArrowRight,
@@ -9,18 +8,16 @@ import {
   Clock, 
   Check, 
   Star, 
-  Users, 
+  Users,
   HardHat,
   Headphones,
   Calculator,
-  Gauge,
   Video,
-  BatteryCharging
+  Camera
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { createWhatsAppLink } from '../utils/whatsapp';
 import { CategoryType } from '../types';
-import { PowerPlannerModal } from './PowerPlannerModal';
 import { CctvEstimatorModal } from './CctvEstimatorModal';
 
 interface HeroProps {
@@ -31,33 +28,32 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelectCategory }) => {
   const { shopInfo } = useShop();
-  const [isPowerPlannerOpen, setIsPowerPlannerOpen] = useState<boolean>(false);
   const [isCctvEstimatorOpen, setIsCctvEstimatorOpen] = useState<boolean>(false);
 
   const rangeCards = [
     {
-      id: 'cctv' as CategoryType,
-      title: 'CCTV Surveillance',
-      subtitle: 'Hikvision, CP PLUS & Dahua HD Smart Cameras',
+      id: 'kits' as CategoryType,
+      title: 'HD Dome & Bullet Kits',
+      subtitle: 'Complete 4 & 8 Camera Packages with DVR, 1TB HDD & Cabling',
       image: '/range-cctv.jpg',
       icon: Video,
-      btnText: 'Explore CCTV'
+      btnText: 'Explore Kits'
     },
     {
-      id: 'battery' as CategoryType,
-      title: 'Batteries',
-      subtitle: 'All Types of Automotive & Inverter Batteries',
-      image: '/range-batteries.jpg',
-      icon: BatteryCharging,
-      btnText: 'Explore Batteries'
+      id: 'wifi' as CategoryType,
+      title: 'Smart Wi-Fi & PTZ',
+      subtitle: '360° Pan-Tilt, Two-Way Audio & AI Human Tracking for Homes & Shops',
+      image: 'https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=800&q=80',
+      icon: Camera,
+      btnText: 'Explore Wi-Fi Cams'
     },
     {
-      id: 'inverter' as CategoryType,
-      title: 'Inverters & UPS',
-      subtitle: 'Reliable Power Backup for Home & Office',
-      image: '/range-inverters.jpg',
-      icon: Zap,
-      btnText: 'Explore Inverters'
+      id: 'ip_nvr' as CategoryType,
+      title: '4K IP & Commercial NVR',
+      subtitle: 'Enterprise PoE AI Video Surveillance for Offices, Warehouses & Retail',
+      image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80',
+      icon: ShieldCheck,
+      btnText: 'Explore Commercial'
     }
   ];
 
@@ -125,9 +121,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
               marginBottom: '16px',
               letterSpacing: '-0.025em'
             }}>
-              Reliable Power &amp;{' '}
+              High-Definition &amp;{' '}
               <span style={{ position: 'relative', display: 'inline-block', color: '#0284c7' }}>
-                Smart Security
+                Smart CCTV Security
                 <svg
                   viewBox="0 0 250 20"
                   style={{
@@ -160,14 +156,14 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
               maxWidth: '560px',
               marginBottom: '26px'
             }}>
-              We specialize in genuine batteries, inverters, CCTV systems, and solar panels with professional installation and dependable after-sales support.
+              Authorized dealer for Hikvision, CP PLUS, and Dahua cameras. We deliver crystal-clear 1080P &amp; 4K surveillance, AI motion alerts, and certified doorstep installation with dependable after-sales care.
             </p>
 
             {/* 4. Action Buttons (Horizontal Row on Desktop, Full Width Stack on Mobile) */}
             <div className="hero-cta-buttons">
               {/* Button 1: Get Free Quote */}
               <button
-                onClick={() => onOpenQuote ? onOpenQuote() : onOpenBooking()}
+                onClick={() => onOpenQuote ? onOpenQuote() : onOpenBooking('cctv')}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -199,7 +195,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
 
               {/* Button 2: WhatsApp Now */}
               <a
-                href={createWhatsAppLink(`Hello ${shopInfo.shopName}, I would like to get a free quote for CCTV, batteries, or inverter systems.`, shopInfo.whatsappPhone)}
+                href={createWhatsAppLink(`Hello ${shopInfo.shopName}, I would like to get a free quote for CCTV cameras and security installation.`, shopInfo.whatsappPhone)}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
@@ -362,7 +358,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                   }}
                 />
 
-                {/* Floating Badge 1 - Top Left: Power Backup / 24x7 Uptime */}
+                {/* Floating Badge 1 - Top Left: 24x7 Surveillance */}
                 <div style={{
                   position: 'absolute',
                   top: '16px',
@@ -383,21 +379,21 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                     width: '34px',
                     height: '34px',
                     borderRadius: '50%',
-                    background: '#fef3c7',
-                    color: '#d97706',
+                    background: '#e0f2fe',
+                    color: '#0284c7',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0
                   }}>
-                    <Zap size={18} />
+                    <Camera size={18} />
                   </div>
                   <div style={{ textAlign: 'left' }}>
                     <div style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', lineHeight: 1 }}>
-                      Power Backup
+                      24×7 Surveillance
                     </div>
                     <div style={{ fontSize: '0.88rem', color: '#0f172a', fontWeight: 800, marginTop: '3px', lineHeight: 1.1 }}>
-                      24×7 Uptime
+                      Continuous Recording
                     </div>
                   </div>
                 </div>
@@ -423,8 +419,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                     width: '34px',
                     height: '34px',
                     borderRadius: '50%',
-                    background: '#e0f2fe',
-                    color: '#0284c7',
+                    background: '#dcfce7',
+                    color: '#16a34a',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -434,10 +430,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                   </div>
                   <div style={{ textAlign: 'left' }}>
                     <div style={{ fontSize: '0.66rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', lineHeight: 1 }}>
-                      Secured
+                      Mobile Live View
                     </div>
                     <div style={{ fontSize: '0.88rem', color: '#0f172a', fontWeight: 800, marginTop: '3px', lineHeight: 1.1 }}>
-                      HD CCTV Live
+                      HD Video Anywhere
                     </div>
                   </div>
                 </div>
@@ -474,7 +470,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
               marginBottom: '10px',
               letterSpacing: '-0.02em'
             }}>
-              Premium Power &amp; Security, Under One Roof
+              Advanced Security &amp; CCTV Surveillance, Under One Roof
             </h2>
 
             {/* Subtitle */}
@@ -485,7 +481,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
               maxWidth: '620px',
               margin: '0 auto 20px auto'
             }}>
-              Genuine products, certified installation and end-to-end after-sales support.
+              World-leading camera brands, certified cabling, mobile app integration, and lifetime service support.
             </p>
 
             {/* Swipe indicator for mobile */}
@@ -617,11 +613,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
               })}
             </div>
 
-            {/* Planners 2-Column Banner Grid (Responsive Side-by-Side on Desktop) */}
+            {/* Planners Banner: Interactive CCTV Package Cost Estimator */}
             <div className="hero-planners-grid">
-              {/* Power Planner Banner Card (Interactive Load Calculator Trigger) */}
               <div 
-                onClick={() => setIsPowerPlannerOpen(true)}
+                onClick={() => setIsCctvEstimatorOpen(true)}
                 style={{
                   background: 'linear-gradient(135deg, #024b86 0%, #03667c 100%)',
                   borderRadius: '24px',
@@ -674,8 +669,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                       textTransform: 'uppercase',
                       marginBottom: '4px'
                     }}>
-                      <Gauge size={13} />
-                      <span>Power Planner</span>
+                      <Video size={13} />
+                      <span>Instant CCTV Estimator</span>
                     </div>
                     <h3 style={{
                       fontSize: '1.08rem',
@@ -685,7 +680,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                       margin: '0 0 4px 0',
                       letterSpacing: '-0.01em'
                     }}>
-                      Not sure what inverter size you need?
+                      Want to estimate your CCTV setup cost?
                     </h3>
                     <p style={{
                       fontSize: '0.78rem',
@@ -694,7 +689,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                       margin: 0,
                       opacity: 0.9
                     }}>
-                      Use our free Load Calculator — pick your appliances &amp; get an instant recommendation.
+                      Use our interactive price calculator — pick cameras, resolution &amp; DVR storage for an instant quotation.
                     </p>
                   </div>
                 </div>
@@ -783,7 +778,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                 }}>
                   <img
                     src="/why-trust-banner.jpg"
-                    alt="Built on Trust, Backed by Expertise - CCTV & Inverter Solutions"
+                    alt="Built on Trust, Backed by Expertise - CCTV Security Solutions"
                     style={{
                       width: '100%',
                       height: 'auto',
@@ -889,7 +884,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
                   {
                     icon: Clock,
                     title: 'Quick Response',
-                    subtitle: 'Rapid doorstep breakdown support & emergency jumpstarts.',
+                    subtitle: 'Prompt doorstep technician visits for repairs, offline cameras, and AMC.',
                     bg: '#fffbeb',
                     border: '#fde68a',
                     color: '#d97706'
@@ -957,12 +952,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
             </div>
           </div>
         </div>
-
-      {/* Interactive Power Planner / Inverter Load Calculator Modal */}
-      <PowerPlannerModal
-        isOpen={isPowerPlannerOpen}
-        onClose={() => setIsPowerPlannerOpen(false)}
-      />
 
       {/* Interactive CCTV Security Package Cost Estimator Modal */}
       <CctvEstimatorModal

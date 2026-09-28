@@ -5,40 +5,32 @@ import { BrandPartner } from '../../types';
 
 // Preset sample images for quick 1-click selection
 const PRESET_BRAND_IMAGES = [
-  { label: 'Exide Battery', category: 'battery', url: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&q=80' },
-  { label: 'Amaron Battery', category: 'battery', url: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=600&q=80' },
-  { label: 'Luminous Inverter', category: 'battery', url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80' },
-  { label: 'Heavy Duty Commercial', category: 'battery', url: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=600&q=80' },
-  { label: 'CP PLUS Smart Cam', category: 'cctv', url: 'https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=600&q=80' },
   { label: 'Hikvision Dome Cam', category: 'cctv', url: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80' },
+  { label: 'CP PLUS Smart Cam', category: 'cctv', url: 'https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=600&q=80' },
   { label: 'Dahua Multi Camera', category: 'cctv', url: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80' },
   { label: 'UNV Outdoor Cam', category: 'cctv', url: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80' },
+  { label: 'Imou Wi-Fi Camera', category: 'cctv', url: 'https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=600&q=80' },
+  { label: 'Meksha 4G Solar Cam', category: 'cctv', url: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80' },
 ];
 
 export const AdminBrands: React.FC = () => {
   const { brands, addBrand, updateBrand, deleteBrand, resetBrands } = useShop();
 
-  const [activeCategory, setActiveCategory] = useState<'all' | 'battery' | 'cctv'>('all');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editingBrand, setEditingBrand] = useState<BrandPartner | null>(null);
 
   const [formData, setFormData] = useState<{
     name: string;
     tagline: string;
-    category: 'battery' | 'cctv';
+    category: 'cctv';
     image: string;
     badge: string;
   }>({
     name: '',
     tagline: '',
-    category: 'battery',
-    image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&q=80',
+    category: 'cctv',
+    image: PRESET_BRAND_IMAGES[0].url,
     badge: ''
-  });
-
-  const filteredBrands = brands.filter(b => {
-    if (activeCategory === 'all') return true;
-    return b.category === activeCategory;
   });
 
   const openAddModal = () => {
@@ -46,8 +38,8 @@ export const AdminBrands: React.FC = () => {
     setFormData({
       name: '',
       tagline: '',
-      category: activeCategory === 'cctv' ? 'cctv' : 'battery',
-      image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&q=80',
+      category: 'cctv',
+      image: PRESET_BRAND_IMAGES[0].url,
       badge: 'Authorized Dealer'
     });
     setIsModalOpen(true);
@@ -58,7 +50,7 @@ export const AdminBrands: React.FC = () => {
     setFormData({
       name: brand.name,
       tagline: brand.tagline,
-      category: brand.category,
+      category: 'cctv',
       image: brand.image,
       badge: brand.badge || ''
     });
@@ -67,13 +59,16 @@ export const AdminBrands: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim()) return;
+    if (!formData.name.trim() || !formData.image.trim()) {
+      alert('Please fill in Brand Name and Image URL');
+      return;
+    }
 
     if (editingBrand) {
       updateBrand(editingBrand.id, {
         name: formData.name.trim(),
         tagline: formData.tagline.trim(),
-        category: formData.category,
+        category: 'cctv',
         image: formData.image.trim(),
         badge: formData.badge.trim() || undefined
       });
@@ -81,61 +76,55 @@ export const AdminBrands: React.FC = () => {
       addBrand({
         name: formData.name.trim(),
         tagline: formData.tagline.trim(),
-        category: formData.category,
+        category: 'cctv',
         image: formData.image.trim(),
         badge: formData.badge.trim() || undefined
       });
     }
+
     setIsModalOpen(false);
   };
 
   const handleDelete = (id: string, name: string) => {
-    if (window.confirm(`Are you sure you want to delete brand "${name}"?`)) {
+    if (window.confirm(`Are you sure you want to remove "${name}" from the brands list?`)) {
       deleteBrand(id);
     }
   };
 
   const handleReset = () => {
-    if (window.confirm('Reset all brand partners to default seed (Exide, Amaron, Luminous, CP Plus, Hikvision, Dahua, UNV)?')) {
+    if (window.confirm('Reset all brand partners to original authorized CCTV brands (Hikvision, CP PLUS, Dahua, UNV, Imou, Meksha Pro)?')) {
       resetBrands();
     }
   };
 
   return (
     <div>
-      {/* Top Header Card */}
+      {/* Header & Controls */}
       <div style={{
-        background: '#ffffff',
-        borderRadius: '16px',
-        padding: '24px',
-        border: '1px solid #e2e8f0',
-        marginBottom: '24px',
-        boxShadow: '0 2px 8px rgba(15, 23, 42, 0.03)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '16px'
+        gap: '12px',
+        marginBottom: '20px'
       }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <Award size={22} color="#d97706" />
-            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a' }}>
-              Trusted Brand Partners &amp; Logos
-            </h2>
-          </div>
-          <p style={{ color: '#64748b', fontSize: '0.86rem' }}>
-            Customize the official brand showcase for Batteries (Exide, Amaron, Luminous) and CCTV (CP Plus, Hikvision, Dahua, etc.).
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0' }}>
+            Authorized CCTV Brand Partners
+          </h2>
+          <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0 }}>
+            Manage leading camera manufacturers shown on the storefront homepage.
           </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <button
             onClick={handleReset}
             className="btn btn-outline btn-sm"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+            title="Reset to default brand list"
           >
-            <RotateCcw size={15} /> Reset Defaults
+            <RotateCcw size={14} /> Reset Defaults
           </button>
 
           <button
@@ -148,39 +137,13 @@ export const AdminBrands: React.FC = () => {
         </div>
       </div>
 
-      {/* Category Filter Tabs */}
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
-        {[
-          { id: 'all' as const, label: `All Brands (${brands.length})` },
-          { id: 'battery' as const, label: `Battery & Inverters (${brands.filter(b => b.category === 'battery').length})` },
-          { id: 'cctv' as const, label: `CCTV Security (${brands.filter(b => b.category === 'cctv').length})` },
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveCategory(tab.id)}
-            style={{
-              padding: '8px 16px',
-              borderRadius: '8px',
-              border: activeCategory === tab.id ? '1.5px solid #1d4ed8' : '1px solid #e2e8f0',
-              background: activeCategory === tab.id ? '#eff6ff' : '#ffffff',
-              color: activeCategory === tab.id ? '#1d4ed8' : '#64748b',
-              fontWeight: 700,
-              fontSize: '0.85rem',
-              cursor: 'pointer'
-            }}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
       {/* Brands Grid */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: '18px'
       }}>
-        {filteredBrands.map(brand => (
+        {brands.map(brand => (
           <div
             key={brand.id}
             style={{
@@ -214,7 +177,7 @@ export const AdminBrands: React.FC = () => {
                   borderRadius: '10px'
                 }}
                 onError={(e) => {
-                  e.currentTarget.src = 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&q=80';
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80';
                 }}
               />
               <span style={{
@@ -225,11 +188,11 @@ export const AdminBrands: React.FC = () => {
                 borderRadius: '6px',
                 fontSize: '0.7rem',
                 fontWeight: 700,
-                background: brand.category === 'battery' ? '#ecfdf5' : '#eff6ff',
-                color: brand.category === 'battery' ? '#059669' : '#1d4ed8',
-                border: `1px solid ${brand.category === 'battery' ? '#a7f3d0' : '#bfdbfe'}`
+                background: '#eff6ff',
+                color: '#1d4ed8',
+                border: '1px solid #bfdbfe'
               }}>
-                {brand.category === 'battery' ? 'Battery / Inverter' : 'CCTV Security'}
+                CCTV Security
               </span>
 
               {brand.badge && (
@@ -241,9 +204,9 @@ export const AdminBrands: React.FC = () => {
                   borderRadius: '6px',
                   fontSize: '0.7rem',
                   fontWeight: 700,
-                  background: 'rgba(15, 23, 42, 0.8)',
-                  color: '#ffffff',
-                  backdropFilter: 'blur(4px)'
+                  background: '#fef3c7',
+                  color: '#b45309',
+                  border: '1px solid #fde68a'
                 }}>
                   {brand.badge}
                 </span>
@@ -251,43 +214,38 @@ export const AdminBrands: React.FC = () => {
             </div>
 
             {/* Content Details */}
-            <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div style={{ padding: '16px', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px 0' }}>
                   {brand.name}
                 </h3>
-                <p style={{ fontSize: '0.82rem', color: '#64748b', lineHeight: 1.4, marginBottom: '14px' }}>
+                <p style={{ fontSize: '0.82rem', color: '#64748b', margin: '0 0 16px 0', lineHeight: 1.4 }}>
                   {brand.tagline}
                 </p>
               </div>
 
-              {/* Actions */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                gap: '8px',
-                borderTop: '1px solid #f1f5f9',
-                paddingTop: '12px'
-              }}>
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: '8px', paddingTop: '10px', borderTop: '1px solid #f1f5f9' }}>
                 <button
                   onClick={() => openEditModal(brand)}
                   className="btn btn-outline btn-sm"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+                  style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
                 >
-                  <Edit2 size={13} /> Edit
+                  <Edit2 size={14} /> Edit
                 </button>
                 <button
                   onClick={() => handleDelete(brand.id, brand.name)}
+                  className="btn btn-outline btn-sm"
                   style={{
-                    background: '#fef2f2',
-                    border: '1px solid #fecaca',
                     color: '#b91c1c',
-                    borderRadius: '6px',
-                    padding: '6px 10px',
-                    cursor: 'pointer'
+                    borderColor: '#fecaca',
+                    background: '#fef2f2',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '8px 12px'
                   }}
-                  title="Delete Brand"
+                  title="Delete brand"
                 >
                   <Trash2 size={14} />
                 </button>
@@ -297,82 +255,53 @@ export const AdminBrands: React.FC = () => {
         ))}
       </div>
 
-      {/* Add / Edit Brand Modal */}
+      {/* Add / Edit Modal */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div
             className="modal-content"
             onClick={e => e.stopPropagation()}
-            style={{ maxWidth: '580px', padding: '24px', background: '#ffffff', color: '#0f172a' }}
+            style={{ maxWidth: '520px', background: '#ffffff', color: '#0f172a' }}
           >
-            {/* Modal Header */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: '18px',
-              borderBottom: '1px solid #e2e8f0',
-              paddingBottom: '12px'
-            }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>
-                {editingBrand ? `Edit Brand: ${editingBrand.name}` : 'Add New Trusted Brand'}
-              </h3>
+            <div className="modal-drag-handle" />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Award size={20} color="#1d4ed8" />
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0 }}>
+                  {editingBrand ? 'Edit CCTV Brand Partner' : 'Add New CCTV Brand Partner'}
+                </h3>
+              </div>
               <button
                 onClick={() => setIsModalOpen(false)}
-                style={{
-                  background: '#f1f5f9',
-                  border: 'none',
-                  borderRadius: '50%',
-                  width: '32px',
-                  height: '32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  color: '#64748b'
-                }}
+                style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}
               >
-                <X size={16} />
+                <X size={20} />
               </button>
             </div>
 
-            {/* Modal Form */}
             <form onSubmit={handleSubmit}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+              <div style={{ marginBottom: '14px' }}>
                 {/* Brand Name */}
                 <div className="form-group" style={{ marginBottom: 0 }}>
                   <label className="form-label">Brand Name *</label>
                   <input
                     type="text"
                     className="form-input"
-                    placeholder="e.g. Exide / CP Plus"
+                    placeholder="e.g. Hikvision / CP PLUS / Dahua"
                     value={formData.name}
                     onChange={e => setFormData({ ...formData, name: e.target.value })}
                     required
                   />
                 </div>
-
-                {/* Category */}
-                <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label className="form-label">Brand Category *</label>
-                  <select
-                    className="form-input"
-                    value={formData.category}
-                    onChange={e => setFormData({ ...formData, category: e.target.value as 'battery' | 'cctv' })}
-                  >
-                    <option value="battery">🔋 Battery &amp; Inverters</option>
-                    <option value="cctv">📹 CCTV Security</option>
-                  </select>
-                </div>
               </div>
 
               {/* Tagline */}
               <div className="form-group" style={{ marginBottom: '14px' }}>
-                <label className="form-label">Tagline / Highlight *</label>
+                <label className="form-label">Tagline / Key Highlight *</label>
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="e.g. Power That Lasts / Security Simplified"
+                  placeholder="e.g. World #1 in Surveillance / Smart AI Security"
                   value={formData.tagline}
                   onChange={e => setFormData({ ...formData, tagline: e.target.value })}
                   required
@@ -385,7 +314,7 @@ export const AdminBrands: React.FC = () => {
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="e.g. Authorized Dealer / Best Seller"
+                  placeholder="e.g. Authorized Dealer / Global #1 / Best Seller"
                   value={formData.badge}
                   onChange={e => setFormData({ ...formData, badge: e.target.value })}
                 />
@@ -409,9 +338,9 @@ export const AdminBrands: React.FC = () => {
               {/* Preset Image Selector */}
               <div style={{ marginBottom: '18px' }}>
                 <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px' }}>
-                  <Sparkles size={12} color="#d97706" /> Or Pick a High-Resolution Preset Image:
+                  <Sparkles size={12} color="#d97706" /> Or Pick a High-Resolution CCTV Preset Image:
                 </label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '8px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '8px' }}>
                   {PRESET_BRAND_IMAGES.map((preset, idx) => (
                     <button
                       type="button"
@@ -435,7 +364,7 @@ export const AdminBrands: React.FC = () => {
                         textOverflow: 'ellipsis'
                       }}
                     >
-                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: preset.category === 'battery' ? '#10b981' : '#3b82f6', flexShrink: 0 }} />
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#3b82f6', flexShrink: 0 }} />
                       <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{preset.label}</span>
                     </button>
                   ))}
@@ -449,7 +378,7 @@ export const AdminBrands: React.FC = () => {
                   borderRadius: '10px',
                   background: '#f8fafc',
                   border: '1px solid #e2e8f0',
-                  marginBottom: '20px',
+                  marginBottom: '18px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px'
@@ -457,31 +386,32 @@ export const AdminBrands: React.FC = () => {
                   <img
                     src={formData.image}
                     alt="Preview"
-                    style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover', border: '1px solid #cbd5e1' }}
+                    style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0 }}
                     onError={(e) => {
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&q=80';
+                      e.currentTarget.style.display = 'none';
                     }}
                   />
                   <div>
-                    <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>Image Live Preview:</div>
-                    <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#0f172a' }}>{formData.name || 'Brand Name'}</div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{formData.tagline || 'Tagline'}</div>
+                    <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>IMAGE PREVIEW</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a' }}>
+                      {formData.name || 'Brand Name'}
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* Modal Actions */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              {/* Submit Buttons */}
+              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="btn btn-outline btn-sm"
+                  className="btn btn-outline"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-primary btn-sm"
+                  className="btn btn-primary"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                 >
                   <Check size={16} /> Save Brand

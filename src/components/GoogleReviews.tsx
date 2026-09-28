@@ -29,24 +29,24 @@ export const GoogleReviews: React.FC = () => {
     {
       id: '1',
       name: 'Rajesh Kumar',
-      service: 'Home Inverter & Battery Setup',
-      comment: 'Got my home inverter installed last month — excellent service, fair pricing and the technicians were very professional. Highly recommend!',
+      service: 'Hikvision 4-Camera ColorVu Setup',
+      comment: 'Got 4 Hikvision ColorVu night vision cameras installed at my residence last month — incredible colorful night video, neat concealed cabling, and the technicians configured the phone app in 10 minutes!',
       rating: 5,
       time: '3 weeks ago'
     },
     {
       id: '2',
       name: 'Suresh Gowda',
-      service: 'Hikvision 4-Camera CCTV System',
-      comment: 'Purchased Hikvision 4-camera CCTV setup for our grocery supermarket. Mobile live view configuration was completed immediately. Super clear night vision!',
+      service: 'CP PLUS 8-Camera Retail Setup',
+      comment: 'Purchased CP PLUS 8-camera CCTV setup for our grocery supermarket. Mobile live view configuration was completed immediately. Super clear video and very prompt service.',
       rating: 5,
       time: '1 month ago'
     },
     {
       id: '3',
       name: 'Priya Sharma',
-      service: 'Doorstep Amaron Car Battery',
-      comment: 'Car battery died in the morning and they delivered & installed a genuine Amaron battery at my doorstep within 35 minutes with old battery scrap discount. Lifesaver!',
+      service: 'Smart 360° Wi-Fi PTZ Cameras',
+      comment: 'Needed indoor cameras for monitoring my parents and children. They recommended and installed 360° smart Wi-Fi cameras with two-way audio. Works like a charm and very easy to use!',
       rating: 5,
       time: '2 weeks ago'
     },
@@ -54,15 +54,15 @@ export const GoogleReviews: React.FC = () => {
       id: '4',
       name: 'Karthik N.',
       service: 'CCTV AMC & DVR Hard Disk Repair',
-      comment: 'Reliable doorstep service. Technicians fixed our office DVR recording issue and set up camera remote backup cleanly. Honest pricing and verified technicians.',
+      comment: 'Reliable doorstep service. Technicians fixed our office DVR recording issue and replaced the hard disk cleanly on the same day. Transparent pricing and verified technicians.',
       rating: 5,
       time: '1 month ago'
     },
     {
       id: '5',
       name: 'Manjunath B.',
-      service: 'Luminous Inverter Combo',
-      comment: 'Best place in town for inverter batteries and security cameras. Genuine Exide battery with official warranty card and GST bill. Great customer support!',
+      service: 'Dahua 4K IP Commercial Surveillance',
+      comment: 'Best team in town for commercial CCTV security. Installed Dahua 4K IP cameras with AI perimeter detection for our warehouse. Genuine products with official warranty card and GST bill.',
       rating: 5,
       time: '2 months ago'
     }
@@ -160,7 +160,7 @@ export const GoogleReviews: React.FC = () => {
           maxWidth: '580px',
           margin: '0 auto 28px'
         }}>
-          Real reviews from verified Google Maps customers — see why people trust {shopInfo.shopName} for CCTV, vehicle batteries &amp; inverters.
+          Real reviews from verified Google Maps customers — see why people trust {shopInfo.shopName} for CCTV cameras &amp; surveillance security installations.
         </p>
 
         {/* Testimonial Card Container */}

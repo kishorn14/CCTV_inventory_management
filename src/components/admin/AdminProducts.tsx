@@ -19,16 +19,18 @@ const PRESET_IMAGES: Record<CategoryType, string[]> = {
     'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80',
     'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80'
   ],
-  battery: [
-    'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=800&q=80'
+  kits: [
+    'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=800&q=80'
   ],
-  inverter: [
-    'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=800&q=80'
+  wifi: [
+    'https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=800&q=80'
+  ],
+  ip_nvr: [
+    'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80'
+  ],
+  solar_4g: [
+    'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80'
   ]
 };
 
@@ -405,7 +407,7 @@ export const AdminProducts: React.FC = () => {
                   <input
                     type="text"
                     className="form-input"
-                    placeholder="e.g. Amaron / Hikvision"
+                    placeholder="e.g. Hikvision / CP PLUS / Dahua"
                     value={formData.brand}
                     onChange={e => setFormData({ ...formData, brand: e.target.value })}
                     required
@@ -428,9 +430,11 @@ export const AdminProducts: React.FC = () => {
                       });
                     }}
                   >
-                    <option value="cctv">CCTV</option>
-                    <option value="battery">Vehicle Battery</option>
-                    <option value="inverter">UPS & Inverter</option>
+                    <option value="kits">HD Kits &amp; DVR</option>
+                    <option value="wifi">Smart Wi-Fi &amp; PTZ</option>
+                    <option value="ip_nvr">4K IP &amp; NVR</option>
+                    <option value="solar_4g">4G SIM &amp; Solar</option>
+                    <option value="cctv">General CCTV</option>
                   </select>
                 </div>
 

@@ -1,27 +1,21 @@
 import React, { useRef } from 'react';
-import { Award, ChevronLeft, ChevronRight, MessageCircle, Sparkles } from 'lucide-react';
+import { Award, ChevronLeft, ChevronRight, MessageCircle, Sparkles, ShieldCheck } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { createWhatsAppLink } from '../utils/whatsapp';
 
 export const TrustedBrands: React.FC = () => {
   const { brands, shopInfo } = useShop();
-
-  const batteryScrollRef = useRef<HTMLDivElement>(null);
   const cctvScrollRef = useRef<HTMLDivElement>(null);
 
-  const batteryBrands = brands.filter(b => b.category === 'battery');
-  const cctvBrands = brands.filter(b => b.category === 'cctv');
-
-  const scroll = (ref: React.RefObject<HTMLDivElement | null>, direction: 'left' | 'right') => {
-    if (ref.current) {
-      const scrollAmount = direction === 'left' ? -260 : 260;
-      ref.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  const scroll = (direction: 'left' | 'right') => {
+    if (cctvScrollRef.current) {
+      const scrollAmount = direction === 'left' ? -280 : 280;
+      cctvScrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
 
-  const handleBrandInquiry = (brandName: string, category: 'battery' | 'cctv') => {
-    const typeLabel = category === 'battery' ? 'Battery & Inverter' : 'CCTV Surveillance';
-    const message = `Hello ${shopInfo.shopName}, I would like to inquire about *${brandName}* (${typeLabel}) products and best price quotes available.`;
+  const handleBrandInquiry = (brandName: string) => {
+    const message = `Hello ${shopInfo.shopName}, I would like to inquire about *${brandName}* CCTV cameras, DVR/NVR packages, and best price quotes available.`;
     window.open(createWhatsAppLink(message, shopInfo.whatsappPhone), '_blank');
   };
 
@@ -29,7 +23,7 @@ export const TrustedBrands: React.FC = () => {
     <section 
       id="brands" 
       style={{
-        padding: '50px 16px 36px',
+        padding: '50px 16px 40px',
         background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%)',
         position: 'relative'
       }}
@@ -56,7 +50,7 @@ export const TrustedBrands: React.FC = () => {
             boxShadow: '0 2px 6px rgba(245, 158, 11, 0.12)'
           }}>
             <Award size={14} color="#d97706" />
-            <span>Trusted Brands</span>
+            <span>Authorized Security Partners</span>
           </div>
 
           <h2 style={{
@@ -66,7 +60,7 @@ export const TrustedBrands: React.FC = () => {
             lineHeight: 1.25,
             marginBottom: '10px'
           }}>
-            Authorized Dealer for India's Leading Brands
+            Authorized Dealer for India's Leading CCTV Brands
           </h2>
 
           <p style={{
@@ -74,429 +68,212 @@ export const TrustedBrands: React.FC = () => {
             color: '#64748b',
             lineHeight: 1.55
           }}>
-            We partner only with manufacturers known for reliability, performance and after-sales support.
+            We partner directly with world-class manufacturers known for crystal-clear optics, AI analytics, and official brand warranty support.
           </p>
         </div>
 
-        {/* Brand Categories Container Grid */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          
-          {/* 1. BATTERY BRANDS */}
-          {batteryBrands.length > 0 && (
-            <div style={{
-              background: '#ffffff',
-              borderRadius: '22px',
-              border: '1px solid #e2e8f0',
-              padding: '22px 18px 20px',
-              boxShadow: '0 4px 20px rgba(15, 23, 42, 0.04)',
-              position: 'relative'
-            }}>
-              {/* Category Header */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '18px'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
-                  <div style={{ height: '1px', width: '32px', background: '#cbd5e1' }} />
-                  <span style={{
-                    fontSize: '0.8rem',
-                    fontWeight: 800,
-                    letterSpacing: '0.1em',
-                    color: '#475569',
-                    textTransform: 'uppercase'
-                  }}>
-                    Battery Brands
-                  </span>
-                  <div style={{ height: '1px', width: '32px', background: '#cbd5e1' }} />
-                </div>
-
-                {/* Desktop navigation arrows */}
-                <div className="brand-scroll-arrows" style={{ display: 'none', position: 'absolute', right: '18px', gap: '6px' }}>
-                  <button
-                    onClick={() => scroll(batteryScrollRef, 'left')}
-                    aria-label="Scroll left"
-                    style={{
-                      width: '30px',
-                      height: '30px',
-                      borderRadius: '50%',
-                      background: '#f1f5f9',
-                      border: '1px solid #e2e8f0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      color: '#475569'
-                    }}
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-                  <button
-                    onClick={() => scroll(batteryScrollRef, 'right')}
-                    aria-label="Scroll right"
-                    style={{
-                      width: '30px',
-                      height: '30px',
-                      borderRadius: '50%',
-                      background: '#f1f5f9',
-                      border: '1px solid #e2e8f0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      color: '#475569'
-                    }}
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Horizontal Scroll Cards List */}
-              <div
-                ref={batteryScrollRef}
-                className="hide-scrollbar"
-                style={{
-                  display: 'flex',
-                  gap: '14px',
-                  overflowX: 'auto',
-                  scrollSnapType: 'x mandatory',
-                  padding: '4px 2px 10px',
-                  WebkitOverflowScrolling: 'touch'
-                }}
-              >
-                {batteryBrands.map((brand) => (
-                  <div
-                    key={brand.id}
-                    onClick={() => handleBrandInquiry(brand.name, 'battery')}
-                    style={{
-                      flex: '0 0 calc(50% - 10px)',
-                      minWidth: '150px',
-                      maxWidth: '220px',
-                      scrollSnapAlign: 'start',
-                      background: '#ffffff',
-                      borderRadius: '16px',
-                      border: '1px solid #e2e8f0',
-                      overflow: 'hidden',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s ease',
-                      boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-3px)';
-                      e.currentTarget.style.boxShadow = '0 8px 20px rgba(29, 78, 216, 0.12)';
-                      e.currentTarget.style.borderColor = '#93c5fd';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(15, 23, 42, 0.04)';
-                      e.currentTarget.style.borderColor = '#e2e8f0';
-                    }}
-                  >
-                    {/* Brand Showcase Image */}
-                    <div style={{
-                      height: '115px',
-                      background: 'radial-gradient(circle, #f8fafc 0%, #f1f5f9 100%)',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: '8px'
-                    }}>
-                      <img
-                        src={brand.image}
-                        alt={brand.name}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          borderRadius: '10px'
-                        }}
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&q=80';
-                        }}
-                      />
-                      {brand.badge && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '6px',
-                          right: '6px',
-                          background: 'rgba(15, 23, 42, 0.8)',
-                          color: '#ffffff',
-                          fontSize: '0.62rem',
-                          fontWeight: 700,
-                          padding: '2px 6px',
-                          borderRadius: '4px',
-                          backdropFilter: 'blur(4px)'
-                        }}>
-                          {brand.badge}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Card Body */}
-                    <div style={{
-                      padding: '12px 10px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      textAlign: 'center',
-                      flex: 1,
-                      justifyContent: 'space-between'
-                    }}>
-                      <div>
-                        <div style={{
-                          fontWeight: 800,
-                          fontSize: '0.95rem',
-                          color: '#0f172a',
-                          lineHeight: 1.2,
-                          marginBottom: '3px'
-                        }}>
-                          {brand.name}
-                        </div>
-                        <div style={{
-                          fontSize: '0.72rem',
-                          color: '#64748b',
-                          lineHeight: 1.3,
-                          fontWeight: 500
-                        }}>
-                          {brand.tagline}
-                        </div>
-                      </div>
-
-                      <div style={{
-                        marginTop: '8px',
-                        fontSize: '0.68rem',
-                        fontWeight: 700,
-                        color: '#1d4ed8',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '3px'
-                      }}>
-                        <MessageCircle size={11} />
-                        <span>Inquire</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 2. CCTV BRANDS */}
-          {cctvBrands.length > 0 && (
-            <div style={{
-              background: '#ffffff',
-              borderRadius: '22px',
-              border: '1px solid #e2e8f0',
-              padding: '22px 18px 20px',
-              boxShadow: '0 4px 20px rgba(15, 23, 42, 0.04)',
-              position: 'relative'
-            }}>
-              {/* Category Header */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: '18px'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%', justifyContent: 'center' }}>
-                  <div style={{ height: '1px', width: '32px', background: '#cbd5e1' }} />
-                  <span style={{
-                    fontSize: '0.8rem',
-                    fontWeight: 800,
-                    letterSpacing: '0.1em',
-                    color: '#475569',
-                    textTransform: 'uppercase'
-                  }}>
-                    CCTV Brands
-                  </span>
-                  <div style={{ height: '1px', width: '32px', background: '#cbd5e1' }} />
-                </div>
-
-                {/* Desktop navigation arrows */}
-                <div className="brand-scroll-arrows" style={{ display: 'none', position: 'absolute', right: '18px', gap: '6px' }}>
-                  <button
-                    onClick={() => scroll(cctvScrollRef, 'left')}
-                    aria-label="Scroll left"
-                    style={{
-                      width: '30px',
-                      height: '30px',
-                      borderRadius: '50%',
-                      background: '#f1f5f9',
-                      border: '1px solid #e2e8f0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      color: '#475569'
-                    }}
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-                  <button
-                    onClick={() => scroll(cctvScrollRef, 'right')}
-                    aria-label="Scroll right"
-                    style={{
-                      width: '30px',
-                      height: '30px',
-                      borderRadius: '50%',
-                      background: '#f1f5f9',
-                      border: '1px solid #e2e8f0',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      color: '#475569'
-                    }}
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Horizontal Scroll Cards List */}
-              <div
-                ref={cctvScrollRef}
-                className="hide-scrollbar"
-                style={{
-                  display: 'flex',
-                  gap: '14px',
-                  overflowX: 'auto',
-                  scrollSnapType: 'x mandatory',
-                  padding: '4px 2px 10px',
-                  WebkitOverflowScrolling: 'touch'
-                }}
-              >
-                {cctvBrands.map((brand) => (
-                  <div
-                    key={brand.id}
-                    onClick={() => handleBrandInquiry(brand.name, 'cctv')}
-                    style={{
-                      flex: '0 0 calc(50% - 10px)',
-                      minWidth: '150px',
-                      maxWidth: '220px',
-                      scrollSnapAlign: 'start',
-                      background: '#ffffff',
-                      borderRadius: '16px',
-                      border: '1px solid #e2e8f0',
-                      overflow: 'hidden',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      cursor: 'pointer',
-                      transition: 'all 0.25s ease',
-                      boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-3px)';
-                      e.currentTarget.style.boxShadow = '0 8px 20px rgba(29, 78, 216, 0.12)';
-                      e.currentTarget.style.borderColor = '#93c5fd';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(15, 23, 42, 0.04)';
-                      e.currentTarget.style.borderColor = '#e2e8f0';
-                    }}
-                  >
-                    {/* Brand Showcase Image */}
-                    <div style={{
-                      height: '115px',
-                      background: 'radial-gradient(circle, #f8fafc 0%, #f1f5f9 100%)',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: '8px'
-                    }}>
-                      <img
-                        src={brand.image}
-                        alt={brand.name}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          borderRadius: '10px'
-                        }}
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80';
-                        }}
-                      />
-                      {brand.badge && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '6px',
-                          right: '6px',
-                          background: 'rgba(15, 23, 42, 0.8)',
-                          color: '#ffffff',
-                          fontSize: '0.62rem',
-                          fontWeight: 700,
-                          padding: '2px 6px',
-                          borderRadius: '4px',
-                          backdropFilter: 'blur(4px)'
-                        }}>
-                          {brand.badge}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Card Body */}
-                    <div style={{
-                      padding: '12px 10px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      textAlign: 'center',
-                      flex: 1,
-                      justifyContent: 'space-between'
-                    }}>
-                      <div>
-                        <div style={{
-                          fontWeight: 800,
-                          fontSize: '0.95rem',
-                          color: '#0f172a',
-                          lineHeight: 1.2,
-                          marginBottom: '3px'
-                        }}>
-                          {brand.name}
-                        </div>
-                        <div style={{
-                          fontSize: '0.72rem',
-                          color: '#64748b',
-                          lineHeight: 1.3,
-                          fontWeight: 500
-                        }}>
-                          {brand.tagline}
-                        </div>
-                      </div>
-
-                      <div style={{
-                        marginTop: '8px',
-                        fontSize: '0.68rem',
-                        fontWeight: 700,
-                        color: '#1d4ed8',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '3px'
-                      }}>
-                        <MessageCircle size={11} />
-                        <span>Inquire</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Bottom Additional Brands Card */}
+        {/* Brands Showcase Container */}
+        <div style={{
+          background: '#ffffff',
+          borderRadius: '24px',
+          border: '1px solid #e2e8f0',
+          padding: '24px 20px 22px',
+          boxShadow: '0 4px 20px rgba(15, 23, 42, 0.04)',
+          position: 'relative'
+        }}>
+          {/* Top Bar with Arrows */}
           <div style={{
-            background: 'linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%)',
-            border: '1px dashed #bfdbfe',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '18px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ShieldCheck size={18} color="#1d4ed8" />
+              <span style={{
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                letterSpacing: '0.08em',
+                color: '#1e293b',
+                textTransform: 'uppercase'
+              }}>
+                100% Genuine Manufacturer Warranties
+              </span>
+            </div>
+
+            {/* Desktop navigation arrows */}
+            <div className="brand-scroll-arrows" style={{ display: 'none', gap: '6px' }}>
+              <button
+                onClick={() => scroll('left')}
+                aria-label="Scroll left"
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  background: '#f1f5f9',
+                  border: '1px solid #e2e8f0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: '#475569'
+                }}
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                onClick={() => scroll('right')}
+                aria-label="Scroll right"
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  background: '#f1f5f9',
+                  border: '1px solid #e2e8f0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: '#475569'
+                }}
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+
+          {/* Horizontal Scroll Cards List */}
+          <div
+            ref={cctvScrollRef}
+            className="hide-scrollbar"
+            style={{
+              display: 'flex',
+              gap: '16px',
+              overflowX: 'auto',
+              scrollSnapType: 'x mandatory',
+              padding: '6px 2px 14px',
+              WebkitOverflowScrolling: 'touch'
+            }}
+          >
+            {brands.map((brand) => (
+              <div
+                key={brand.id}
+                onClick={() => handleBrandInquiry(brand.name)}
+                style={{
+                  flex: '0 0 calc(50% - 10px)',
+                  minWidth: '175px',
+                  maxWidth: '240px',
+                  scrollSnapAlign: 'start',
+                  background: '#ffffff',
+                  borderRadius: '18px',
+                  border: '1px solid #e2e8f0',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  cursor: 'pointer',
+                  transition: 'all 0.25s ease',
+                  boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-3px)';
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(29, 78, 216, 0.12)';
+                  e.currentTarget.style.borderColor = '#93c5fd';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(15, 23, 42, 0.04)';
+                  e.currentTarget.style.borderColor = '#e2e8f0';
+                }}
+              >
+                {/* Brand Showcase Image */}
+                <div style={{
+                  position: 'relative',
+                  height: '110px',
+                  background: '#f8fafc',
+                  overflow: 'hidden'
+                }}>
+                  <img
+                    src={brand.image}
+                    alt={brand.name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover'
+                    }}
+                  />
+                  {brand.badge && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '8px',
+                      left: '8px',
+                      background: 'rgba(15, 23, 42, 0.85)',
+                      backdropFilter: 'blur(4px)',
+                      color: '#ffffff',
+                      fontSize: '0.66rem',
+                      fontWeight: 700,
+                      padding: '3px 8px',
+                      borderRadius: '6px'
+                    }}>
+                      {brand.badge}
+                    </div>
+                  )}
+                </div>
+
+                {/* Brand Info */}
+                <div style={{
+                  padding: '14px 12px 12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexGrow: 1,
+                  justifyContent: 'space-between'
+                }}>
+                  <div>
+                    <h3 style={{
+                      fontSize: '1.05rem',
+                      fontWeight: 800,
+                      color: '#0f172a',
+                      marginBottom: '4px',
+                      lineHeight: 1.2
+                    }}>
+                      {brand.name}
+                    </h3>
+                    <p style={{
+                      fontSize: '0.74rem',
+                      color: '#64748b',
+                      lineHeight: 1.35,
+                      marginBottom: '12px'
+                    }}>
+                      {brand.tagline}
+                    </p>
+                  </div>
+
+                  {/* 1-Click WhatsApp Trigger */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    padding: '8px 10px',
+                    borderRadius: '8px',
+                    background: '#eff6ff',
+                    color: '#1d4ed8',
+                    fontSize: '0.74rem',
+                    fontWeight: 700,
+                    border: '1px solid #bfdbfe'
+                  }}>
+                    <MessageCircle size={13} color="#1d4ed8" />
+                    <span>Inquire Best Price</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom Custom Inquiry Bar */}
+          <div style={{
+            marginTop: '18px',
+            background: '#f8fafc',
+            border: '1px solid #e2e8f0',
             borderRadius: '16px',
             padding: '16px 20px',
             display: 'flex',
@@ -522,11 +299,11 @@ export const TrustedBrands: React.FC = () => {
               +
             </div>
             <span style={{ fontSize: '0.85rem', color: '#334155', fontWeight: 600 }}>
-              We also deal in several other leading battery, inverter, CCTV and solar brands.
+              Need a custom multi-camera package or specific CCTV model? We source, install &amp; configure all major security brands.
             </span>
             <button
               onClick={() => {
-                const message = `Hello ${shopInfo.shopName}, I would like to inquire about battery/inverter/CCTV brand options and availability.`;
+                const message = `Hello ${shopInfo.shopName}, I would like to inquire about a custom CCTV brand setup and price quotation.`;
                 window.open(createWhatsAppLink(message, shopInfo.whatsappPhone), '_blank');
               }}
               style={{
@@ -545,7 +322,7 @@ export const TrustedBrands: React.FC = () => {
               }}
             >
               <Sparkles size={13} color="#2563eb" />
-              <span>Ask for Any Brand</span>
+              <span>Ask for Any Model</span>
             </button>
           </div>
 

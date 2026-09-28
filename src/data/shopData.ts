@@ -1,92 +1,93 @@
 import { Product, ServiceItem } from '../types';
 
 export const CATEGORIES = [
-  { id: 'all', label: 'All Products', icon: 'Sparkles' },
-  { id: 'cctv', label: 'CCTV Surveillance', icon: 'Camera', active: true },
-  { id: 'battery', label: 'Vehicle Batteries', icon: 'BatteryCharging', active: true },
-  { id: 'inverter', label: 'Inverters & UPS Power', icon: 'Zap', active: true },
+  { id: 'all', label: 'All Cameras & Kits', icon: 'Sparkles' },
+  { id: 'kits', label: 'HD Dome & Bullet Kits', icon: 'Camera', active: true },
+  { id: 'wifi', label: 'Smart Wi-Fi & PTZ', icon: 'Wifi', active: true },
+  { id: 'ip_nvr', label: '4K IP & Commercial NVR', icon: 'Shield', active: true },
+  { id: 'solar_4g', label: '4G SIM & Solar Cameras', icon: 'Sun', active: true },
 ] as const;
 
 export const PRODUCTS: Product[] = [
-  // CCTV Category
+  // 1. HD CCTV Kits
   {
     id: 'cctv-1',
     name: 'Hikvision 4-Camera 1080P Full HD Security Kit',
-    category: 'cctv',
+    category: 'kits',
     brand: 'Hikvision',
     image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80',
     badge: 'Best Seller',
     priceRange: '₹12,500 - ₹15,500 (Installed)',
     warranty: '2 Years Manufacturer Warranty',
     features: [
-      '2 Dome + 2 Bullet Full HD Cameras',
+      '2 Indoor Dome + 2 Outdoor Bullet Full HD Cameras',
       '4-Channel Turbo HD DVR + 1TB Surveillance Hard Disk',
-      '30m Smart Infrared Night Vision',
-      'Live Mobile Viewing on Android & iOS',
-      'Free Standard Cable & Power Supply'
+      '30m Smart Infrared Night Vision & Motion Detection',
+      'Free Live Mobile Viewing on Android & iOS (Hik-Connect)',
+      'Standard Cabling, Power Supply & Installation Included'
     ],
     description: 'Complete high-definition surveillance solution perfect for homes, retail shops, and small offices with remote mobile access anywhere in the world.',
     popular: true
   },
   {
     id: 'cctv-2',
-    name: 'CP PLUS 360° Smart Wi-Fi PTZ Dome Camera',
-    category: 'cctv',
+    name: 'CP PLUS 360° Smart Wi-Fi PTZ Dome Camera (EzyKam+)',
+    category: 'wifi',
     brand: 'CP PLUS',
     image: 'https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=800&q=80',
     badge: 'Popular for Home',
     priceRange: '₹2,499 - ₹3,200',
     warranty: '2 Years Replacement Warranty',
     features: [
-      '360° Pan & Tilt Rotation via Mobile App',
-      '2-Way Audio (Speak & Listen)',
-      'Motion Tracking & Human Body Detection',
+      '360° Pan & Tilt Rotation via Phone App',
+      '2-Way Audio (Speak & Listen in Real-Time)',
+      'AI Smart Motion Tracking & Human Body Detection',
       'MicroSD Card Support up to 128GB + Cloud Backup',
-      'Full Color Night Vision in Low Light'
+      'Full Color Night Vision in Low-Light Conditions'
     ],
-    description: 'Plug-and-play smart security camera for baby/elderly monitoring, indoor rooms, and shop billing counters.',
+    description: 'Plug-and-play smart security camera for baby/elderly monitoring, indoor rooms, and shop billing counters. Easy Wi-Fi setup with zero DVR required.',
     popular: true
   },
   {
     id: 'cctv-3',
     name: 'Dahua 8-Channel 4K IP Commercial NVR Package',
-    category: 'cctv',
+    category: 'ip_nvr',
     brand: 'Dahua',
     image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80',
     badge: 'Commercial Grade',
     priceRange: '₹28,000 - ₹36,000',
     warranty: '3 Years Warranty',
     features: [
-      '8 POE 4K Ultra-HD Network Cameras',
+      '8 PoE 4K Ultra-HD Network Cameras',
       '8-Channel 4K NVR with 2TB / 4TB Enterprise Storage',
       'AI Facial Recognition & Perimeter Intrusion Alert',
-      'Weatherproof IP67 Metal Housing',
-      'Heavy duty Cat6 Gigabit Cabling'
+      'Weatherproof IP67 Metal Housing with Surge Protection',
+      'Heavy Duty Cat6 Gigabit Structured Cabling'
     ],
     description: 'Ultra-reliable enterprise surveillance system engineered for factories, warehouses, apartment complexes, and jewelry showrooms.'
   },
   {
     id: 'cctv-4',
     name: 'Outdoor Solar 4G Standalone Bullet Camera',
-    category: 'cctv',
+    category: 'solar_4g',
     brand: 'Meksha Pro',
     image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80',
     badge: 'No Wi-Fi / Wire Needed',
     priceRange: '₹6,800 - ₹8,500',
     warranty: '1 Year Full Warranty',
     features: [
-      'Operates with 4G SIM Card (Jio / Airtel)',
-      'Built-in Monocrystalline Solar Panel + Lithium Battery',
-      'Continuous 24/7 Recording even during power cuts',
+      'Operates with 4G SIM Card (Jio / Airtel / Vi)',
+      'Built-in Monocrystalline Solar Panel + Long-Life Lithium Battery',
+      'Continuous 24/7 Recording even during total power outages',
       'IP66 Waterproof & Heavy Lightning Surge Protection',
-      'Instant Siren & Mobile Notification Alerts'
+      'Instant Siren & Mobile Notification Alerts upon Detection'
     ],
     description: 'Ideal for agricultural farms, construction project sites, remote houses, and open plots without electricity or Wi-Fi.'
   },
   {
     id: 'cctv-5',
     name: 'Hikvision ColorVu 24/7 Full-Color Night Camera Kit',
-    category: 'cctv',
+    category: 'kits',
     brand: 'Hikvision',
     image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80',
     badge: 'Color Night Vision',
@@ -94,208 +95,191 @@ export const PRODUCTS: Product[] = [
     warranty: '2 Years Manufacturer Warranty',
     features: [
       '24/7 Vivid Color Imaging even in total darkness',
-      'F1.0 Super Aperture & Advanced Sensor',
-      'Warm supplemental light for 20m range',
-      'Includes 4-Channel DVR + 1TB Storage Disk'
+      'F1.0 Super Aperture & Advanced Low-Light Sensor',
+      'Warm supplemental soft light for 20m range',
+      'Includes 4-Channel Turbo DVR + 1TB Surveillance Hard Disk',
+      'Free Doorstep Setup & Concealed Cable Wiring'
     ],
-    description: 'Never miss details in black & white. Delivers crystal clear colorful video day and night for heightened security.'
+    description: 'Never miss vehicle color or clothing details in black & white. Delivers crystal clear colorful video day and night for heightened home and business security.'
   },
-
-  // Vehicle Batteries Category (Fully Active)
   {
-    id: 'bat-1',
-    name: 'Amaron & Exide Four-Wheeler Car Batteries',
-    category: 'battery',
-    brand: 'Amaron / Exide',
-    image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=800&q=80',
-    badge: 'Doorstep Fitment',
-    priceRange: '₹3,600 - ₹7,800 (with Old Battery Scrap Exchange)',
-    warranty: '36 to 66 Months Manufacturer Warranty',
+    id: 'cctv-6',
+    name: 'CP PLUS 8-Camera Full HD Surveillance Package',
+    category: 'kits',
+    brand: 'CP PLUS',
+    image: 'https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=800&q=80',
+    badge: 'Large Home & Shop',
+    priceRange: '₹22,500 - ₹26,500 (Installed)',
+    warranty: '2 Years Brand Warranty',
     features: [
-      'Free Doorstep Delivery & Professional Installation',
-      'Zero-Maintenance Silver Alloy Technology',
-      'High Cranking Power (CCA) for Instant Cold Starts',
-      'Best Trade-in Cash Discount for Old Scrap Battery',
-      'Official Warranty Card & Digital Tax Invoice'
+      '4 Indoor Dome + 4 Outdoor Bullet 1080P Cameras',
+      '8-Channel Turbo DVR + 2TB Seagate SkyHawk Surveillance HDD',
+      'Centralized 8-Port Heavy Duty SMPS Power Supply',
+      'Mobile View on unlimited Android and iPhone devices',
+      'Full Clean Cabling, Wall Clamping & Technician Fitment'
     ],
-    description: 'Authorized automotive battery sales for hatchback, sedan, SUV, and commercial vehicles with free doorstep fitment across the city.',
+    description: 'The preferred package for multi-story residential buildings, departmental stores, and commercial premises requiring complete perimeter and indoor coverage.',
     popular: true
   },
   {
-    id: 'bat-2',
-    name: 'Two-Wheeler Bike & Scooter Batteries',
-    category: 'battery',
-    brand: 'Exide / Amaron Pro',
-    image: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80',
-    badge: 'High Performance',
-    priceRange: '₹950 - ₹1,850',
-    warranty: '24 to 48 Months Warranty',
+    id: 'cctv-7',
+    name: 'Imou Ranger 2 360° AI Smart Wireless Camera',
+    category: 'wifi',
+    brand: 'Imou',
+    image: 'https://images.unsplash.com/photo-1588508065123-287b28e013da?auto=format&fit=crop&w=800&q=80',
+    badge: 'Smart AI Tracking',
+    priceRange: '₹2,199 - ₹2,799',
+    warranty: '1 Year Warranty',
     features: [
-      'Factory Charged & Ready to Ride (VRLA / AGM)',
-      'Spill-Proof & Vibration Resistant Design',
-      'Superior Cranking for Quick Push-Button Ignition',
-      'Suitable for Activa, Pulsar, Splendor, Bullet, EV 2-wheelers'
+      '1080P Full HD with 360° Zero-Blind Spot Coverage',
+      'Smart Tracking & AI Human Detection (Filters false alarms)',
+      'Abnormal Sound Alarm (Detects baby crying & glass breaks)',
+      'Privacy Shield Mode & 2-Way Intercom Talk',
+      'Works with Alexa & Google Assistant Smart Displays'
     ],
-    description: 'Maintenance-free two-wheeler batteries delivering high cranking reliability and long service life.'
+    description: 'Compact and intelligent indoor security camera with automatic human tracking and instant smartphone alerts.'
   },
   {
-    id: 'bat-3',
-    name: 'Commercial Vehicle, Tractor & Auto Batteries',
-    category: 'battery',
-    brand: 'Exide / PowerZone',
-    image: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=800&q=80',
-    badge: 'Heavy Duty',
-    priceRange: '₹4,500 - ₹14,000',
-    warranty: '24 to 36 Months Warranty',
+    id: 'cctv-8',
+    name: 'Uniview (UNV) 16-Channel Enterprise 4K AI NVR System',
+    category: 'ip_nvr',
+    brand: 'UNV (Uniview)',
+    image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80',
+    badge: 'Enterprise Solution',
+    priceRange: '₹58,000 - ₹75,000',
+    warranty: '3 Years Brand Warranty',
     features: [
-      'Heavy Deep-Cycle Lead-Antimony Alloy Plates',
-      'Engineered for Indian Rough Roads & Heavy Loads',
-      'Instant Emergency Jumpstart & Fitment Available'
+      '16 Ultra 4K Ultra-PoE IP Starlight Cameras',
+      '16-Channel AI NVR with 4TB / 8TB Surveillance Storage',
+      'Smart Perimeter Protection, Vehicle & Human Search',
+      'Central Monitoring Station (CMS) Software support',
+      'Ideal for factories, schools, jewelry showrooms & apartments'
     ],
-    description: 'Tough commercial batteries designed for trucks, mini-trucks, tractors, commercial generators, and passenger auto-rickshaws.'
-  },
-
-  // Inverters & UPS Power Category (Fully Active)
-  {
-    id: 'inv-1',
-    name: 'Pure Sine Wave Home Inverter + Tall Tubular Battery Combo',
-    category: 'inverter',
-    brand: 'Luminous / Microtek',
-    image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
-    badge: 'Home & Office Power',
-    priceRange: '₹14,500 - ₹24,500 (Installed Combo)',
-    warranty: 'Up to 5 Years Warranty',
-    features: [
-      '900VA - 1500VA Pure Sine Wave Inverter System',
-      '150Ah - 220Ah Heavy Tall Tubular Battery',
-      'Silent Operation for Fans, Lights, TV, Laptops & Mixers',
-      'Fast Battery Charging with Low-Voltage Grid Support',
-      'Neat Concealed Wiring & Bypass Switch Setup'
-    ],
-    description: 'Reliable uninterrupted power backup systems for homes and offices. Keep your lights, fans, and work-from-home setup running smoothly during power cuts.',
-    popular: true
+    description: 'Top-tier commercial video security system designed for large properties with smart analytics, high-speed PoE, and centralized control.'
   },
   {
-    id: 'inv-2',
-    name: 'Mini DC UPS for Wi-Fi Routers & Broadband Modems',
-    category: 'inverter',
-    brand: 'Meksha Pro Power',
-    image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
-    badge: 'Zero Internet Downtime',
-    priceRange: '₹1,299 - ₹1,850',
-    warranty: '1 Year Replacement Warranty',
+    id: 'cctv-9',
+    name: 'Meksha Dual-Lens 4G Outdoor PTZ Police Siren Camera',
+    category: 'solar_4g',
+    brand: 'Meksha Pro',
+    image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80',
+    badge: 'Red & Blue Alarm',
+    priceRange: '₹5,499 - ₹6,999',
+    warranty: '1 Year Warranty',
     features: [
-      '4 to 6 Hours Continuous Internet Backup during Power Cuts',
-      'Zero-Delay Switchover (No Wi-Fi disconnection on Zoom/Teams)',
-      'Compatible with JioFiber, Airtel Xstream, ACT, BSNL, TP-Link',
-      'Smart Microprocessor Charging with Overcharge Protection',
-      'Compact Plug-and-Play Design with Universal Connector Pins'
+      'Dual-Lens (Wide Angle + 10x Telephoto Zoom)',
+      'Red-Blue Flashing Police Strobe & Loud Siren Deterrent',
+      'Direct 4G SIM Card Connectivity (No Wi-Fi needed)',
+      'Auto Human Motion Tracking & Floodlight Night Vision',
+      'Heavy Duty Weatherproof IP66 Metal Body'
     ],
-    description: 'Never get disconnected during important work meetings, online classes, or transactions. Essential power backup for Wi-Fi routers, optical network units (ONU), and broadband modems.',
-    popular: true
-  },
-  {
-    id: 'inv-3',
-    name: 'Dedicated CCTV Surveillance Centralized UPS Power Backup',
-    category: 'inverter',
-    brand: 'Meksha SecurePower',
-    image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80',
-    badge: '24/7 Security Backup',
-    priceRange: '₹2,400 - ₹6,500',
-    warranty: '2 Years Warranty',
-    features: [
-      'Guarantees 24/7 Continuous CCTV & DVR Recording during Power Outages',
-      '4-Port / 8-Port / 16-Port Centralized Regulated Output',
-      'Built-in Voltage Spike, Lightning Surge & Short-Circuit Protection',
-      'Prevents Hard Disk Corruptions and Security Blind Spots'
-    ],
-    description: 'Specialized power backup engineered for CCTV DVRs, NVRs, and security cameras to guarantee continuous surveillance even during power cuts and tampering attempts.'
+    description: 'Active defense security camera that automatically sounds a loud siren and flashes warning lights to scare off intruders before a crime happens.'
   }
 ];
 
 export const SERVICES: ServiceItem[] = [
   {
-    id: 'srv-cctv',
-    title: 'CCTV Camera Installation & Maintenance',
+    id: 'srv-cctv-install',
+    title: 'Home & Commercial CCTV Camera Installation',
     category: 'cctv',
     iconName: 'Camera',
-    shortDesc: 'Complete HD & 4K IP camera installation, concealed wiring, mobile live viewing setup, DVR hard disk repair, and AMC contracts.',
+    shortDesc: 'Complete HD & 4K IP camera installation, neat concealed wiring, DVR/NVR setup, and free mobile live viewing on all smartphones.',
     bulletPoints: [
-      'Professional site survey & camera placement planning',
-      'Mobile live view setup on all family/staff phones',
-      'Cable fault troubleshooting & power supply repairs',
-      'Hard disk recording recovery & DVR troubleshooting',
-      'Annual Maintenance Contracts (AMC) for shops & homes'
+      'Free on-site survey & camera placement angle optimization',
+      'Neat concealed or casing-pipe cabling without wall damage',
+      'Instant mobile live view setup on Android & iPhone',
+      'Surveillance-grade hard disk configuration & recording test',
+      'Zero advance payment — pay only after 100% satisfaction'
     ],
     startingPrice: '₹350 / camera install',
     responseTime: 'Doorstep Service (Same Day)',
     comingSoon: false
   },
   {
-    id: 'srv-battery',
-    title: 'Doorstep Vehicle Battery Delivery, Fitment & Jumpstart',
-    category: 'battery',
-    iconName: 'BatteryCharging',
-    shortDesc: 'Instant doorstep delivery and installation for cars, bikes, and commercial vehicles with old battery exchange and emergency jumpstart.',
+    id: 'srv-cctv-repair',
+    title: 'CCTV Repair, Hard Disk & Offline Troubleshooting',
+    category: 'cctv',
+    iconName: 'Wrench',
+    shortDesc: 'Fast diagnostics and doorstep repair for offline cameras, blank screens, power supply failures, and DVR recording errors.',
     bulletPoints: [
-      'Free doorstep delivery & professional computerized fitment',
-      'Highest scrap exchange cash discount for old batteries',
-      'Emergency car & bike jumpstart breakdown support',
-      'Free alternator voltage & battery health diagnostic check'
+      'Camera offline, video loss & blank black screen fixes',
+      'DVR/NVR continuous beeping & hard disk recording failure repair',
+      'SMPS power supply replacement & BNC/DC connector crimping',
+      'Mobile app re-linking (Hik-Connect / DMSS / gCMOB / Imou)',
+      'Password reset & firmware upgrade for all major DVR/NVRs'
     ],
-    startingPrice: 'Free Fitment with Battery',
-    responseTime: 'Doorstep in 30-45 Mins',
+    startingPrice: '₹300 / service visit',
+    responseTime: 'Doorstep in 60 Mins',
     comingSoon: false
   },
   {
-    id: 'srv-inverter',
-    title: 'Home Inverter, Wi-Fi Mini UPS & CCTV Power Backup Setup',
-    category: 'inverter',
-    iconName: 'Zap',
-    shortDesc: 'Complete power backup planning, pure sine wave inverter wiring, Wi-Fi modem UPS setup, and regular battery distilled water maintenance.',
+    id: 'srv-cctv-commercial',
+    title: 'Commercial 4K IP Surveillance & Multi-Site CMS',
+    category: 'cctv',
+    iconName: 'Shield',
+    shortDesc: 'Enterprise PoE network camera design for factories, jewelry stores, schools, apartments, and centralized multi-branch monitoring.',
     bulletPoints: [
-      'Expert load calculation & pure sine wave inverter sizing',
-      'Dedicated backup setup for Wi-Fi routers & CCTV security systems',
-      'Battery distilled water top-up, terminal descaling & health check',
-      'PCB repair, bypass switch installation & office UPS support'
+      'Gigabit Cat6 PoE structured networking & rack cabinet setups',
+      'AI facial recognition, perimeter tripwire & ANPR vehicle detection',
+      'Central monitoring station (CMS) software for multi-branch viewing',
+      'Cloud backup & off-site tamper-proof recording systems',
+      'Comprehensive handover with user training & technical documentation'
     ],
-    startingPrice: '₹450 / service visit',
-    responseTime: 'Doorstep Service (Prompt)',
+    startingPrice: 'Custom Quotation',
+    responseTime: 'Next Day Survey',
+    comingSoon: false
+  },
+  {
+    id: 'srv-cctv-amc',
+    title: 'Annual Maintenance Contracts (AMC) for Homes & Corporates',
+    category: 'cctv',
+    iconName: 'Award',
+    shortDesc: 'Keep your security cameras operating 24/7/365 with regular preventative checkups, lens cleaning, priority breakdown visits, and free labor.',
+    bulletPoints: [
+      'Quarterly preventative health audits, lens cleaning & angle adjustments',
+      'Hard disk recording retention check & backup verification',
+      'Unlimited priority emergency breakdown repair calls',
+      'Zero labor charges on all camera & cable servicing throughout the year',
+      'Special discounts on hardware upgrades & camera additions'
+    ],
+    startingPrice: 'From ₹1,999 / year',
+    responseTime: 'Priority 2-Hour SLA',
     comingSoon: false
   }
 ];
 
 export const BRANDS = [
-  { name: 'Hikvision', category: 'CCTV Surveillance' },
-  { name: 'CP PLUS', category: 'CCTV Surveillance' },
-  { name: 'Dahua', category: 'CCTV Surveillance' },
-  { name: 'Meksha Pro', category: 'CCTV & Power' },
-  { name: 'Exide', category: 'Vehicle Batteries' },
-  { name: 'Amaron', category: 'Vehicle Batteries' },
-  { name: 'Luminous', category: 'Inverters & UPS' },
-  { name: 'Microtek', category: 'Inverters & UPS' }
+  { name: 'Hikvision', category: 'Global CCTV #1' },
+  { name: 'CP PLUS', category: 'India\'s Most Trusted' },
+  { name: 'Dahua', category: '4K AI Surveillance' },
+  { name: 'UNV (Uniview)', category: 'IP Network Video' },
+  { name: 'Imou', category: 'Smart Wi-Fi Security' },
+  { name: 'Meksha Pro', category: '4G Solar & Long Range' }
 ];
 
 export const FAQS = [
   {
-    q: 'How quickly can you install CCTV cameras at my location?',
-    a: 'We provide prompt site visits and professional installation. Our certified technicians bring all necessary cameras, DVR/NVR, hard disks, power supplies, and cabling.'
+    q: 'How quickly can you install CCTV cameras at my home or business?',
+    a: 'We provide same-day or next-day installation across the city. Our certified technicians arrive fully equipped with cameras, DVR/NVR, surveillance hard disks, power supplies, and cabling.'
   },
   {
-    q: 'Can I view my CCTV cameras on my smartphone from anywhere?',
-    a: 'Yes! We configure official mobile apps (Hik-Connect / gCMOB / DMSS) on all your smartphones for free, so you can watch live video, playback recordings, and receive motion alert notifications worldwide.'
+    q: 'Can I view my CCTV cameras on my smartphone when I am away?',
+    a: 'Yes, absolutely! We configure official mobile apps (Hik-Connect, gCMOB, DMSS, Imou Life) on all family members or staff smartphones for free. You can view crystal-clear live video, playback past recordings, and get motion alerts anywhere in the world.'
   },
   {
-    q: 'Do you provide warranties on cameras and recording equipment?',
-    a: 'Yes! All our Hikvision, CP PLUS, and Dahua cameras and DVRs come with 2 to 3 years official manufacturer warranty with original tax invoices.'
+    q: 'What is the difference between HD Analog CCTV and IP Network Cameras?',
+    a: 'HD Analog cameras (coaxial cable + DVR) are highly cost-effective, durable, and ideal for homes and small shops. IP Network cameras (Cat6 cable + PoE NVR) deliver superior 4K clarity, digital zoom without pixelation, and advanced AI features like facial recognition and vehicle plate reading, making them the preferred choice for larger properties, warehouses, and offices.'
   },
   {
-    q: 'Do you offer doorstep delivery and fitment for vehicle batteries?',
-    a: 'Yes! We deliver and professionally install genuine Exide and Amaron batteries for cars, bikes, and commercial vehicles right at your doorstep with instant old scrap exchange discounts.'
+    q: 'Do your cameras work at night and during total darkness?',
+    a: 'Yes! All our cameras come equipped with Smart Infrared (IR) night vision up to 30 meters. We also offer Full-Color Night Vision (Hikvision ColorVu / Dahua Full-Color) cameras that deliver vivid, colorful daylight-like video even in pitch-black environments.'
   },
   {
-    q: 'Do you supply inverters for Wi-Fi modems and CCTV cameras?',
-    a: 'Yes! In addition to whole-home sine wave inverters, we supply dedicated Mini DC UPS for Wi-Fi routers (4-6 hours internet backup) and specialized centralized CCTV power backup systems to ensure continuous security recording during power cuts.'
+    q: 'Do I need an active Wi-Fi / Internet connection for CCTV cameras to record?',
+    a: 'No internet is required for recording! Your CCTV cameras will continuously record 24/7 to the DVR/NVR hard disk even without internet or Wi-Fi. An active internet connection is only needed when you want to view live video or playbacks remotely on your mobile phone.'
+  },
+  {
+    q: 'What warranty is provided on CCTV cameras and recording equipment?',
+    a: 'All our Hikvision, CP PLUS, and Dahua cameras, DVRs, and NVRs carry 2 to 3 years official manufacturer warranty with original GST tax invoices. Surveillance hard disks carry up to 3 years replacement warranty.'
   }
 ];
-

@@ -7,8 +7,9 @@ import {
   Tag, 
   Sparkles,
   Camera,
-  BatteryCharging,
-  Zap,
+  Wifi,
+  Shield,
+  Sun,
   Eye,
   X
 } from 'lucide-react';
@@ -34,7 +35,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory || selectedCategory === 'cctv';
     const matchesSearch = 
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -46,9 +47,11 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
   const getCategoryIcon = (id: string) => {
     switch (id) {
+      case 'kits': return Camera;
+      case 'wifi': return Wifi;
+      case 'ip_nvr': return Shield;
+      case 'solar_4g': return Sun;
       case 'cctv': return Camera;
-      case 'battery': return BatteryCharging;
-      case 'inverter': return Zap;
       default: return Sparkles;
     }
   };
@@ -99,10 +102,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             <Tag size={14} /> Genuine Products &amp; Authorized Warranties
           </div>
           <h2 className="section-title">
-            Explore Our <span className="text-gradient">Products &amp; Solutions</span>
+            Explore Our <span className="text-gradient">CCTV Cameras &amp; Packages</span>
           </h2>
           <p className="section-subtitle">
-            Browse bestselling CCTV cameras, vehicle batteries, and home inverter systems. Click to inquire or order directly via WhatsApp.
+            Browse bestselling HD dome/bullet kits, smart 360° Wi-Fi cameras, 4K commercial IP systems, and 4G solar solutions. Click to inquire or order directly via WhatsApp.
           </p>
         </div>
 
@@ -122,7 +125,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             />
             <input
               type="text"
-              placeholder="Search by product name, brand (Amaron, Hikvision, Kent, Luminous...)..."
+              placeholder="Search by camera model, brand (Hikvision, CP PLUS, Dahua, Imou...)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{

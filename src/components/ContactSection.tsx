@@ -71,7 +71,7 @@ export const ContactSection: React.FC = () => {
             Visit Our Shop or <span className="text-gradient">Contact Us</span>
           </h2>
           <p className="section-subtitle">
-            We are open all 7 days for sales, customer support, doorstep battery fitments, and CCTV service calls.
+            We are open all 7 days for CCTV sales, on-site security surveys, and technical support service calls.
           </p>
         </div>
 
@@ -257,7 +257,7 @@ export const ContactSection: React.FC = () => {
                 <textarea
                   className="form-textarea"
                   rows={3}
-                  placeholder="e.g. Need price for 150Ah Amaron Inverter Battery or 8 CCTV cameras for my factory..."
+                  placeholder="e.g. Need price quotation for 4/8 CCTV cameras for my residence, or 4K IP security system for my warehouse..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   required

@@ -32,11 +32,11 @@ interface ShopContextType {
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  PRODUCTS: 'meksha_shop_products_v4',
-  SERVICES: 'meksha_shop_services_v4',
-  BRANDS: 'meksha_shop_brands_v4',
-  SHOP_INFO: 'meksha_shop_info_v4',
-  CCTV_PRICING: 'meksha_cctv_pricing_v4',
+  PRODUCTS: 'meksha_shop_products_v5',
+  SERVICES: 'meksha_shop_services_v5',
+  BRANDS: 'meksha_shop_brands_v5',
+  SHOP_INFO: 'meksha_shop_info_v5',
+  CCTV_PRICING: 'meksha_cctv_pricing_v5',
   ADMIN_PASS: 'meksha_shop_admin_pass_v4'
 };
 
@@ -46,7 +46,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // 1. Products state with auto-migration / cleanup
   const [products, setProducts] = useState<Product[]>(() => {
     try {
-      // Clean up legacy v2/v3 storage if present
+      // Clean up legacy v2/v3/v4 storage if present
+      localStorage.removeItem('meksha_shop_products_v4');
+      localStorage.removeItem('meksha_shop_services_v4');
+      localStorage.removeItem('meksha_shop_brands_v4');
+      localStorage.removeItem('meksha_shop_info_v4');
       localStorage.removeItem('meksha_shop_products_v3');
       localStorage.removeItem('meksha_shop_services_v3');
       localStorage.removeItem('meksha_shop_info_v3');
@@ -58,8 +62,8 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const saved = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
       if (saved) {
         const parsed: Product[] = JSON.parse(saved);
-        // Ensure no deprecated categories (water_purifier / solar_heater) linger
-        const valid = parsed.filter(p => p.category === 'cctv' || p.category === 'battery' || p.category === 'inverter');
+        // Ensure no lingering battery / inverter products
+        const valid = parsed.filter(p => p.category === 'cctv' || p.category === 'kits' || p.category === 'wifi' || p.category === 'ip_nvr' || p.category === 'solar_4g');
         if (valid.length >= 6) return valid;
       }
       return DEFAULT_PRODUCTS;
@@ -74,7 +78,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const saved = localStorage.getItem(STORAGE_KEYS.SERVICES);
       if (saved) {
         const parsed: ServiceItem[] = JSON.parse(saved);
-        const valid = parsed.filter(s => s.category === 'cctv' || s.category === 'battery' || s.category === 'inverter');
+        const valid = parsed.filter(s => s.category === 'cctv');
         if (valid.length >= 3) return valid;
       }
       return DEFAULT_SERVICES;
@@ -130,6 +134,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
         if (!parsed.shopName || parsed.shopName === 'Meksha Solutions') {
           parsed.shopName = DEFAULT_SHOP_INFO.shopName;
+        }
+        if (!parsed.tagline || parsed.tagline.includes('Batteries') || parsed.tagline.includes('Inverters')) {
+          parsed.tagline = DEFAULT_SHOP_INFO.tagline;
         }
         if (!parsed.instagramUrl) {
           parsed.instagramUrl = DEFAULT_SHOP_INFO.instagramUrl;
