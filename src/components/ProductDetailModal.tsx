@@ -143,7 +143,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
               gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
               gap: '10px'
             }}>
-              {product.features.map((feat, i) => (
+              {(product.features || []).map((feat, i) => (
                 <div key={i} style={{
                   display: 'flex',
                   alignItems: 'flex-start',

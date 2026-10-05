@@ -61,10 +61,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const saved = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
       if (saved) {
-        const parsed: Product[] = JSON.parse(saved);
-        // Ensure no lingering battery / inverter products
-        const valid = parsed.filter(p => p.category === 'cctv' || p.category === 'kits' || p.category === 'wifi' || p.category === 'ip_nvr' || p.category === 'solar_4g');
-        if (valid.length >= 6) return valid;
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
       }
       return DEFAULT_PRODUCTS;
     } catch {
@@ -77,9 +77,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.SERVICES);
       if (saved) {
-        const parsed: ServiceItem[] = JSON.parse(saved);
-        const valid = parsed.filter(s => s.category === 'cctv');
-        if (valid.length >= 3) return valid;
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
       }
       return DEFAULT_SERVICES;
     } catch {
@@ -92,8 +93,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.BRANDS);
       if (saved) {
-        const parsed: BrandPartner[] = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
       }
       return DEFAULT_BRANDS;
     } catch {
@@ -252,6 +255,46 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Failed to save admin password to localStorage', e);
     }
   }, [adminPassword]);
+
+  // Listen for storage events across tabs to sync admin changes to storefront in real-time
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (!e.newValue) return;
+      try {
+        if (e.key === STORAGE_KEYS.PRODUCTS) {
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed)) {
+            setProducts(parsed);
+          }
+        } else if (e.key === STORAGE_KEYS.SERVICES) {
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed)) {
+            setServices(parsed);
+          }
+        } else if (e.key === STORAGE_KEYS.BRANDS) {
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed)) {
+            setBrands(parsed);
+          }
+        } else if (e.key === STORAGE_KEYS.SHOP_INFO) {
+          const parsed = JSON.parse(e.newValue);
+          if (parsed && typeof parsed === 'object') {
+            setShopInfo(parsed);
+          }
+        } else if (e.key === STORAGE_KEYS.CCTV_PRICING) {
+          const parsed = JSON.parse(e.newValue);
+          if (parsed && typeof parsed === 'object') {
+            setCctvPricing(parsed);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to sync storage event across tabs', err);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   // Product CRUD
   const addProduct = (newProd: Omit<Product, 'id'>) => {
