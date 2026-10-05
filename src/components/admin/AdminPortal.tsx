@@ -41,8 +41,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
 
   const navTabs = [
     { id: 'products', label: 'Products & Pricing', icon: ShoppingBag },
+    { id: 'cctv_pricing', label: 'Cost Estimator Products (33)', icon: Video },
     { id: 'brands', label: 'Brand Partners', icon: Award },
-    { id: 'cctv_pricing', label: 'CCTV Estimator Pricing', icon: Video },
     { id: 'services', label: 'Services & AMC', icon: Wrench },
     { id: 'settings', label: 'Shop & WhatsApp Details', icon: Settings },
     { id: 'backup', label: 'Backup & Reset', icon: Database },
@@ -167,7 +167,9 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
         </div>
 
         {/* Tab Content */}
-        {activeTab === 'products' && <AdminProducts />}
+        {activeTab === 'products' && (
+          <AdminProducts onGoToEstimatorPricing={() => setActiveTab('cctv_pricing')} />
+        )}
         {activeTab === 'brands' && <AdminBrands />}
         {activeTab === 'cctv_pricing' && <AdminCctvPricing />}
         {activeTab === 'services' && <AdminServices />}

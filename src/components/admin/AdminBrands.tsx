@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Plus, Edit2, Trash2, RotateCcw, Check, X, Award, Image as ImageIcon, Sparkles } from 'lucide-react';
 import { useShop } from '../../context/ShopContext';
 import { BrandPartner } from '../../types';
+import { ConfirmDeleteModal } from './ConfirmDeleteModal';
+
 
 // Preset sample images for quick 1-click selection
 const PRESET_BRAND_IMAGES = [
@@ -18,6 +20,11 @@ export const AdminBrands: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editingBrand, setEditingBrand] = useState<BrandPartner | null>(null);
+
+  // Confirmation Modal States
+  const [brandToDelete, setBrandToDelete] = useState<BrandPartner | null>(null);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+
 
   const [formData, setFormData] = useState<{
     name: string;
@@ -85,17 +92,26 @@ export const AdminBrands: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const handleDelete = (id: string, name: string) => {
-    if (window.confirm(`Are you sure you want to remove "${name}" from the brands list?`)) {
-      deleteBrand(id);
+  const handleDelete = (brand: BrandPartner) => {
+    setBrandToDelete(brand);
+  };
+
+  const confirmDeleteBrand = () => {
+    if (brandToDelete) {
+      deleteBrand(brandToDelete.id);
+      setBrandToDelete(null);
     }
   };
 
   const handleReset = () => {
-    if (window.confirm('Reset all brand partners to original authorized CCTV brands (Hikvision, CP PLUS, Dahua, UNV, Imou, Meksha Pro)?')) {
-      resetBrands();
-    }
+    setShowResetConfirm(true);
   };
+
+  const confirmReset = () => {
+    resetBrands();
+    setShowResetConfirm(false);
+  };
+
 
   return (
     <div>
@@ -234,7 +250,7 @@ export const AdminBrands: React.FC = () => {
                   <Edit2 size={14} /> Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(brand.id, brand.name)}
+                  onClick={() => handleDelete(brand)}
                   className="btn btn-outline btn-sm"
                   style={{
                     color: '#b91c1c',
@@ -421,6 +437,35 @@ export const AdminBrands: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Brand Delete Confirmation Modal */}
+      <ConfirmDeleteModal
+        isOpen={!!brandToDelete}
+        onClose={() => setBrandToDelete(null)}
+        onConfirm={confirmDeleteBrand}
+        title="Remove Brand Partner"
+        subtitle="Are you sure you want to remove this brand partner from the storefront display?"
+        warningNote="This brand logo and banner will no longer appear on your homepage."
+        confirmLabel="Remove Brand"
+        cancelLabel="Cancel"
+        item={brandToDelete ? {
+          title: brandToDelete.name,
+          image: brandToDelete.image,
+          badge: brandToDelete.badge
+        } : null}
+      />
+
+      {/* Reset Brands Confirmation Modal */}
+      <ConfirmDeleteModal
+        isOpen={showResetConfirm}
+        onClose={() => setShowResetConfirm(false)}
+        onConfirm={confirmReset}
+        title="Reset Brands to Defaults"
+        subtitle="Reset all brand partners back to official factory default brands (Hikvision, CP PLUS, Dahua, UNV, Imou, Meksha Pro)?"
+        warningNote="Any custom brands you have created will be replaced with the standard brand list."
+        confirmLabel="Yes, Reset to Defaults"
+        cancelLabel="Cancel"
+      />
     </div>
   );
 };

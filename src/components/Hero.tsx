@@ -24,9 +24,10 @@ interface HeroProps {
   onOpenBooking: (category?: CategoryType) => void;
   onOpenQuote?: () => void;
   onSelectCategory: (category: CategoryType) => void;
+  onOpenEstimator?: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelectCategory }) => {
+export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelectCategory, onOpenEstimator }) => {
   const { shopInfo } = useShop();
   const [isCctvEstimatorOpen, setIsCctvEstimatorOpen] = useState<boolean>(false);
 
@@ -616,7 +617,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
             {/* Planners Banner: Interactive CCTV Package Cost Estimator */}
             <div className="hero-planners-grid">
               <div 
-                onClick={() => setIsCctvEstimatorOpen(true)}
+                onClick={() => {
+                  if (onOpenEstimator) onOpenEstimator();
+                  else setIsCctvEstimatorOpen(true);
+                }}
                 style={{
                   background: 'linear-gradient(135deg, #024b86 0%, #03667c 100%)',
                   borderRadius: '24px',
@@ -953,11 +957,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onOpenQuote, onSelect
           </div>
         </div>
 
-      {/* Interactive CCTV Security Package Cost Estimator Modal */}
-      <CctvEstimatorModal
-        isOpen={isCctvEstimatorOpen}
-        onClose={() => setIsCctvEstimatorOpen(false)}
-      />
+      {/* Interactive CCTV Security Package Cost Estimator Modal (Fallback) */}
+      {!onOpenEstimator && (
+        <CctvEstimatorModal
+          isOpen={isCctvEstimatorOpen}
+          onClose={() => setIsCctvEstimatorOpen(false)}
+        />
+      )}
     </section>
   );
 };

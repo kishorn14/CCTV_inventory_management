@@ -79,6 +79,7 @@ export interface CctvPricingConfig {
   ip2mpBullet: number;    // IP 2MP Smart Outdoor Camera
   ip4mpColorVu: number;   // IP 4MP Full-Color Smart Camera
   wifi360Camera: number;  // WiFi 360° Smart Wireless Camera
+  solar4gCamera: number;  // Solar 4G Standalone Bullet/PTZ Camera
 
   // DVR prices (HD Analog)
   dvr4Channel: number;    // 4 Channel HD DVR
@@ -96,12 +97,30 @@ export interface CctvPricingConfig {
   hdd2TB: number;         // 2TB Surveillance HDD
   hdd4TB: number;         // 4TB Surveillance HDD
 
-  // Accessories & Installation labor
+  // MicroSD Storage (for WiFi & Solar cameras)
+  sdCard64GB: number;     // 64GB High-Speed MicroSD
+  sdCard128GB: number;    // 128GB High-Speed MicroSD
+
+  // Power supply (SMPS)
   powerSupply4Port: number;
   powerSupply8Port: number;
   powerSupply16Port: number;
-  cablePerCamera: number;       // 30m cable bundle + connectors per camera
-  installationPerCamera: number; // labor, mounting, mobile setup per camera
+
+  // Cabling per meter
+  cablePricePerMeter: number;       // ₹ per meter (e.g. ₹25/m)
+  defaultCableMetersPerCam: number; // default meters per camera (e.g. 20m)
+  cablePerCamera?: number;          // backwards compat fallback
+
+  // Connectors & Accessories
+  modularBoxPerCam: number;         // Weatherproof PVC Modular Junction Box per camera (e.g. ₹120)
+  bncConnectorsPerCam: number;      // 2 BNC + 1 DC Pin connector set per camera (e.g. ₹90)
+  rack2U: number;                   // 2U Wall Mount DVR/NVR Metal Rack (e.g. ₹1,450)
+  wifiRouter4G: number;             // 4G Wi-Fi Router / Dongle for Online Mobile View (e.g. ₹2,100)
+
+  // Installation & Fitting charges
+  installationPerCamera: number;    // Wired camera mounting, wiring & setup
+  wifiFittingPerCamera: number;     // WiFi camera wall mounting & phone pairing
+  solarFittingPerCamera: number;    // Solar panel mounting & pole alignment
 }
 
 export const DEFAULT_CCTV_PRICING: CctvPricingConfig = {
@@ -113,6 +132,7 @@ export const DEFAULT_CCTV_PRICING: CctvPricingConfig = {
   ip2mpBullet: 2600,
   ip4mpColorVu: 3600,
   wifi360Camera: 2199,
+  solar4gCamera: 5800,
 
   dvr4Channel: 2800,
   dvr8Channel: 4200,
@@ -127,11 +147,25 @@ export const DEFAULT_CCTV_PRICING: CctvPricingConfig = {
   hdd2TB: 5200,
   hdd4TB: 8900,
 
+  sdCard64GB: 550,
+  sdCard128GB: 950,
+
   powerSupply4Port: 650,
   powerSupply8Port: 1150,
   powerSupply16Port: 1950,
-  cablePerCamera: 450,
-  installationPerCamera: 450
+
+  cablePricePerMeter: 25,
+  defaultCableMetersPerCam: 20,
+  cablePerCamera: 500,
+
+  modularBoxPerCam: 120,
+  bncConnectorsPerCam: 90,
+  rack2U: 1450,
+  wifiRouter4G: 2100,
+
+  installationPerCamera: 450,
+  wifiFittingPerCamera: 350,
+  solarFittingPerCamera: 650
 };
 
 export interface BrandPartner {

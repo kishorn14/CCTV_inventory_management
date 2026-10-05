@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Download, Upload, RotateCcw, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useShop } from '../../context/ShopContext';
+import { ConfirmDeleteModal } from './ConfirmDeleteModal';
+
 
 export const AdminBackup: React.FC = () => {
   const { exportDataJSON, importDataJSON, resetToDefaults } = useShop();
   const [statusMsg, setStatusMsg] = useState('');
   const [importText, setImportText] = useState('');
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+
 
   const handleExport = () => {
     const dataStr = exportDataJSON();
@@ -31,11 +35,15 @@ export const AdminBackup: React.FC = () => {
   };
 
   const handleReset = () => {
-    if (window.confirm('Are you sure you want to reset all products, prices, and services back to original defaults? Any custom products added will be replaced.')) {
-      resetToDefaults();
-      setStatusMsg('All data reset to initial default templates.');
-    }
+    setShowResetConfirm(true);
   };
+
+  const confirmReset = () => {
+    resetToDefaults();
+    setShowResetConfirm(false);
+    setStatusMsg('All data reset to initial default templates.');
+  };
+
 
   return (
     <div style={{ maxWidth: '840px' }}>
@@ -133,6 +141,19 @@ export const AdminBackup: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Reset Confirmation Modal */}
+      <ConfirmDeleteModal
+        isOpen={showResetConfirm}
+        onClose={() => setShowResetConfirm(false)}
+        onConfirm={confirmReset}
+        title="Reset All Store Catalog Data"
+        subtitle="Are you sure you want to reset all products, prices, and services back to original defaults?"
+        warningNote="Any custom products, brand updates, and pricing modifications you have made will be overwritten with initial system templates."
+        confirmLabel="Yes, Reset Store Data"
+        cancelLabel="Cancel"
+      />
     </div>
   );
 };
+

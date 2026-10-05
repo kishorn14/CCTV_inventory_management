@@ -36,11 +36,14 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
   const filteredProducts = products.filter((product) => {
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory || selectedCategory === 'cctv';
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return matchesCategory;
+
     const matchesSearch = 
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.features.some(f => f.toLowerCase().includes(searchQuery.toLowerCase()));
+      (product.name || '').toLowerCase().includes(q) ||
+      (product.brand || '').toLowerCase().includes(q) ||
+      (product.description || '').toLowerCase().includes(q) ||
+      (Array.isArray(product.features) ? product.features.some(f => (f || '').toLowerCase().includes(q)) : false);
 
     return matchesCategory && matchesSearch;
   });
@@ -348,7 +351,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                         flexDirection: 'column',
                         gap: '6px'
                       }}>
-                        {product.features.slice(0, 3).map((feat, idx) => (
+                        {(product.features || []).slice(0, 3).map((feat, idx) => (
                           <li key={idx} style={{
                             display: 'flex',
                             alignItems: 'flex-start',

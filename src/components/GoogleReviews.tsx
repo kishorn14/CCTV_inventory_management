@@ -130,47 +130,7 @@ export const GoogleReviews: React.FC = () => {
           Directly from our verified <strong>Google Business Profile</strong> — see genuine customer feedback, farm installations, and home CCTV setups across Davangere &amp; Karnataka.
         </p>
 
-        {/* Quick Reviewer Switcher Chips */}
-        <div style={{
-          display: 'flex',
-          gap: '8px',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          marginBottom: '20px'
-        }}>
-          {reviews.map((rev, idx) => (
-            <button
-              key={rev.id}
-              onClick={() => setCurrentIndex(idx)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '6px 12px',
-                borderRadius: '9999px',
-                fontSize: '0.78rem',
-                fontWeight: currentIndex === idx ? 800 : 600,
-                background: currentIndex === idx ? '#0f172a' : '#ffffff',
-                color: currentIndex === idx ? '#ffffff' : '#475569',
-                border: currentIndex === idx ? '1px solid #0f172a' : '1px solid #e2e8f0',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                boxShadow: currentIndex === idx ? '0 4px 12px rgba(15, 23, 42, 0.15)' : 'none'
-              }}
-            >
-              <span style={{
-                width: '7px',
-                height: '7px',
-                borderRadius: '50%',
-                background: currentIndex === idx ? '#38bdf8' : '#cbd5e1'
-              }} />
-              <span>{rev.name}</span>
-              {rev.photos && rev.photos.length > 0 && (
-                <ImageIcon size={11} color={currentIndex === idx ? '#38bdf8' : '#94a3b8'} />
-              )}
-            </button>
-          ))}
-        </div>
+
 
         {/* Testimonial Card Container */}
         <div 

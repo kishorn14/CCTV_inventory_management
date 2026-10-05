@@ -12,6 +12,7 @@ import { Footer } from './components/Footer';
 import { FloatingActions } from './components/FloatingActions';
 import { ServiceBookingModal } from './components/ServiceBookingModal';
 import { ProductDetailModal } from './components/ProductDetailModal';
+import { CctvEstimatorModal } from './components/CctvEstimatorModal';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { CategoryType, Product } from './types';
 
@@ -24,6 +25,7 @@ function MainApp() {
   });
 
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [isEstimatorOpen, setIsEstimatorOpen] = useState(false);
   const [bookingCategory, setBookingCategory] = useState<CategoryType>('cctv');
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('all');
   const [isCatalogVisible, setIsCatalogVisible] = useState<boolean>(false);
@@ -87,12 +89,14 @@ function MainApp() {
       <Navbar 
         onOpenBooking={() => handleOpenBooking('cctv')} 
         onOpenProducts={() => handleSelectCategory('all')}
+        onOpenEstimator={() => setIsEstimatorOpen(true)}
       />
 
       {/* Hero Showcase */}
       <Hero
         onOpenBooking={(cat) => handleOpenBooking(cat || 'cctv')}
         onSelectCategory={handleSelectCategory}
+        onOpenEstimator={() => setIsEstimatorOpen(true)}
       />
 
       {/* Authorized Dealer & Trusted CCTV Brand Partners (Hikvision, CP PLUS, Dahua, Uniview, Imou) */}
@@ -108,8 +112,8 @@ function MainApp() {
         />
       )}
 
-      {/* Interactive CCTV Security Cost Estimator */}
-      <EstimatorCalculator />
+      {/* Interactive CCTV Security Cost Estimator Teaser Section */}
+      <EstimatorCalculator onOpenEstimator={() => setIsEstimatorOpen(true)} />
 
       {/* Google Reviews & Customer Testimonials (Connected to Google Maps Share Link) */}
       <GoogleReviews />
@@ -140,6 +144,12 @@ function MainApp() {
       <ProductDetailModal
         product={viewProduct}
         onClose={() => setViewProduct(null)}
+      />
+
+      {/* CCTV Cost Estimator Modal (Opens ONLY when user clicks Estimate Cost) */}
+      <CctvEstimatorModal
+        isOpen={isEstimatorOpen}
+        onClose={() => setIsEstimatorOpen(false)}
       />
     </div>
   );

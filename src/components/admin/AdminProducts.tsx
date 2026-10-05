@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { 
   Plus, 
   Search, 
   Edit3, 
   Trash2, 
   X, 
-  Check
+  Check,
+  Lock
 } from 'lucide-react';
 import { useShop } from '../../context/ShopContext';
 import { Product, CategoryType } from '../../types';
 import { CATEGORIES } from '../../data/shopData';
+import { ConfirmDeleteModal } from './ConfirmDeleteModal';
 
 const PRESET_IMAGES: Record<CategoryType, string[]> = {
   all: [],
@@ -34,7 +36,11 @@ const PRESET_IMAGES: Record<CategoryType, string[]> = {
   ]
 };
 
-export const AdminProducts: React.FC = () => {
+interface AdminProductsProps {
+  onGoToEstimatorPricing?: () => void;
+}
+
+export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPricing }) => {
   const { products, addProduct, updateProduct, deleteProduct } = useShop();
   const [categoryFilter, setCategoryFilter] = useState<CategoryType>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,6 +48,11 @@ export const AdminProducts: React.FC = () => {
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+
+  // Delete Confirmation State
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [notification, setNotification] = useState<string | null>(null);
+
 
   // Form State
   const [formData, setFormData] = useState({
@@ -84,7 +95,7 @@ export const AdminProducts: React.FC = () => {
       badge: product.badge || '',
       priceRange: product.priceRange,
       warranty: product.warranty,
-      featuresText: product.features.join('\n'),
+      featuresText: (product.features || []).join('\n'),
       description: product.description,
       popular: !!product.popular
     });
@@ -120,11 +131,22 @@ export const AdminProducts: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const handleDelete = (id: string, name: string) => {
-    if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
-      deleteProduct(id);
+  const promptDelete = (product: Product) => {
+    setProductToDelete(product);
+  };
+
+  const confirmDelete = () => {
+    if (productToDelete) {
+      const deletedName = productToDelete.name;
+      deleteProduct(productToDelete.id);
+      setProductToDelete(null);
+      setNotification(`"${deletedName}" was removed from the inventory.`);
+      setTimeout(() => {
+        setNotification(prev => (prev?.includes(deletedName) ? null : prev));
+      }, 4000);
     }
   };
+
 
   const filtered = products.filter(p => {
     const matchCat = categoryFilter === 'all' || p.category === categoryFilter;
@@ -135,6 +157,66 @@ export const AdminProducts: React.FC = () => {
 
   return (
     <div>
+      {/* Cost Estimator Distinction Banner */}
+      <div style={{
+        background: '#eff6ff',
+        border: '1px solid #bfdbfe',
+        borderRadius: '14px',
+        padding: '14px 18px',
+        marginBottom: '20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '12px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            width: '34px',
+            height: '34px',
+            borderRadius: '8px',
+            background: '#dbeafe',
+            color: '#1d4ed8',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            <Lock size={17} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#1e40af' }}>
+              Cost Estimator Products (33 Non-Deletable Items)
+            </div>
+            <div style={{ fontSize: '0.78rem', color: '#475569' }}>
+              Looking for CCTV Cost Estimator components (Wired/Wi-Fi/Solar cameras, DVRs, HDDs, cables &amp; accessories)? They are protected from deletion and managed under the <strong>Cost Estimator Products (33)</strong> tab where you can safely set all prices.
+            </div>
+          </div>
+        </div>
+
+        {onGoToEstimatorPricing && (
+          <button
+            type="button"
+            onClick={onGoToEstimatorPricing}
+            style={{
+              padding: '8px 16px',
+              borderRadius: '8px',
+              border: 'none',
+              background: '#1d4ed8',
+              color: '#ffffff',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <span>Manage Estimator Rates (33) &rarr;</span>
+          </button>
+        )}
+      </div>
+
       {/* Top Header & Add Button */}
       <div style={{
         display: 'flex',
@@ -264,7 +346,7 @@ export const AdminProducts: React.FC = () => {
                 <Edit3 size={15} /> Edit
               </button>
               <button
-                onClick={() => handleDelete(product.id, product.name)}
+                onClick={() => promptDelete(product)}
                 className="btn btn-outline btn-sm"
                 style={{ borderColor: '#fecaca', background: '#fef2f2', color: '#b91c1c', minHeight: '38px' }}
               >
@@ -337,7 +419,7 @@ export const AdminProducts: React.FC = () => {
                       <Edit3 size={15} />
                     </button>
                     <button
-                      onClick={() => handleDelete(product.id, product.name)}
+                      onClick={() => promptDelete(product)}
                       style={{
                         background: '#fef2f2',
                         border: '1px solid #fecaca',
@@ -606,6 +688,78 @@ export const AdminProducts: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmDeleteModal
+        isOpen={!!productToDelete}
+        onClose={() => setProductToDelete(null)}
+        onConfirm={confirmDelete}
+        title="Delete Product"
+        subtitle="Are you sure you want to permanently delete this product? This action cannot be undone."
+        warningNote="This item will immediately be removed from your store catalog and customers will not be able to order it."
+        confirmLabel="Yes, Delete Product"
+        cancelLabel="Cancel"
+        item={productToDelete ? {
+          title: productToDelete.name,
+          image: productToDelete.image,
+          category: productToDelete.category,
+          brand: productToDelete.brand,
+          price: productToDelete.priceRange,
+          badge: productToDelete.badge
+        } : null}
+      />
+
+      {/* Floating Status Notification */}
+      {notification && (
+        <div style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          zIndex: 1100,
+          background: '#0f172a',
+          color: '#ffffff',
+          borderRadius: '12px',
+          padding: '12px 18px',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.25)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          border: '1px solid #334155',
+          animation: 'slideUp 0.25s ease-out'
+        }}>
+          <div style={{
+            width: '28px',
+            height: '28px',
+            borderRadius: '50%',
+            background: '#dc2626',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            <Trash2 size={14} color="#ffffff" />
+          </div>
+          <div style={{ fontSize: '0.86rem', fontWeight: 600 }}>
+            {notification}
+          </div>
+          <button
+            onClick={() => setNotification(null)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#94a3b8',
+              cursor: 'pointer',
+              marginLeft: '6px',
+              padding: '4px',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            <X size={15} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
+

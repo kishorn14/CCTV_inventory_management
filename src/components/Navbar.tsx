@@ -16,16 +16,17 @@ import { createWhatsAppLink } from '../utils/whatsapp';
 interface NavbarProps {
   onOpenBooking: () => void;
   onOpenProducts?: () => void;
+  onOpenEstimator?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts, onOpenEstimator }) => {
   const { shopInfo } = useShop();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
     { label: 'Brands', href: '#brands', icon: Award },
     { label: 'Products', href: '#products', icon: ShoppingBag, isProducts: true },
-    { label: 'Estimator', href: '#estimator', icon: Calculator },
+    { label: 'Estimator', href: '#estimator', icon: Calculator, isEstimator: true },
     { label: 'Reviews', href: '#reviews', icon: Star },
     { label: 'Contact', href: '#contact', icon: MapPin },
   ];
@@ -84,9 +85,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts })
               <a
                 key={link.label}
                 href={link.href}
-                onClick={() => {
+                onClick={(e) => {
                   if (link.isProducts && onOpenProducts) {
                     onOpenProducts();
+                  }
+                  if (link.isEstimator && onOpenEstimator) {
+                    e.preventDefault();
+                    onOpenEstimator();
                   }
                 }}
                 style={{
@@ -164,10 +169,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts })
                 <a
                   key={link.label}
                   href={link.href}
-                  onClick={() => {
+                  onClick={(e) => {
                     setMobileMenuOpen(false);
                     if (link.isProducts && onOpenProducts) {
                       onOpenProducts();
+                    }
+                    if (link.isEstimator && onOpenEstimator) {
+                      e.preventDefault();
+                      onOpenEstimator();
                     }
                   }}
                   style={{
