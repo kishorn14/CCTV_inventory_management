@@ -31,6 +31,9 @@ export interface Product {
   description: string;
   popular?: boolean;
   comingSoon?: boolean;
+  sampleVideoUrl?: string; // Custom admin sample video URL (Day / Main)
+  nightVideoUrl?: string;  // Custom admin night vision video URL
+  is360Camera?: boolean;   // Whether this camera supports 360° or Pan-Tilt rotation
 }
 
 export interface ServiceItem {

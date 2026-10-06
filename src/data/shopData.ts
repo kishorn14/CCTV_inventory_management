@@ -261,13 +261,14 @@ export const PRODUCTS: Product[] = [
     "name": "SecureMax 6MP 4G Linkage PT Camera Triple Lens 4+4+12mm - SM1005-A 7843308399",
     "category": "wifi_4g",
     "brand": "SECUREMAX",
-    "image": "https://dms.mydukaan.io/original/jpeg/media/7bb4bf4e-a186-4e4e-9589-eddfa611c615.png",
+    "image": "/products/solar_triple_lens_camera.jpg",
     "badge": "Triple Lens 4G",
     "priceRange": "₹7,316",
     "price": 7316,
     "mrp": 9900,
     "unit": "NOS",
     "warranty": "1 Year Warranty",
+    "is360Camera": true,
     "features": [
       "6MP Ultra HD Triple Lens (4+4+12mm)",
       "4G SIM Card Enabled (No Wi-Fi needed)",
@@ -290,6 +291,7 @@ export const PRODUCTS: Product[] = [
     "mrp": 5600,
     "unit": "NOS",
     "warranty": "1 Year Warranty",
+    "is360Camera": true,
     "features": [
       "3MP Super HD Clarity",
       "360° Pan & Tilt Motorized Rotation",
@@ -312,6 +314,7 @@ export const PRODUCTS: Product[] = [
     "mrp": 6050,
     "unit": "NOS",
     "warranty": "1 Year Warranty",
+    "is360Camera": true,
     "features": [
       "3MP Super HD Clarity",
       "360° Pan & Tilt Motorized Rotation",
@@ -356,6 +359,7 @@ export const PRODUCTS: Product[] = [
     "mrp": 15150,
     "unit": "NOS",
     "warranty": "1 Year Warranty",
+    "is360Camera": true,
     "features": [
       "Continuous Solar Powered Operation",
       "High-Capacity Lithium Battery Kit",

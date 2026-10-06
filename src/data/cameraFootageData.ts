@@ -31,12 +31,28 @@ export function isCameraProduct(product: Product): boolean {
   return false;
 }
 
+export function is360Product(product: Product): boolean {
+  if (product.is360Camera === true) return true;
+  if (product.is360Camera === false) return false;
+  const n = product.name.toUpperCase();
+  return (
+    n.includes('360') ||
+    n.includes('PT') ||
+    n.includes('PTZ') ||
+    n.includes('PAN & TILT') ||
+    n.includes('PAN-TILT') ||
+    n.includes('LINKAGE') ||
+    n.includes('TRIPLE LENS')
+  );
+}
+
 export function getCameraFootageInfo(product: Product): CameraFootageInfo {
   const name = product.name.toUpperCase();
+  let baseInfo: CameraFootageInfo;
 
   // 1. 6MP Cameras
   if (name.includes('6MP') || name.includes('SM1005')) {
-    return {
+    baseInfo = {
       resolutionLabel: '6MP Ultra HD (3200 × 1800)',
       resolutionPixels: '3200 × 1800',
       fps: 25,
@@ -51,13 +67,11 @@ export function getCameraFootageInfo(product: Product): CameraFootageInfo {
       videoDay: '/videos/cctv_outdoor.mp4',
       videoNight: '/videos/cctv_street.mp4'
     };
-  }
-
-  // 2. 4MP Cameras
-  if (name.includes('4MP') || name.includes('TA41') || name.includes('DA41')) {
+  } else if (name.includes('4MP') || name.includes('TA41') || name.includes('DA41')) {
+    // 2. 4MP Cameras
     const isLongRange = name.includes('60M') || name.includes('0600');
     const isIllumax = name.includes('ILLUAMX') || name.includes('ILLUMAX') || name.includes('DUAL LIGHT') || name.includes('DUAL IR');
-    return {
+    baseInfo = {
       resolutionLabel: '4MP 2K QHD (2688 × 1520)',
       resolutionPixels: '2688 × 1520',
       fps: 25,
@@ -72,12 +86,10 @@ export function getCameraFootageInfo(product: Product): CameraFootageInfo {
       videoDay: '/videos/cctv_street.mp4',
       videoNight: '/videos/cctv_outdoor.mp4'
     };
-  }
-
-  // 3. 3MP Cameras (Trueview WiFi / 4G PTZ)
-  if (name.includes('3MP') || name.includes('T18120') || name.includes('T18290') || name.includes('T18238')) {
+  } else if (name.includes('3MP') || name.includes('T18120') || name.includes('T18290') || name.includes('T18238')) {
+    // 3. 3MP Cameras (Trueview WiFi / 4G PTZ)
     const isPTZ = name.includes('PT') || name.includes('360');
-    return {
+    baseInfo = {
       resolutionLabel: '3MP 2K HD (2304 × 1296)',
       resolutionPixels: '2304 × 1296',
       fps: 25,
@@ -92,11 +104,9 @@ export function getCameraFootageInfo(product: Product): CameraFootageInfo {
       videoDay: '/videos/cctv_outdoor.mp4',
       videoNight: '/videos/cctv_street.mp4'
     };
-  }
-
-  // 4. Solar Cameras (EyeQube / OEM)
-  if (name.includes('EYEQUBE') || product.category === 'solar') {
-    return {
+  } else if (name.includes('EYEQUBE') || product.category === 'solar') {
+    // 4. Solar Cameras (EyeQube / OEM)
+    baseInfo = {
       resolutionLabel: '3MP / 4MP Solar 4G HD (2304 × 1296)',
       resolutionPixels: '2304 × 1296',
       fps: 20,
@@ -111,23 +121,35 @@ export function getCameraFootageInfo(product: Product): CameraFootageInfo {
       videoDay: '/videos/cctv_outdoor.mp4',
       videoNight: '/videos/cctv_street.mp4'
     };
+  } else {
+    // 5. 2.4MP / 2MP HD & Analog / IP Cameras
+    const isDualLight = name.includes('DUAL LIGHT') || name.includes('DUAL IR');
+    baseInfo = {
+      resolutionLabel: name.includes('2.4MP') ? '2.4MP Full HD (1920 × 1080)' : '2MP 1080p Full HD (1920 × 1080)',
+      resolutionPixels: '1920 × 1080',
+      fps: 30,
+      bitrate: '2048 Kbps (H.264 / H.265)',
+      sensor: '1/2.7" 2MP Progressive High-Speed Sensor',
+      lens: '3.6mm High Definition CCTV Lens',
+      nightVisionType: isDualLight ? 'dual_light' : 'infrared',
+      nightVisionDistance: '20 - 30 Meters Smart IR Distance',
+      supportsColorNight: isDualLight,
+      audio: name.includes('MIC') ? 'Built-in Audio Mic' : 'Standard Audio Over Coax / IP',
+      weatherRating: 'IP67 / IP66 Weather Resistant',
+      videoDay: '/videos/cctv_street.mp4',
+      videoNight: '/videos/cctv_outdoor.mp4'
+    };
   }
 
-  // 5. 2.4MP / 2MP HD & Analog / IP Cameras
-  const isDualLight = name.includes('DUAL LIGHT') || name.includes('DUAL IR');
-  return {
-    resolutionLabel: name.includes('2.4MP') ? '2.4MP Full HD (1920 × 1080)' : '2MP 1080p Full HD (1920 × 1080)',
-    resolutionPixels: '1920 × 1080',
-    fps: 30,
-    bitrate: '2048 Kbps (H.264 / H.265)',
-    sensor: '1/2.7" 2MP Progressive High-Speed Sensor',
-    lens: '3.6mm High Definition CCTV Lens',
-    nightVisionType: isDualLight ? 'dual_light' : 'infrared',
-    nightVisionDistance: '20 - 30 Meters Smart IR Distance',
-    supportsColorNight: isDualLight,
-    audio: name.includes('MIC') ? 'Built-in Audio Mic' : 'Standard Audio Over Coax / IP',
-    weatherRating: 'IP67 / IP66 Weather Resistant',
-    videoDay: '/videos/cctv_street.mp4',
-    videoNight: '/videos/cctv_outdoor.mp4'
-  };
+  // Admin Custom Video URL overrides (Day & Night)
+  if (product.sampleVideoUrl && product.sampleVideoUrl.trim()) {
+    baseInfo.videoDay = product.sampleVideoUrl.trim();
+  }
+  if (product.nightVideoUrl && product.nightVideoUrl.trim()) {
+    baseInfo.videoNight = product.nightVideoUrl.trim();
+  } else if (product.sampleVideoUrl && product.sampleVideoUrl.trim()) {
+    baseInfo.videoNight = product.sampleVideoUrl.trim();
+  }
+
+  return baseInfo;
 }

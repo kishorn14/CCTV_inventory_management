@@ -6,7 +6,9 @@ import {
   Trash2, 
   X, 
   Check,
-  Lock
+  Lock,
+  Video,
+  Compass
 } from 'lucide-react';
 import { useShop } from '../../context/ShopContext';
 import { Product, CategoryType } from '../../types';
@@ -92,6 +94,9 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
     badge: '',
     priceRange: '',
     warranty: '',
+    sampleVideoUrl: '',
+    nightVideoUrl: '',
+    is360Camera: false,
     featuresText: '',
     description: '',
     popular: false
@@ -107,6 +112,9 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
       badge: 'New Arrival',
       priceRange: '₹3,500 - ₹5,000',
       warranty: '',
+      sampleVideoUrl: '',
+      nightVideoUrl: '',
+      is360Camera: false,
       featuresText: 'High Quality Build\nFree Doorstep Fitting\nGenuine Company Support',
       description: 'Brand new high performance model with express installation.',
       popular: false
@@ -124,6 +132,9 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
       badge: product.badge || '',
       priceRange: product.priceRange,
       warranty: product.warranty || '',
+      sampleVideoUrl: product.sampleVideoUrl || '',
+      nightVideoUrl: product.nightVideoUrl || '',
+      is360Camera: !!product.is360Camera,
       featuresText: (product.features || []).join('\n'),
       description: product.description,
       popular: !!product.popular
@@ -146,6 +157,9 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
       badge: formData.badge ? formData.badge : undefined,
       priceRange: formData.priceRange,
       warranty: formData.warranty.trim() ? formData.warranty.trim() : undefined,
+      sampleVideoUrl: formData.sampleVideoUrl.trim() ? formData.sampleVideoUrl.trim() : undefined,
+      nightVideoUrl: formData.nightVideoUrl.trim() ? formData.nightVideoUrl.trim() : undefined,
+      is360Camera: formData.is360Camera,
       features: features.length > 0 ? features : ['100% Genuine Brand', 'Doorstep Service Support'],
       description: formData.description,
       popular: formData.popular
@@ -695,6 +709,149 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                     </div>
                   </div>
                 )}
+              </div>
+
+              {/* Camera Sample Footage & 360 Rotation Controls */}
+              <div style={{
+                background: '#f0fdf4',
+                border: '1px solid #bbf7d0',
+                borderRadius: '10px',
+                padding: '14px',
+                marginBottom: '16px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <Video size={18} color="#16a34a" />
+                  <span style={{ fontSize: '0.86rem', fontWeight: 800, color: '#166534' }}>
+                    Camera Sample Footage &amp; 360° Rotation (Customer Preview)
+                  </span>
+                </div>
+                <p style={{ fontSize: '0.74rem', color: '#4b5563', margin: '0 0 12px 0' }}>
+                  Change the sample CCTV video clip that plays when a customer clicks the eye icon. You can provide day and night clips, or upload an MP4 file.
+                </p>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '12px', marginBottom: '12px' }}>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label" style={{ fontSize: '0.78rem' }}>
+                      ☀️ Day Sample Video URL (.mp4 / link)
+                    </label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="e.g. /videos/cctv_outdoor.mp4 or https://..."
+                      value={formData.sampleVideoUrl}
+                      onChange={e => setFormData({ ...formData, sampleVideoUrl: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label" style={{ fontSize: '0.78rem' }}>
+                      🌙 Night Sample Video URL (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="e.g. /videos/cctv_street.mp4 (Optional)"
+                      value={formData.nightVideoUrl}
+                      onChange={e => setFormData({ ...formData, nightVideoUrl: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                {/* Quick Presets & Video Upload */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>Quick Presets:</span>
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, sampleVideoUrl: '/videos/cctv_outdoor.mp4' })}
+                      style={{
+                        padding: '3px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid #cbd5e1',
+                        background: '#ffffff',
+                        fontSize: '0.72rem',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Outdoor Daytime
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, sampleVideoUrl: '/videos/cctv_street.mp4' })}
+                      style={{
+                        padding: '3px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid #cbd5e1',
+                        background: '#ffffff',
+                        fontSize: '0.72rem',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Street Perimeter
+                    </button>
+                  </div>
+
+                  <label style={{
+                    background: '#ffffff',
+                    border: '1px solid #86efac',
+                    color: '#15803d',
+                    padding: '4px 10px',
+                    borderRadius: '6px',
+                    fontSize: '0.74rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}>
+                    📁 Upload MP4 from Device
+                    <input
+                      type="file"
+                      accept="video/mp4,video/webm"
+                      style={{ display: 'none' }}
+                      onChange={e => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            if (typeof reader.result === 'string') {
+                              setFormData({ ...formData, sampleVideoUrl: reader.result });
+                            }
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
+
+                {/* 360 Pan-Tilt Camera Toggle */}
+                <label style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  background: '#ffffff',
+                  padding: '10px 12px',
+                  borderRadius: '8px',
+                  border: formData.is360Camera ? '2px solid #22c55e' : '1px solid #cbd5e1',
+                  cursor: 'pointer'
+                }}>
+                  <input
+                    type="checkbox"
+                    checked={formData.is360Camera}
+                    onChange={e => setFormData({ ...formData, is360Camera: e.target.checked })}
+                    style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#16a34a' }}
+                  />
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#0f172a' }}>
+                      <Compass size={15} color="#16a34a" />
+                      <span>360° / Pan-Tilt Rotation Camera Feature</span>
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                      Enables interactive 360° video dragging, touch swipe rotation, and virtual PTZ joystick controls for customers while watching footage.
+                    </div>
+                  </div>
+                </label>
               </div>
 
               <div className="form-group">

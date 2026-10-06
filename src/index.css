@@ -988,3 +988,230 @@ textarea {
   padding: 2px 8px;
   border-radius: 6px;
 }
+
+/* =========================================================
+   CCTV SAMPLE FOOTAGE & 360° LIVE ROTATION MODAL (MOBILE OPTIMIZED)
+   ========================================================= */
+.cctv-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(2, 6, 23, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cctv-modal-card {
+  background: #090e17;
+  color: #ffffff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 860px;
+  max-height: 94vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.cctv-modal-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cctv-modal-body {
+  padding: 14px 16px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overscroll-behavior: contain;
+}
+
+.cctv-modal-footer {
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Vision selector tabs */
+.cctv-vision-nav {
+  display: flex;
+  gap: 6px;
+  background: rgba(17, 24, 39, 0.85);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cctv-vision-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.78rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+/* Video viewport */
+.cctv-viewport-box {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.9);
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  touch-action: none;
+  user-select: none;
+}
+
+/* 360 PTZ Controls overlay */
+.cctv-ptz-hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #4ade80;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 15;
+  pointer-events: none;
+}
+
+/* 360 PTZ Virtual D-Pad */
+.cctv-ptz-dpad {
+  position: absolute;
+  right: 10px;
+  bottom: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 32px);
+  grid-template-rows: repeat(3, 32px);
+  gap: 3px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  z-index: 20;
+}
+
+.cctv-ptz-dpad-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #ffffff;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 0.75rem;
+  user-select: none;
+}
+
+.cctv-ptz-dpad-btn:active {
+  background: #2563eb;
+  transform: scale(0.92);
+}
+
+/* Tech specs grid */
+.cctv-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.cctv-spec-item {
+  background: #111827;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Responsive mobile adjustments (<640px) */
+@media (max-width: 640px) {
+  .cctv-modal-overlay {
+    padding: 6px;
+    align-items: flex-end;
+  }
+
+  .cctv-modal-card {
+    max-height: 96vh;
+    border-radius: 20px 20px 12px 12px;
+  }
+
+  .cctv-modal-header {
+    padding: 10px 12px;
+  }
+
+  .cctv-modal-body {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .cctv-vision-btn {
+    padding: 7px 4px;
+    font-size: 0.72rem;
+    gap: 4px;
+  }
+
+  .cctv-specs-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .cctv-spec-item {
+    padding: 8px 10px;
+  }
+
+  .cctv-modal-footer {
+    padding: 10px 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .cctv-modal-footer-actions {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .cctv-modal-footer-actions > * {
+    flex: 1;
+    justify-content: center;
+  }
+}
