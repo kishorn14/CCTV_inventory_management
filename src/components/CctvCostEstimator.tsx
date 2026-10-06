@@ -12,13 +12,18 @@ import {
   ChevronRight,
   RefreshCw,
   CheckCircle2,
-  Server
+  Server,
+  X
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { isCameraProduct } from '../data/cameraFootageData';
 import { createWhatsAppLink, SHOP_INFO } from '../utils/whatsapp';
 
-export const CctvCostEstimator: React.FC = () => {
+interface CctvCostEstimatorProps {
+  onClose?: () => void;
+}
+
+export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose }) => {
   const { products } = useShop();
 
   // 1. Live dynamic product categories directly from store catalog
@@ -307,7 +312,33 @@ export const CctvCostEstimator: React.FC = () => {
       <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
         
         {/* Estimator Header Banner */}
-        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+        <div style={{ position: 'relative', textAlign: 'center', marginBottom: '24px' }}>
+          {onClose && (
+            <button
+              onClick={onClose}
+              style={{
+                position: 'absolute',
+                top: '-4px',
+                right: '0',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                color: '#e2e8f0',
+                padding: '6px 14px',
+                borderRadius: '8px',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.18s ease',
+                zIndex: 10
+              }}
+              title="Close and hide cost estimator"
+            >
+              <X size={16} /> Close Estimator
+            </button>
+          )}
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',

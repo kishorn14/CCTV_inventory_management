@@ -27,6 +27,21 @@ function MainApp() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('all');
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
   const [footageProduct, setFootageProduct] = useState<Product | null>(null);
+  const [isEstimatorOpen, setIsEstimatorOpen] = useState(false);
+
+  const handleOpenEstimator = () => {
+    setIsEstimatorOpen(true);
+    setTimeout(() => {
+      const el = document.getElementById('cctv-cost-estimator');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
+  };
+
+  const handleCloseEstimator = () => {
+    setIsEstimatorOpen(false);
+  };
 
   useEffect(() => {
     const handleUrlChange = () => {
@@ -151,19 +166,20 @@ function MainApp() {
             gap: '10px',
             flexWrap: 'wrap'
           }}>
-            <a
-              href="#cctv-cost-estimator"
+            <button
+              onClick={handleOpenEstimator}
               className="btn btn-primary"
               style={{
                 fontSize: '0.9rem',
                 padding: '8px 18px',
                 borderRadius: '8px',
-                gap: '6px'
+                gap: '6px',
+                cursor: 'pointer'
               }}
             >
               <Calculator size={16} />
               Instant Cost Estimator
-            </a>
+            </button>
 
             <a
               href="tel:6366406305"
@@ -199,7 +215,10 @@ function MainApp() {
       </div>
 
       {/* 3. Live CCTV Package Cost Estimator (Interactive Component Configurator) */}
-      <CctvCostEstimator />
+      {/* 3. Live CCTV Package Cost Estimator - Opened ONLY when user clicks Cost Estimator button */}
+      {isEstimatorOpen && (
+        <CctvCostEstimator onClose={handleCloseEstimator} />
+      )}
 
       {/* 4. Product Catalog Grid (All 50 Products from MyBillBook - Always Visible & Interactive) */}
       <ProductCatalog

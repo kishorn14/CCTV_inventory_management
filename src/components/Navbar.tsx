@@ -19,7 +19,7 @@ interface NavbarProps {
   onOpenEstimator?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts, onOpenEstimator }) => {
   const { shopInfo } = useShop();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -111,8 +111,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts })
               <ShieldCheck size={16} /> 100% Genuine Brands
             </div>
 
-            <a
-              href="#cctv-cost-estimator"
+            <button
+              onClick={() => {
+                if (onOpenEstimator) onOpenEstimator();
+              }}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -122,14 +124,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts })
                 border: '1px solid #bfdbfe',
                 fontSize: '0.86rem',
                 fontWeight: 700,
-                textDecoration: 'none',
                 padding: '7px 14px',
-                borderRadius: '8px'
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
               }}
             >
               <Calculator size={15} />
               Cost Estimator
-            </a>
+            </button>
 
             <a
               href="#products"
