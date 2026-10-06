@@ -261,7 +261,7 @@ export const PRODUCTS: Product[] = [
     "name": "SecureMax 6MP 4G Linkage PT Camera Triple Lens 4+4+12mm - SM1005-A 7843308399",
     "category": "wifi_4g",
     "brand": "SECUREMAX",
-    "image": "/products/solar_triple_lens_camera.jpg",
+    "image": "/products/securemax_triple_lens.jpg",
     "badge": "Triple Lens 4G",
     "priceRange": "₹7,316",
     "price": 7316,
