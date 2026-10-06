@@ -13,7 +13,8 @@ import {
   RefreshCw,
   CheckCircle2,
   Server,
-  X
+  X,
+  ArrowRight
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { isCameraProduct } from '../data/cameraFootageData';
@@ -63,10 +64,27 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     );
   }, [products]);
 
-  // Step 1: Camera & Filter state
+  // Step 1: Camera Quantities Map (cameraId -> quantity)
+  // Allows selecting different types of cameras (e.g. 2 Bullets + 2 Domes)
+  const [cameraQuantities, setCameraQuantities] = useState<Record<string, number>>(() => {
+    const firstCam = cameraProducts[0]?.id;
+    return firstCam ? { [firstCam]: 4 } : {};
+  });
+
   const [cameraFilter, setCameraFilter] = useState<'all' | 'ip' | 'analog' | 'wifi' | 'solar'>('all');
-  const [selectedCameraId, setSelectedCameraId] = useState<string>('');
-  const [cameraCount, setCameraCount] = useState<number>(4);
+
+  // Helper to update quantity for a specific camera
+  const updateCameraQty = (cameraId: string, qty: number) => {
+    setCameraQuantities(prev => {
+      const updated = { ...prev };
+      if (qty <= 0) {
+        delete updated[cameraId];
+      } else {
+        updated[cameraId] = Math.min(32, qty);
+      }
+      return updated;
+    });
+  };
 
   // Subsequent Component Selections
   const [selectedHddId, setSelectedHddId] = useState<string>('auto'); // 'auto' | 'none' | specific id
@@ -81,37 +99,48 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   const [activeStep, setActiveStep] = useState<number>(1);
   const [notificationMsg, setNotificationMsg] = useState<string | null>(null);
 
-  // Helper to show guidance prompt and advance step
   const advanceToStep = (step: number, message: string) => {
     setActiveStep(step);
     setNotificationMsg(message);
-    // Smooth scroll to step if needed
     const stepEl = document.getElementById(`estimator-step-${step}`);
     if (stepEl) {
       stepEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   };
 
-  // Selected camera resolved
-  const selectedCamera = useMemo(() => {
-    if (selectedCameraId) {
-      const found = cameraProducts.find(p => p.id === selectedCameraId);
-      if (found) return found;
-    }
-    return cameraProducts[0];
-  }, [cameraProducts, selectedCameraId]);
+  // List of all currently selected cameras with their quantities
+  const selectedCamerasList = useMemo(() => {
+    return cameraProducts
+      .filter(p => (cameraQuantities[p.id] || 0) > 0)
+      .map(p => ({
+        product: p,
+        quantity: cameraQuantities[p.id] || 0
+      }));
+  }, [cameraProducts, cameraQuantities]);
 
-  const isIpCamera = useMemo(() => {
-    if (!selectedCamera) return false;
-    return selectedCamera.category === 'ip_cameras' || selectedCamera.name.toUpperCase().includes('IP');
-  }, [selectedCamera]);
+  // Total cameras count across all selected models
+  const totalCameraCount = useMemo(() => {
+    return selectedCamerasList.reduce((sum, item) => sum + item.quantity, 0);
+  }, [selectedCamerasList]);
 
-  const isStandaloneCamera = useMemo(() => {
-    if (!selectedCamera) return false;
-    return selectedCamera.category === 'wifi_4g' || selectedCamera.category === 'solar';
-  }, [selectedCamera]);
+  // Minimum 1 camera count for sizing downstream accessories
+  const effectiveCameraCount = Math.max(1, totalCameraCount);
 
-  // Filtered cameras for Step 1 selection
+  // Check if any selected camera is an IP camera
+  const hasIpCameras = useMemo(() => {
+    return selectedCamerasList.some(item => 
+      item.product.category === 'ip_cameras' || item.product.name.toUpperCase().includes('IP')
+    );
+  }, [selectedCamerasList]);
+
+  // Check if all selected cameras are standalone (Wi-Fi or Solar)
+  const isAllStandalone = useMemo(() => {
+    return selectedCamerasList.length > 0 && selectedCamerasList.every(item => 
+      item.product.category === 'wifi_4g' || item.product.category === 'solar'
+    );
+  }, [selectedCamerasList]);
+
+  // Filtered cameras for Step 1
   const filteredCameras = useMemo(() => {
     if (cameraFilter === 'all') return cameraProducts;
     if (cameraFilter === 'ip') return cameraProducts.filter(p => p.category === 'ip_cameras');
@@ -121,13 +150,13 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     return cameraProducts;
   }, [cameraProducts, cameraFilter]);
 
-  // Dynamic Auto Recommendations for Recorder
+  // Dynamic Auto Recommendations for Recorder (scaled to totalCameraCount)
   const recommendedRecorder = useMemo(() => {
-    if (isStandaloneCamera) return null;
-    if (isIpCamera) {
-      if (cameraCount <= 8) {
+    if (isAllStandalone) return null;
+    if (hasIpCameras) {
+      if (effectiveCameraCount <= 8) {
         return recorderProducts.find(p => p.name.includes('8CH')) || recorderProducts[0];
-      } else if (cameraCount <= 16) {
+      } else if (effectiveCameraCount <= 16) {
         return recorderProducts.find(p => p.name.includes('16CH')) || recorderProducts[0];
       } else {
         return recorderProducts.find(p => p.name.includes('32CH')) || recorderProducts[0];
@@ -136,7 +165,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
       // Analog DVR
       return recorderProducts.find(p => p.name.includes('DVR')) || recorderProducts[0];
     }
-  }, [cameraCount, isIpCamera, isStandaloneCamera, recorderProducts]);
+  }, [effectiveCameraCount, hasIpCameras, isAllStandalone, recorderProducts]);
 
   const resolvedRecorder = useMemo(() => {
     if (selectedRecorderId === 'none') return null;
@@ -144,19 +173,19 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     return recorderProducts.find(p => p.id === selectedRecorderId) || null;
   }, [selectedRecorderId, recommendedRecorder, recorderProducts]);
 
-  // Recommended HDD Storage
+  // Recommended HDD Storage (scaled to totalCameraCount)
   const recommendedHdd = useMemo(() => {
-    if (isStandaloneCamera) {
+    if (isAllStandalone) {
       return hddProducts.find(p => p.name.includes('128 GB')) || hddProducts.find(p => p.name.includes('64 GB'));
     }
-    if (cameraCount <= 4) {
+    if (effectiveCameraCount <= 4) {
       return hddProducts.find(p => p.name.includes('1TB')) || hddProducts.find(p => p.name.includes('500GB'));
-    } else if (cameraCount <= 8) {
+    } else if (effectiveCameraCount <= 8) {
       return hddProducts.find(p => p.name.includes('2TB')) || hddProducts.find(p => p.name.includes('1TB'));
     } else {
       return hddProducts.find(p => p.name.includes('4TB')) || hddProducts.find(p => p.name.includes('2TB'));
     }
-  }, [cameraCount, isStandaloneCamera, hddProducts]);
+  }, [effectiveCameraCount, isAllStandalone, hddProducts]);
 
   const resolvedHdd = useMemo(() => {
     if (selectedHddId === 'none') return null;
@@ -173,35 +202,38 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   // Resolved Power (PoE switch or SMPS)
   const resolvedPower = useMemo(() => {
     if (!includePowerSupply) return null;
-    if (isStandaloneCamera) return null;
-    if (isIpCamera) {
+    if (isAllStandalone) return null;
+    if (hasIpCameras) {
       return powerProducts.find(p => p.name.includes('POE') || p.name.includes('PoE')) || powerProducts[0];
     } else {
       return powerProducts.find(p => p.name.includes('SMPS')) || powerProducts[0];
     }
-  }, [includePowerSupply, isIpCamera, isStandaloneCamera, powerProducts]);
+  }, [includePowerSupply, hasIpCameras, isAllStandalone, powerProducts]);
 
   // Resolved Cable
   const resolvedCable = useMemo(() => {
     if (!includeCables) return null;
-    if (isStandaloneCamera) return null;
-    if (isIpCamera) {
+    if (isAllStandalone) return null;
+    if (hasIpCameras) {
       return cableProducts.find(p => p.name.includes('Cat6 cable pure copper')) || cableProducts[0];
     } else {
       return cableProducts.find(p => p.name.includes('3+1')) || cableProducts[0];
     }
-  }, [includeCables, isIpCamera, isStandaloneCamera, cableProducts]);
+  }, [includeCables, hasIpCameras, isAllStandalone, cableProducts]);
 
   // Connectors & Accessories Cost
-  const connectorsUnitCost = isIpCamera ? 65 : 55; // per camera point
-  const connectorsTotalCost = includeConnectors && !isStandaloneCamera ? connectorsUnitCost * cameraCount : 0;
+  const connectorsUnitCost = hasIpCameras ? 65 : 55; // per camera point
+  const connectorsTotalCost = includeConnectors && !isAllStandalone ? connectorsUnitCost * totalCameraCount : 0;
 
   // Doorstep Installation labor rate
-  const installationUnitCost = isStandaloneCamera ? 450 : (isIpCamera ? 550 : 450);
-  const installationTotalCost = includeInstallation ? installationUnitCost * cameraCount : 0;
+  const installationUnitCost = isAllStandalone ? 450 : (hasIpCameras ? 550 : 450);
+  const installationTotalCost = includeInstallation ? installationUnitCost * totalCameraCount : 0;
 
-  // Total Calculation
-  const cameraTotal = (selectedCamera?.price || 0) * cameraCount;
+  // Total Camera Cost across all types
+  const cameraTotal = useMemo(() => {
+    return selectedCamerasList.reduce((sum, item) => sum + (item.product.price || 0) * item.quantity, 0);
+  }, [selectedCamerasList]);
+
   const hddTotal = resolvedHdd?.price || 0;
   const recorderTotal = resolvedRecorder?.price || 0;
   const rackTotal = resolvedRack?.price || 0;
@@ -210,16 +242,16 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   const cableTotal = useMemo(() => {
     if (!resolvedCable) return 0;
     if (resolvedCable.name.includes('305M')) return resolvedCable.price || 0;
-    const meters = Math.max(cameraCount * 20, 40);
+    const meters = Math.max(totalCameraCount * 20, 40);
     return (resolvedCable.price || 47) * meters;
-  }, [resolvedCable, cameraCount]);
+  }, [resolvedCable, totalCameraCount]);
 
   const grandTotal = cameraTotal + hddTotal + recorderTotal + rackTotal + powerTotal + cableTotal + connectorsTotalCost + installationTotalCost;
 
   // Reset function
   const handleReset = () => {
-    setSelectedCameraId(cameraProducts[0]?.id || '');
-    setCameraCount(4);
+    const firstCam = cameraProducts[0]?.id;
+    setCameraQuantities(firstCam ? { [firstCam]: 4 } : {});
     setSelectedHddId('auto');
     setSelectedRecorderId('auto');
     setSelectedRackId('none');
@@ -231,12 +263,17 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     setNotificationMsg(null);
   };
 
-  // WhatsApp Quotation Message
+  // WhatsApp Quotation Message (Lists each individual camera model and count)
   const waEstimateText = useMemo(() => {
     let msg = `*MEKSHA CCTV SOLUTIONS - ESTIMATED PACKAGE QUOTATION*\n`;
     msg += `-------------------------------------------\n`;
-    msg += `📷 *Cameras:* ${cameraCount}x ${selectedCamera?.name || 'CCTV Camera'}\n`;
-    msg += `   └ Rate: ₹${(selectedCamera?.price || 0).toLocaleString('en-IN')} × ${cameraCount} = ₹${cameraTotal.toLocaleString('en-IN')}\n\n`;
+    msg += `📷 *Selected Cameras (${totalCameraCount} Total):*\n`;
+    selectedCamerasList.forEach(item => {
+      const lineCost = (item.product.price || 0) * item.quantity;
+      msg += `   • ${item.quantity}x ${item.product.name}\n`;
+      msg += `     Rate: ₹${(item.product.price || 0).toLocaleString('en-IN')} × ${item.quantity} = ₹${lineCost.toLocaleString('en-IN')}\n`;
+    });
+    msg += `   └ Cameras Subtotal: ₹${cameraTotal.toLocaleString('en-IN')}\n\n`;
 
     if (resolvedHdd) {
       msg += `💾 *Storage:* ${resolvedHdd.name}\n`;
@@ -259,17 +296,17 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     }
 
     if (resolvedCable) {
-      msg += `🔌 *Cabling:* ${resolvedCable.name} (~${cameraCount * 20}m)\n`;
+      msg += `🔌 *Cabling:* ${resolvedCable.name} (~${totalCameraCount * 20}m)\n`;
       msg += `   └ Est. Price: ₹${cableTotal.toLocaleString('en-IN')}\n\n`;
     }
 
     if (connectorsTotalCost > 0) {
-      msg += `🔩 *Connectors & Junction Boxes:* ${cameraCount} points\n`;
+      msg += `🔩 *Connectors & Junction Boxes:* ${totalCameraCount} points\n`;
       msg += `   └ Price: ₹${connectorsTotalCost.toLocaleString('en-IN')}\n\n`;
     }
 
     if (includeInstallation) {
-      msg += `🛠️ *Doorstep Installation:* ${cameraCount} points fitting & mobile setup\n`;
+      msg += `🛠️ *Doorstep Installation:* ${totalCameraCount} points fitting & mobile setup\n`;
       msg += `   └ Labor: ₹${installationTotalCost.toLocaleString('en-IN')}\n\n`;
     }
 
@@ -280,8 +317,8 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
 
     return msg;
   }, [
-    selectedCamera, 
-    cameraCount, 
+    totalCameraCount,
+    selectedCamerasList,
     cameraTotal, 
     resolvedHdd, 
     resolvedRecorder, 
@@ -339,6 +376,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
               <X size={16} /> Close Estimator
             </button>
           )}
+
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -360,7 +398,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
             Customize &amp; Estimate Your CCTV System In Seconds
           </h2>
           <p style={{ color: '#94a3b8', fontSize: '0.92rem', maxWidth: '680px', margin: '0 auto' }}>
-            Select your camera model. The estimator automatically guides you through selecting matching storage (HDD), recording unit (DVR/NVR), racks, cables, and setup using live shop prices.
+            Select individual quantities beside each camera model (mix &amp; match bullets, domes, and Wi-Fi cams). The estimator automatically guides you through matching storage (HDD), recording unit (DVR/NVR), racks, cables, and setup.
           </p>
 
           {/* Stepper Navigation Strip */}
@@ -373,7 +411,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
             flexWrap: 'wrap'
           }}>
             {[
-              { num: 1, label: '1. Camera', icon: Camera },
+              { num: 1, label: `1. Cameras (${totalCameraCount})`, icon: Camera },
               { num: 2, label: '2. HDD Storage', icon: HardDrive },
               { num: 3, label: '3. DVR / NVR', icon: Server },
               { num: 4, label: '4. Rack Enclosure', icon: Box },
@@ -472,7 +510,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
           {/* LEFT: Step-by-Step Auto Guided Components Builder */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             
-            {/* STEP 1: Select Camera & Quantity */}
+            {/* STEP 1: Select Cameras with Quantity Beside Each Camera */}
             <div 
               id="estimator-step-1"
               style={{
@@ -505,43 +543,36 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                   </span>
                   <div>
                     <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>
-                      Step 1: Select CCTV Camera Model
+                      Step 1: Select Cameras &amp; Quantities
                     </h3>
                     <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                      Selected: <strong style={{ color: '#38bdf8' }}>{selectedCamera?.name}</strong>
+                      Total Selected: <strong style={{ color: '#38bdf8' }}>{totalCameraCount} Camera{totalCameraCount !== 1 ? 's' : ''}</strong> ({selectedCamerasList.length} model{selectedCamerasList.length !== 1 ? 's' : ''})
                     </span>
                   </div>
                 </div>
 
-                {/* Camera Quantity Controller */}
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  background: '#0f172a',
-                  padding: '4px 10px',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(255, 255, 255, 0.15)'
-                }}>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', marginRight: '4px' }}>Qty:</span>
-                  <button
-                    onClick={() => setCameraCount(Math.max(1, cameraCount - 1))}
-                    style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '3px' }}
-                    title="Decrease camera count"
-                  >
-                    <Minus size={15} />
-                  </button>
-                  <span style={{ fontWeight: 800, fontSize: '0.92rem', color: '#38bdf8', minWidth: '42px', textAlign: 'center' }}>
-                    {cameraCount}
-                  </span>
-                  <button
-                    onClick={() => setCameraCount(Math.min(32, cameraCount + 1))}
-                    style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '3px' }}
-                    title="Increase camera count"
-                  >
-                    <Plus size={15} />
-                  </button>
-                </div>
+                {/* Quick Advance Button */}
+                <button
+                  onClick={() => advanceToStep(2, `Selected ${totalCameraCount} camera(s). Next: Choose HDD storage capacity.`)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    background: totalCameraCount > 0 ? '#2563eb' : '#334155',
+                    color: '#ffffff',
+                    border: 'none',
+                    padding: '6px 14px',
+                    borderRadius: '8px',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    cursor: totalCameraCount > 0 ? 'pointer' : 'default',
+                    transition: 'all 0.15s ease'
+                  }}
+                  disabled={totalCameraCount === 0}
+                >
+                  <span>Next: Storage (HDD)</span>
+                  <ArrowRight size={14} />
+                </button>
               </div>
 
               {/* Camera Filter Tabs */}
@@ -573,63 +604,153 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                 ))}
               </div>
 
-              {/* Camera Grid with Clean Scroll */}
+              {/* Camera Grid with Quantity Controller Right Beside Each Camera */}
               <div style={{ 
                 display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', 
-                gap: '8px', 
-                maxHeight: '270px', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', 
+                gap: '10px', 
+                maxHeight: '340px', 
                 overflowY: 'auto',
                 paddingRight: '4px'
               }}>
                 {filteredCameras.map(cam => {
-                  const isSelected = selectedCamera?.id === cam.id;
+                  const qty = cameraQuantities[cam.id] || 0;
+                  const isSelected = qty > 0;
                   return (
                     <div
                       key={cam.id}
-                      onClick={() => {
-                        setSelectedCameraId(cam.id);
-                        advanceToStep(2, `Camera selected: "${cam.name}". Next: Select HDD storage capacity.`);
-                      }}
                       style={{
                         padding: '10px 12px',
                         borderRadius: '10px',
-                        background: isSelected ? 'rgba(37, 99, 235, 0.25)' : '#0f172a',
+                        background: isSelected ? 'rgba(37, 99, 235, 0.22)' : '#0f172a',
                         border: isSelected ? '2px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.08)',
-                        cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
+                        justifyContent: 'space-between',
                         gap: '10px',
                         transition: 'all 0.18s ease'
                       }}
                     >
-                      <img 
-                        src={cam.image} 
-                        alt={cam.name} 
-                        style={{ width: '42px', height: '42px', borderRadius: '6px', objectFit: 'contain', background: '#fff', padding: '2px' }} 
-                      />
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{
-                          fontSize: '0.8rem',
-                          fontWeight: 700,
-                          color: isSelected ? '#ffffff' : '#e2e8f0',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }}>
-                          {cam.name}
+                      {/* Left: Thumbnail + Camera Info */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, minWidth: 0 }}>
+                        <img 
+                          src={cam.image} 
+                          alt={cam.name} 
+                          style={{ width: '42px', height: '42px', borderRadius: '6px', objectFit: 'contain', background: '#fff', padding: '2px', flexShrink: 0 }} 
+                        />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{
+                            fontSize: '0.8rem',
+                            fontWeight: 700,
+                            color: isSelected ? '#ffffff' : '#e2e8f0',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }} title={cam.name}>
+                            {cam.name}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
+                            <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{cam.brand}</span>
+                            <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80' }}>
+                              ₹{(cam.price || 0).toLocaleString('en-IN')}
+                            </span>
+                          </div>
+                          {isSelected && (
+                            <div style={{ fontSize: '0.7rem', color: '#93c5fd', marginTop: '2px' }}>
+                              Subtotal: ₹{((cam.price || 0) * qty).toLocaleString('en-IN')}
+                            </div>
+                          )}
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2px' }}>
-                          <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{cam.brand}</span>
-                          <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80' }}>
-                            ₹{(cam.price || 0).toLocaleString('en-IN')}
-                          </span>
-                        </div>
+                      </div>
+
+                      {/* Right: Quantity Controller Just Beside Camera */}
+                      <div style={{ flexShrink: 0 }}>
+                        {qty === 0 ? (
+                          <button
+                            onClick={() => {
+                              updateCameraQty(cam.id, 1);
+                              setNotificationMsg(`Added ${cam.name} (1 unit) to package.`);
+                            }}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              background: '#1e3a8a',
+                              border: '1px solid #3b82f6',
+                              color: '#ffffff',
+                              padding: '5px 12px',
+                              borderRadius: '8px',
+                              fontSize: '0.78rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              transition: 'all 0.15s ease'
+                            }}
+                            title="Add this camera model"
+                          >
+                            <Plus size={13} /> Add
+                          </button>
+                        ) : (
+                          <div style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '2px',
+                            background: '#1d4ed8',
+                            borderRadius: '8px',
+                            padding: '3px 6px',
+                            border: '1px solid #60a5fa'
+                          }}>
+                            <button
+                              onClick={() => updateCameraQty(cam.id, qty - 1)}
+                              style={{
+                                background: 'none',
+                                border: 'none',
+                                color: '#fff',
+                                cursor: 'pointer',
+                                padding: '2px 4px',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                              title="Decrease quantity"
+                            >
+                              <Minus size={13} />
+                            </button>
+                            <span style={{
+                              minWidth: '22px',
+                              textAlign: 'center',
+                              fontWeight: 900,
+                              fontSize: '0.86rem',
+                              color: '#ffffff'
+                            }}>
+                              {qty}
+                            </span>
+                            <button
+                              onClick={() => updateCameraQty(cam.id, qty + 1)}
+                              style={{
+                                background: 'none',
+                                border: 'none',
+                                color: '#fff',
+                                cursor: 'pointer',
+                                padding: '2px 4px',
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                              title="Increase quantity"
+                            >
+                              <Plus size={13} />
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
                 })}
               </div>
+
+              {totalCameraCount === 0 && (
+                <div style={{ textAlign: 'center', color: '#f87171', fontSize: '0.82rem', marginTop: '10px' }}>
+                  ⚠️ Please select quantity for at least 1 camera model above to configure your package.
+                </div>
+              )}
             </div>
 
             {/* STEP 2: Automatic HDD Storage Selection */}
@@ -667,7 +788,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     Step 2: Select Hard Disk (HDD) Storage Size
                   </h3>
                   <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                    Continuous CCTV video recording retention (Auto-recommended: <strong style={{ color: '#38bdf8' }}>{recommendedHdd?.name}</strong>)
+                    Continuous CCTV video recording retention for {totalCameraCount} camera{totalCameraCount !== 1 ? 's' : ''} (Auto-recommended: <strong style={{ color: '#38bdf8' }}>{recommendedHdd?.name}</strong>)
                   </span>
                 </div>
               </div>
@@ -786,9 +907,9 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     Step 3: Select DVR / NVR Recording Unit
                   </h3>
                   <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                    {isStandaloneCamera 
+                    {isAllStandalone 
                       ? 'Wi-Fi / 4G Solar cameras support internal SD recording; NVR is optional'
-                      : `Matching channels for ${cameraCount} cameras (Auto-recommended: ${recommendedRecorder?.name || 'Auto'})`
+                      : `Matching channels for ${totalCameraCount} camera(s) (Auto-recommended: ${recommendedRecorder?.name || 'Auto'})`
                     }
                   </span>
                 </div>
@@ -997,7 +1118,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     Step 5: Cables, Power, Connectors &amp; Doorstep Setup
                   </h3>
                   <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                    Turnkey accessories required for turnkey operation (Toggle to customize)
+                    Turnkey accessories required for {totalCameraCount} camera points (Toggle to customize)
                   </span>
                 </div>
               </div>
@@ -1019,7 +1140,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                 >
                   <div>
                     <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff' }}>
-                      {isIpCamera ? 'PoE Switch Unit' : 'SMPS Power Supply'}
+                      {hasIpCameras ? 'PoE Switch Unit' : 'SMPS Power Supply'}
                     </div>
                     <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
                       {resolvedPower ? resolvedPower.name.slice(0, 25) : 'Auto assigned'}
@@ -1046,10 +1167,10 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                 >
                   <div>
                     <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff' }}>
-                      {isIpCamera ? 'Pure Copper Cat6' : '3+1 CCTV Cable'}
+                      {hasIpCameras ? 'Pure Copper Cat6' : '3+1 CCTV Cable'}
                     </div>
                     <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-                      ~{cameraCount * 20}m wiring run
+                      ~{totalCameraCount * 20}m wiring run
                     </div>
                   </div>
                   <div style={{ fontSize: '0.85rem', fontWeight: 800, color: includeCables ? '#4ade80' : '#94a3b8' }}>
@@ -1073,10 +1194,10 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                 >
                   <div>
                     <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff' }}>
-                      Connectors &amp; Junction Boxes
+                      Connectors &amp; Modular Boxes
                     </div>
                     <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-                      {isIpCamera ? 'RJ45 + Modular Boxes' : 'BNC + DC + Modular Boxes'}
+                      {hasIpCameras ? 'RJ45 + Modular Boxes' : 'BNC + DC + Modular Boxes'}
                     </div>
                   </div>
                   <div style={{ fontSize: '0.85rem', fontWeight: 800, color: includeConnectors ? '#4ade80' : '#94a3b8' }}>
@@ -1103,7 +1224,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                       Doorstep Fitting &amp; Setup
                     </div>
                     <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-                      Davanagere district fitting &amp; app config
+                      Davanagere district fitting &amp; app config ({totalCameraCount} points)
                     </div>
                   </div>
                   <div style={{ fontSize: '0.85rem', fontWeight: 800, color: includeInstallation ? '#4ade80' : '#94a3b8' }}>
@@ -1131,7 +1252,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                   Live Package Summary
                 </span>
                 <h3 style={{ margin: '2px 0 0', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>
-                  {cameraCount} Camera CCTV Package
+                  {totalCameraCount} Camera CCTV Package
                 </h3>
               </div>
               <span style={{
@@ -1149,20 +1270,28 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
             {/* Itemized List */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.85rem', marginBottom: '18px' }}>
               
-              {/* Cameras */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
-                <div>
-                  <div style={{ fontWeight: 600, color: '#fff' }}>
-                    📷 {cameraCount}x {selectedCamera?.name || 'Camera'}
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-                    ₹{(selectedCamera?.price || 0).toLocaleString('en-IN')} each
-                  </div>
+              {/* Selected Cameras (Lists each camera model selected) */}
+              {selectedCamerasList.length === 0 ? (
+                <div style={{ color: '#f87171', fontSize: '0.82rem', padding: '6px 0' }}>
+                  No cameras selected yet
                 </div>
-                <div style={{ fontWeight: 700, color: '#fff' }}>
-                  ₹{cameraTotal.toLocaleString('en-IN')}
-                </div>
-              </div>
+              ) : (
+                selectedCamerasList.map(({ product, quantity }) => (
+                  <div key={product.id} style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
+                    <div style={{ flex: 1, minWidth: 0, paddingRight: '8px' }}>
+                      <div style={{ fontWeight: 600, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        📷 {quantity}x {product.name}
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                        ₹{(product.price || 0).toLocaleString('en-IN')} each
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                      ₹{((product.price || 0) * quantity).toLocaleString('en-IN')}
+                    </div>
+                  </div>
+                ))
+              )}
 
               {/* HDD */}
               {resolvedHdd && (
@@ -1231,7 +1360,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
                   <div>
                     <div style={{ fontWeight: 600, color: '#fff' }}>
-                      🔌 {resolvedCable.name.slice(0, 24)} (~{cameraCount * 20}m)
+                      🔌 {resolvedCable.name.slice(0, 24)} (~{totalCameraCount * 20}m)
                     </div>
                   </div>
                   <div style={{ fontWeight: 700, color: '#fff' }}>
@@ -1255,7 +1384,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
               )}
 
               {/* Installation */}
-              {includeInstallation && (
+              {includeInstallation && totalCameraCount > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
                   <div>
                     <div style={{ fontWeight: 600, color: '#fff' }}>
