@@ -2,62 +2,20 @@ import { Product, ServiceItem, Review } from '../types';
 
 export const CATEGORIES = [
   { id: 'all', label: 'All Products (50)', icon: 'Sparkles', active: true },
-  { id: 'wifi_4g', label: 'Wi-Fi 360° & 4G Cameras', icon: 'Wifi', active: true },
   { id: 'ip_cameras', label: 'CP PLUS IP Cameras', icon: 'Shield', active: true },
   { id: 'hd_analog', label: 'HD & Analog Cameras', icon: 'Camera', active: true },
-  { id: 'dvr_nvr', label: 'DVR & NVR Recording Units', icon: 'HardDrive', active: true },
+  { id: 'wifi_4g', label: 'Wi-Fi 360° & 4G Cameras', icon: 'Wifi', active: true },
   { id: 'solar', label: 'Solar 4G Cameras', icon: 'Sun', active: true },
-  { id: 'storage', label: 'Hard Disks & SD Storage', icon: 'Database', active: true },
+  { id: 'storage', label: 'Hard Disks & Storage (HDD)', icon: 'Database', active: true },
+  { id: 'dvr_nvr', label: 'DVR & NVR Recording Units', icon: 'HardDrive', active: true },
+  { id: 'racks_accessories', label: 'Server & CCTV Racks', icon: 'Box', active: true },
   { id: 'networking', label: 'PoE Switches & Routers', icon: 'Network', active: true },
-  { id: 'cables_power', label: 'Cables & SMPS Power', icon: 'Zap', active: true },
-  { id: 'racks_accessories', label: 'Racks & Accessories', icon: 'Box', active: true },
+  { id: 'cables_power', label: 'Cables & Connectors', icon: 'Zap', active: true },
 ] as const;
 
 export const PRODUCTS: Product[] = [
   {
     "id": "prod-1",
-    "name": "128 GB MICRO SD CARD",
-    "category": "storage",
-    "brand": "MEKSHA",
-    "image": "/products/microsd.jpg",
-    "badge": "128GB MicroSD",
-    "priceRange": "₹2,124",
-    "price": 2124,
-    "mrp": 2850,
-    "unit": "PCS",
-    "warranty": "2 Years Warranty",
-    "features": [
-      "High Endurance Class 10 U3 / V30",
-      "Optimized for Continuous CCTV Video Loop",
-      "Shock, Temperature & Waterproof",
-      "Plug & Play for Wi-Fi & 4G Cameras"
-    ],
-    "description": "High-endurance Micro SD memory card for standalone Wi-Fi and 4G smart cameras with fast read/write speeds.",
-    "popular": false
-  },
-  {
-    "id": "prod-2",
-    "name": "2U RACK - WALL MOUNT",
-    "category": "racks_accessories",
-    "brand": "MEKSHA",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/7691d991-ca0c-419b-95bb-09a18a0c1ecb.png",
-    "badge": "2U Wall Mount",
-    "priceRange": "₹1,416",
-    "price": 1416,
-    "mrp": 1900,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "2U Compact Wall Mount Enclosure",
-      "Lockable Front Door with Ventilation",
-      "Powder Coated Rust-Proof Steel",
-      "Ideal for 4CH / 8CH DVR Setups"
-    ],
-    "description": "Compact 2U wall mount CCTV rack to house DVR, SMPS, and cables cleanly in homes and shops.",
-    "popular": false
-  },
-  {
-    "id": "prod-3",
     "name": "4mp ip Bullet Illuamx With Mic(CP-UNC-TA41L3C-D-LQ)",
     "category": "ip_cameras",
     "brand": "CP PLUS",
@@ -79,7 +37,7 @@ export const PRODUCTS: Product[] = [
     "popular": true
   },
   {
-    "id": "prod-4",
+    "id": "prod-2",
     "name": "4mp ip Dome Illuamx With Mic (CP-UNC-DA41L3C-D-LQ)",
     "category": "ip_cameras",
     "brand": "CP PLUS",
@@ -101,113 +59,7 @@ export const PRODUCTS: Product[] = [
     "popular": false
   },
   {
-    "id": "prod-5",
-    "name": "64 GB MICRO SD CARD",
-    "category": "storage",
-    "brand": "MEKSHA",
-    "image": "/products/microsd.jpg",
-    "badge": "64GB MicroSD",
-    "priceRange": "₹1,357",
-    "price": 1357,
-    "mrp": 1850,
-    "unit": "PCS",
-    "warranty": "2 Years Warranty",
-    "features": [
-      "High Endurance Class 10 U3 / V30",
-      "Optimized for Continuous CCTV Video Loop",
-      "Shock, Temperature & Waterproof",
-      "Plug & Play for Wi-Fi & 4G Cameras"
-    ],
-    "description": "High-endurance Micro SD memory card for standalone Wi-Fi and 4G smart cameras with fast read/write speeds.",
-    "popular": false
-  },
-  {
-    "id": "prod-6",
-    "name": "6U RACK WALL MOUNT - 500D",
-    "category": "racks_accessories",
-    "brand": "MEKSHA",
-    "image": "/products/rack_6u_server.jpg",
-    "badge": "6U Wall Mount",
-    "priceRange": "₹2,714",
-    "price": 2714,
-    "mrp": 3650,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "6U Standard 19\" Wall Mount Rack (500mm Depth)",
-      "Toughened Glass Front Door with Lock & Key",
-      "Cable Entry Cutouts on Top and Bottom",
-      "High Load Bearing Powder Coated Steel"
-    ],
-    "description": "Heavy duty 6U server and CCTV rack cabinet to secure NVR, DVR, PoE switch, and power supplies.",
-    "popular": false
-  },
-  {
-    "id": "prod-7",
-    "name": "Cat6 cable pure copper",
-    "category": "cables_power",
-    "brand": "MEKSHA",
-    "image": "/products/cat6_copper_coil.jpg",
-    "badge": "Pure Copper",
-    "priceRange": "₹47",
-    "price": 47,
-    "mrp": 65,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Pure Copper High Conductivity",
-      "Gigabit Cat6 Specification",
-      "Weatherproof Outer Sheath",
-      "Low Interference Twisted Pairs"
-    ],
-    "description": "High grade pure copper Cat6 networking cable sold per meter for custom wiring lengths.",
-    "popular": false
-  },
-  {
-    "id": "prod-8",
-    "name": "Consistent 500GB HDD - 2YRS",
-    "category": "storage",
-    "brand": "CONSISTENT",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/b7a7fdc5-2cf3-44c3-9ae0-859b2ba9e3b1.png",
-    "badge": "500GB HDD",
-    "priceRange": "₹2,478",
-    "price": 2478,
-    "mrp": 3350,
-    "unit": "NOS",
-    "warranty": "2 Years Warranty",
-    "features": [
-      "Standard 3.5\" SATA Surveillance Drive",
-      "SATA 6Gb/s High Speed Interface",
-      "Low Power Consumption & Silent Operation",
-      "Tested for DVR Recording"
-    ],
-    "description": "Reliable SATA internal hard disk drive for CCTV video storage with 2 years replacement warranty.",
-    "popular": false
-  },
-  {
-    "id": "prod-9",
-    "name": "CP PLUS 16CH NVR - CP-UNR-4K2162-V3",
-    "category": "dvr_nvr",
-    "brand": "CP PLUS",
-    "image": "https://cpplusworld.com/prodassets/product/small/9801c8f0-6d8b-4f7b-b199-c616819f8ae4.png",
-    "badge": "16CH 4K NVR",
-    "priceRange": "₹12,862",
-    "price": 12862,
-    "mrp": 17350,
-    "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
-    "features": [
-      "16-Channel 4K High Definition NVR",
-      "SATA HDD Support up to 10TB",
-      "Multi-Screen Live Monitoring",
-      "Audio & Motion Alarm Triggering",
-      "CP PLUS InstaOn App Support"
-    ],
-    "description": "CP PLUS 16-Channel 4K NVR for commercial shops, multi-floor buildings, and warehouses.",
-    "popular": true
-  },
-  {
-    "id": "prod-10",
+    "id": "prod-3",
     "name": "CP Plus 2.4MP Bullet With Mic - CP-URC-TC24PL3C",
     "category": "ip_cameras",
     "brand": "CP PLUS",
@@ -229,7 +81,7 @@ export const PRODUCTS: Product[] = [
     "popular": true
   },
   {
-    "id": "prod-11",
+    "id": "prod-4",
     "name": "CP PLUS 2MP IP DUAL IR BULLET WITH MIC - CP-UNC-TA21L3C-LQ",
     "category": "ip_cameras",
     "brand": "CP PLUS",
@@ -251,7 +103,7 @@ export const PRODUCTS: Product[] = [
     "popular": false
   },
   {
-    "id": "prod-12",
+    "id": "prod-5",
     "name": "CP PLUS 2MP IP DUAL IR DOME WITH MIC - CP-UNC-DA21L3C-LQ",
     "category": "ip_cameras",
     "brand": "CP PLUS",
@@ -273,7 +125,7 @@ export const PRODUCTS: Product[] = [
     "popular": false
   },
   {
-    "id": "prod-13",
+    "id": "prod-6",
     "name": "CP PLUS 2MP IP DUAL IR DOME WITH MIC - CP-UNC-TA21L3C-LQ",
     "category": "ip_cameras",
     "brand": "CP PLUS",
@@ -295,50 +147,7 @@ export const PRODUCTS: Product[] = [
     "popular": false
   },
   {
-    "id": "prod-14",
-    "name": "CP PLUS 3+1 CCTV CABLE - 90R-V3",
-    "category": "cables_power",
-    "brand": "CP PLUS",
-    "image": "https://5.imimg.com/data5/SELLER/Default/2025/10/555585028/RX/TC/AS/129092759/cp-plus-cp-ecc-90r-3-1-cctv-cable-500x500.jpg",
-    "badge": "90M Coil",
-    "priceRange": "₹1,711",
-    "price": 1711,
-    "mrp": 2300,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Coaxial Video Cable + 3 Power/Audio Wires",
-      "90 Meters Factory Sealed Coil",
-      "Low Signal Loss & Noise Shielding",
-      "Weatherproof PVC Insulation"
-    ],
-    "description": "CP PLUS 3+1 CCTV cable 90m bundle designed for analog and HD DVR camera wiring.",
-    "popular": false
-  },
-  {
-    "id": "prod-15",
-    "name": "CP PLUS 32CH NVR - CP-UNR-4K4322-V4 (4K)",
-    "category": "dvr_nvr",
-    "brand": "CP PLUS",
-    "image": "https://cpplusworld.com/prodassets/product/small/dd6484c0-5c7a-49be-8c93-8103d785baf8.jpg",
-    "badge": "32CH 4K NVR",
-    "priceRange": "₹20,060",
-    "price": 20060,
-    "mrp": 27100,
-    "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
-    "features": [
-      "32-Channel 4K Ultra HD Recording",
-      "Dual SATA Ports up to 16TB Storage",
-      "H.265+ Smart Video Encoding",
-      "Commercial Enterprise Grade NVR",
-      "Instant Mobile App Remote Access"
-    ],
-    "description": "CP PLUS 32-Channel 4K Network Video Recorder for large commercial enterprises, apartments, and industrial facilities.",
-    "popular": true
-  },
-  {
-    "id": "prod-16",
+    "id": "prod-7",
     "name": "CP PLUS 4MP IP BULLET CAMERA - CP-UNC-TA41L6C-D-Q-0600 - 60MTRS",
     "category": "ip_cameras",
     "brand": "CP PLUS",
@@ -360,7 +169,7 @@ export const PRODUCTS: Product[] = [
     "popular": true
   },
   {
-    "id": "prod-17",
+    "id": "prod-8",
     "name": "CP PLUS 4MP IP DUAL IR BULLET WITH MIC - CP-UNC-TA41L3C-D-LQ",
     "category": "ip_cameras",
     "brand": "CP PLUS",
@@ -382,7 +191,7 @@ export const PRODUCTS: Product[] = [
     "popular": true
   },
   {
-    "id": "prod-18",
+    "id": "prod-9",
     "name": "CP PLUS 4MP IP DUAL IR DOME WITH MIC - CP-UNC-DA41L3C-D-LQ",
     "category": "ip_cameras",
     "brand": "CP PLUS",
@@ -404,495 +213,7 @@ export const PRODUCTS: Product[] = [
     "popular": false
   },
   {
-    "id": "prod-19",
-    "name": "CP Plus 8CH NVR - CP-UNR-108F1",
-    "category": "dvr_nvr",
-    "brand": "CP PLUS",
-    "image": "https://cpplusworld.com/prodassets/product/small/1eb53499-144f-4fd6-9a08-0007adc7c771.jpg",
-    "badge": "8CH NVR",
-    "priceRange": "₹6,490",
-    "price": 6490,
-    "mrp": 8750,
-    "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
-    "features": [
-      "8-Channel HD NVR Recording",
-      "High Speed Network Bandwidth",
-      "Compact Desktop / Rack Chassis",
-      "Plug & Play IP Camera Detection",
-      "Mobile App Live Streaming"
-    ],
-    "description": "CP PLUS 8-Channel NVR recorder suitable for homes, offices, and small retail showrooms.",
-    "popular": false
-  },
-  {
-    "id": "prod-20",
-    "name": "CP PLUS Cat6 UTP SOLID CABLE 305M - CP-BUT-6TGL1",
-    "category": "cables_power",
-    "brand": "CP PLUS",
-    "image": "/products/cat6_box.jpg",
-    "badge": "305M Drum Box",
-    "priceRange": "₹12,036",
-    "price": 12036,
-    "mrp": 16250,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Original CP PLUS Solid Copper Cat6 Cable",
-      "305 Meters Full Length Reel in Pull Box",
-      "Gigabit Transmission Speeds (up to 250 MHz)",
-      "Durable Outer Jacket with Meter Markings"
-    ],
-    "description": "CP PLUS 305m pure solid Cat6 networking cable drum for professional IP CCTV camera installations.",
-    "popular": true
-  },
-  {
-    "id": "prod-21",
-    "name": "CP PLUS SOLAR PANEL WITH BATTERY KIT - CP-SL06K YI86VjM0JDVUUNDr",
-    "category": "solar",
-    "brand": "CP PLUS",
-    "image": "https://cpplusworld.com/prodassets/product/small/55926f8d-03c0-4c9a-8efc-8d29a64024d2.png",
-    "badge": "Solar Powered",
-    "priceRange": "₹6,090",
-    "price": 6090,
-    "mrp": 8200,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Continuous Solar Powered Operation",
-      "High-Capacity Lithium Battery Kit",
-      "Weatherproof Outdoor IP66 Casing",
-      "Zero Electric Wiring Required",
-      "Mobile View Anywhere"
-    ],
-    "description": "Complete solar security camera kit engineered for agricultural farms, open lands, and remote properties without grid electricity.",
-    "popular": true
-  },
-  {
-    "id": "prod-22",
-    "name": "D-Link 5 Port Switch - DES-1005C",
-    "category": "networking",
-    "brand": "D-LINK",
-    "image": "https://www.dlink.com/in/en/-/media/product-pages/des/1005c/preview-image/des1005cfrontin.png",
-    "badge": "Ethernet Switch",
-    "priceRange": "₹1,133",
-    "price": 1133,
-    "mrp": 1550,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "5 Fast Ethernet 10/100 Ports",
-      "Energy Efficient Green Ethernet",
-      "Plug & Play Easy Installation",
-      "Compact Desktop Footprint"
-    ],
-    "description": "D-Link / Maxxion 5-Port desktop ethernet switch for expanding network connections in CCTV and office setups.",
-    "popular": false
-  },
-  {
-    "id": "prod-23",
-    "name": "FYBER 4CH CCTV SMPS FYUS-51",
-    "category": "cables_power",
-    "brand": "FYBER",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/d5234608-3eb1-476b-956c-d0455253b5c2.png",
-    "badge": "4CH SMPS",
-    "priceRange": "₹1,003",
-    "price": 1003,
-    "mrp": 1350,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Regulated 12V DC Centralized Power Output",
-      "Short Circuit & Overload Protection",
-      "Perforated Heavy Metal Casing",
-      "Individual Fuse Protection per Channel"
-    ],
-    "description": "Fyber centralized CCTV SMPS power supply box to power 4 or 8 cameras safely from a single power point.",
-    "popular": false
-  },
-  {
-    "id": "prod-24",
-    "name": "FYBER 8+2 PORT 10/100 POE - FYA-82FE (COMPACT)",
-    "category": "networking",
-    "brand": "FYBER",
-    "image": "https://rukminim3.flixcart.com/image/480/480/xif0q/network-switch/6/y/q/fya-82fe-fyber-original-imahfbmhtwr7pwgj.jpeg?q=90",
-    "badge": "PoE Switch",
-    "priceRange": "₹2,950",
-    "price": 2950,
-    "mrp": 4000,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "8 PoE Ports + 2 Uplink Ports (10/100 Mbps)",
-      "Up to 250m Long Distance PoE Transmission",
-      "Surge & Lightning Protection",
-      "Metal Sturdy Desktop/Rack Mount Case"
-    ],
-    "description": "Power over Ethernet (PoE) network switch to deliver both power and data to IP cameras over single Cat6 cable.",
-    "popular": true
-  },
-  {
-    "id": "prod-25",
-    "name": "FYBER 8CH CCTV SMPS FYUS-61 202512610204015",
-    "category": "cables_power",
-    "brand": "FYBER",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/d5234608-3eb1-476b-956c-d0455253b5c2.png",
-    "badge": "8CH SMPS",
-    "priceRange": "₹1,003",
-    "price": 1003,
-    "mrp": 1350,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Regulated 12V DC Centralized Power Output",
-      "Short Circuit & Overload Protection",
-      "Perforated Heavy Metal Casing",
-      "Individual Fuse Protection per Channel"
-    ],
-    "description": "Fyber centralized CCTV SMPS power supply box to power 4 or 8 cameras safely from a single power point.",
-    "popular": false
-  },
-  {
-    "id": "prod-26",
-    "name": "FYBER RJ45 CONNECTORS - FYJC5E",
-    "category": "racks_accessories",
-    "brand": "FYBER",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/19b8d19f-4ded-4f09-89ba-3daa9b7a4f2e.png",
-    "badge": "Accessory",
-    "priceRange": "₹0",
-    "price": 0,
-    "mrp": 20,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Gold Plated 8P8C Pins for Best Contact",
-      "Clear Polycarbonate Durable Housing",
-      "Compatible with Cat5e & Cat6 Cables",
-      "Pack / Loose Available"
-    ],
-    "description": "High quality RJ45 crimp modular connectors for terminating IP camera network cables.",
-    "popular": false
-  },
-  {
-    "id": "prod-27",
-    "name": "FYBER RJ45 CONNECTORS - FY-RJC5E",
-    "category": "racks_accessories",
-    "brand": "FYBER",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/19b8d19f-4ded-4f09-89ba-3daa9b7a4f2e.png",
-    "badge": "Accessory",
-    "priceRange": "₹9",
-    "price": 9,
-    "mrp": 29,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Gold Plated 8P8C Pins for Best Contact",
-      "Clear Polycarbonate Durable Housing",
-      "Compatible with Cat5e & Cat6 Cables",
-      "Pack / Loose Available"
-    ],
-    "description": "High quality RJ45 crimp modular connectors for terminating IP camera network cables.",
-    "popular": false
-  },
-  {
-    "id": "prod-28",
-    "name": "iFYBER 4X4 MODULAR BOX - FYJC-77(B)",
-    "category": "racks_accessories",
-    "brand": "FYBER",
-    "image": "/products/junction_box.jpg",
-    "badge": "Accessory",
-    "priceRange": "₹53",
-    "price": 53,
-    "mrp": 73,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Waterproof & Dustproof Junction Box",
-      "Pre-Marked Knockouts for Cable Glands",
-      "UV Resistant High Impact Plastic",
-      "Clean Concealed Camera Base Mounting"
-    ],
-    "description": "iFyber waterproof modular junction box to conceal and protect camera connectors from rain and dust.",
-    "popular": false
-  },
-  {
-    "id": "prod-29",
-    "name": "iFYBER 5X5 MODULAR BOX - FYJC-88(B)",
-    "category": "racks_accessories",
-    "brand": "FYBER",
-    "image": "/products/junction_box.jpg",
-    "badge": "Accessory",
-    "priceRange": "₹65",
-    "price": 65,
-    "mrp": 100,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Waterproof & Dustproof Junction Box",
-      "Pre-Marked Knockouts for Cable Glands",
-      "UV Resistant High Impact Plastic",
-      "Clean Concealed Camera Base Mounting"
-    ],
-    "description": "iFyber waterproof modular junction box to conceal and protect camera connectors from rain and dust.",
-    "popular": false
-  },
-  {
-    "id": "prod-30",
-    "name": "KRYSTAA 1TB SATA HDD - 2YRS",
-    "category": "storage",
-    "brand": "KRYSTAA",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/b7a7fdc5-2cf3-44c3-9ae0-859b2ba9e3b1.png",
-    "badge": "1TB HDD",
-    "priceRange": "₹6,608",
-    "price": 6608,
-    "mrp": 8900,
-    "unit": "NOS",
-    "warranty": "2 Years Warranty",
-    "features": [
-      "Standard 3.5\" SATA Surveillance Drive",
-      "SATA 6Gb/s High Speed Interface",
-      "Low Power Consumption & Silent Operation",
-      "Tested for DVR Recording"
-    ],
-    "description": "Reliable SATA internal hard disk drive for CCTV video storage with 2 years replacement warranty.",
-    "popular": false
-  },
-  {
-    "id": "prod-31",
-    "name": "MAXXION 5 PORT DESKTOP SWITCH - (MX-DS1105)",
-    "category": "networking",
-    "brand": "MAXXION",
-    "image": "/products/maxxion_switch.jpg",
-    "badge": "Ethernet Switch",
-    "priceRange": "₹1,003",
-    "price": 1003,
-    "mrp": 1350,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "5 Fast Ethernet 10/100 Ports",
-      "Energy Efficient Green Ethernet",
-      "Plug & Play Easy Installation",
-      "Compact Desktop Footprint"
-    ],
-    "description": "D-Link / Maxxion 5-Port desktop ethernet switch for expanding network connections in CCTV and office setups.",
-    "popular": false
-  },
-  {
-    "id": "prod-32",
-    "name": "MAXXION CCTV WIRED DC PINS",
-    "category": "racks_accessories",
-    "brand": "MAXXION",
-    "image": "/products/bnc_dc_pins.jpg",
-    "badge": "Accessory",
-    "priceRange": "₹12",
-    "price": 12,
-    "mrp": 32,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Standard 12V 2.1mm DC Power Connector",
-      "Pre-Wired Heavy Gauge Copper Leads",
-      "Polarity Color Coded (Red/Black)",
-      "Secure Camera Power Connection"
-    ],
-    "description": "Maxxion CCTV wired DC male power pins for connecting 12V power supply to security cameras.",
-    "popular": false
-  },
-  {
-    "id": "prod-33",
-    "name": "MAXXION WIRED BNC CONNECTORS - ELITE",
-    "category": "racks_accessories",
-    "brand": "MAXXION",
-    "image": "/products/bnc_dc_pins.jpg",
-    "badge": "Accessory",
-    "priceRange": "₹47",
-    "price": 47,
-    "mrp": 67,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Pure Copper Core BNC Connector",
-      "Screw Terminal / Pre-Wired Easy Fit",
-      "Heavy Shielding Against Signal Interference",
-      "Standard for All HD DVR Cameras"
-    ],
-    "description": "Maxxion Elite wired BNC connectors for crisp, noise-free video transmission from HD cameras.",
-    "popular": false
-  },
-  {
-    "id": "prod-34",
-    "name": "MINI CCTV RACK - WALLMOUNT",
-    "category": "racks_accessories",
-    "brand": "MEKSHA",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/7691d991-ca0c-419b-95bb-09a18a0c1ecb.png",
-    "badge": "Mini CCTV Rack",
-    "priceRange": "₹1,062",
-    "price": 1062,
-    "mrp": 1450,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Mini Wall Mount CCTV Cabinet",
-      "Key Lock for Physical Security of DVR",
-      "Ventilated Side Panels for Heat Dissipation",
-      "Pre-Drilled Wall Mounting Holes"
-    ],
-    "description": "Mini wall mount enclosure to prevent tampering and theft of CCTV recording units.",
-    "popular": false
-  },
-  {
-    "id": "prod-35",
-    "name": "MINI CCTV RACK - WALLMOUNT",
-    "category": "racks_accessories",
-    "brand": "MEKSHA",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/7691d991-ca0c-419b-95bb-09a18a0c1ecb.png",
-    "badge": "Mini CCTV Rack",
-    "priceRange": "₹1,103",
-    "price": 1103,
-    "mrp": 1500,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Mini Wall Mount CCTV Cabinet",
-      "Key Lock for Physical Security of DVR",
-      "Ventilated Side Panels for Heat Dissipation",
-      "Pre-Drilled Wall Mounting Holes"
-    ],
-    "description": "Mini wall mount enclosure to prevent tampering and theft of CCTV recording units.",
-    "popular": false
-  },
-  {
-    "id": "prod-36",
-    "name": "OEM CCTV PRO HD CAMERA - EYEQUBE EQ-2025C01293| EQ-2025C01295",
-    "category": "solar",
-    "brand": "EYEQUBE",
-    "image": "/products/eyeqube_solar_camera.jpg",
-    "badge": "Solar Powered",
-    "priceRange": "₹11,210",
-    "price": 11210,
-    "mrp": 15150,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Continuous Solar Powered Operation",
-      "High-Capacity Lithium Battery Kit",
-      "Weatherproof Outdoor IP66 Casing",
-      "Zero Electric Wiring Required",
-      "Mobile View Anywhere"
-    ],
-    "description": "Complete solar security camera kit engineered for agricultural farms, open lands, and remote properties without grid electricity.",
-    "popular": true
-  },
-  {
-    "id": "prod-37",
-    "name": "RJ 45 JOINTER - 1X1",
-    "category": "racks_accessories",
-    "brand": "MEKSHA",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/19b8d19f-4ded-4f09-89ba-3daa9b7a4f2e.png",
-    "badge": "Accessory",
-    "priceRange": "₹59",
-    "price": 59,
-    "mrp": 100,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "Heavy Duty Standard CCTV Accessory",
-      "Durable Construction",
-      "Direct Shop Stock Available"
-    ],
-    "description": "Essential installation accessory for secure CCTV system deployment.",
-    "popular": false
-  },
-  {
-    "id": "prod-38",
-    "name": "Seagate 2TB SKYHAWK HDD - SV",
-    "category": "storage",
-    "brand": "SEAGATE",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/b7a7fdc5-2cf3-44c3-9ae0-859b2ba9e3b1.png",
-    "badge": "2TB Surveillance",
-    "priceRange": "₹12,980",
-    "price": 12980,
-    "mrp": 17500,
-    "unit": "NOS",
-    "warranty": "3 Years Warranty",
-    "features": [
-      "Engineered for 24/7 Surveillance Workloads",
-      "ImagePerfect Firmware (Zero Frame Drops)",
-      "Up to 64 HD Cameras Supported",
-      "1 Million Hours MTBF Reliability",
-      "3 Years Brand Warranty"
-    ],
-    "description": "Original Seagate SkyHawk Surveillance HDD designed specifically for continuous 24/7 DVR and NVR video recording.",
-    "popular": true
-  },
-  {
-    "id": "prod-39",
-    "name": "Seagate 4TB SKYHAWK HDD - SV",
-    "category": "storage",
-    "brand": "SEAGATE",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/b7a7fdc5-2cf3-44c3-9ae0-859b2ba9e3b1.png",
-    "badge": "4TB Surveillance",
-    "priceRange": "₹19,470",
-    "price": 19470,
-    "mrp": 26300,
-    "unit": "NOS",
-    "warranty": "3 Years Warranty",
-    "features": [
-      "Engineered for 24/7 Surveillance Workloads",
-      "ImagePerfect Firmware (Zero Frame Drops)",
-      "Up to 64 HD Cameras Supported",
-      "1 Million Hours MTBF Reliability",
-      "3 Years Brand Warranty"
-    ],
-    "description": "Original Seagate SkyHawk Surveillance HDD designed specifically for continuous 24/7 DVR and NVR video recording.",
-    "popular": true
-  },
-  {
-    "id": "prod-40",
-    "name": "SecureMax 6MP 4G Linkage PT Camera Triple Lens 4+4+12mm - SM1005-A 7843308399",
-    "category": "wifi_4g",
-    "brand": "SECUREMAX",
-    "image": "https://dms.mydukaan.io/original/jpeg/media/7bb4bf4e-a186-4e4e-9589-eddfa611c615.png",
-    "badge": "Triple Lens 4G",
-    "priceRange": "₹7,316",
-    "price": 7316,
-    "mrp": 9900,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "6MP Ultra HD Triple Lens (4+4+12mm)",
-      "4G SIM Card Enabled (No Wi-Fi needed)",
-      "360° PTZ Panoramic Coverage",
-      "AI Human Detection & Smart Auto Tracking",
-      "Full Color Night Vision"
-    ],
-    "description": "SecureMax 6MP 4G Linkage Triple Lens PT Camera with multi-angle surveillance, ideal for large areas without broadband.",
-    "popular": true
-  },
-  {
-    "id": "prod-41",
-    "name": "TP-LINK USB TYPE CTO GIGA LAN ADAPTER - UE300C 22487E3011735",
-    "category": "networking",
-    "brand": "TP-LINK",
-    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/1faa6cf5-1fdb-44bf-a020-ec9bddb331da.png",
-    "badge": "Gigabit Adapter",
-    "priceRange": "₹1,829",
-    "price": 1829,
-    "mrp": 2450,
-    "unit": "NOS",
-    "warranty": "1 Year Warranty",
-    "features": [
-      "USB Type-C to RJ45 Gigabit Ethernet",
-      "Foldable & Compact Portable Design",
-      "Plug & Play on Windows, Mac, Linux",
-      "Supports up to 1000 Mbps High Speed"
-    ],
-    "description": "TP-Link high-speed Gigabit LAN adapter for laptops, PCs and network testing.",
-    "popular": false
-  },
-  {
-    "id": "prod-42",
+    "id": "prod-10",
     "name": "TRUEVIEW 2MP BULLET DUAL LIGHT HD CAMERA - (T18257-A)",
     "category": "hd_analog",
     "brand": "TRUEVIEW",
@@ -914,7 +235,7 @@ export const PRODUCTS: Product[] = [
     "popular": false
   },
   {
-    "id": "prod-43",
+    "id": "prod-11",
     "name": "TRUEVIEW 2MP DOME DUAL LIGHT HD CAMERA - (T18256-A)",
     "category": "hd_analog",
     "brand": "TRUEVIEW",
@@ -936,7 +257,29 @@ export const PRODUCTS: Product[] = [
     "popular": false
   },
   {
-    "id": "prod-44",
+    "id": "prod-12",
+    "name": "SecureMax 6MP 4G Linkage PT Camera Triple Lens 4+4+12mm - SM1005-A 7843308399",
+    "category": "wifi_4g",
+    "brand": "SECUREMAX",
+    "image": "https://dms.mydukaan.io/original/jpeg/media/7bb4bf4e-a186-4e4e-9589-eddfa611c615.png",
+    "badge": "Triple Lens 4G",
+    "priceRange": "₹7,316",
+    "price": 7316,
+    "mrp": 9900,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "6MP Ultra HD Triple Lens (4+4+12mm)",
+      "4G SIM Card Enabled (No Wi-Fi needed)",
+      "360° PTZ Panoramic Coverage",
+      "AI Human Detection & Smart Auto Tracking",
+      "Full Color Night Vision"
+    ],
+    "description": "SecureMax 6MP 4G Linkage Triple Lens PT Camera with multi-angle surveillance, ideal for large areas without broadband.",
+    "popular": true
+  },
+  {
+    "id": "prod-13",
     "name": "TRUEVIEW 3MP 4G PT DOME CAMERA - (T18120SF) 2AB089WN1000159534",
     "category": "wifi_4g",
     "brand": "TRUEVIEW",
@@ -958,7 +301,7 @@ export const PRODUCTS: Product[] = [
     "popular": true
   },
   {
-    "id": "prod-45",
+    "id": "prod-14",
     "name": "TRUEVIEW 3MP OUTDOOR WIFI PT CAMERA - (T18290S)",
     "category": "wifi_4g",
     "brand": "TRUEVIEW",
@@ -980,7 +323,7 @@ export const PRODUCTS: Product[] = [
     "popular": true
   },
   {
-    "id": "prod-46",
+    "id": "prod-15",
     "name": "TRUEVIEW 3MP WIFI COLOR BULLET CAMERA - (T18238S)",
     "category": "wifi_4g",
     "brand": "TRUEVIEW",
@@ -1002,7 +345,179 @@ export const PRODUCTS: Product[] = [
     "popular": false
   },
   {
-    "id": "prod-47",
+    "id": "prod-16",
+    "name": "OEM CCTV PRO HD CAMERA - EYEQUBE EQ-2025C01293| EQ-2025C01295",
+    "category": "solar",
+    "brand": "EYEQUBE",
+    "image": "/products/eyeqube_solar_camera.jpg",
+    "badge": "Solar Powered",
+    "priceRange": "₹11,210",
+    "price": 11210,
+    "mrp": 15150,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Continuous Solar Powered Operation",
+      "High-Capacity Lithium Battery Kit",
+      "Weatherproof Outdoor IP66 Casing",
+      "Zero Electric Wiring Required",
+      "Mobile View Anywhere"
+    ],
+    "description": "Complete solar security camera kit engineered for agricultural farms, open lands, and remote properties without grid electricity.",
+    "popular": true
+  },
+  {
+    "id": "prod-38",
+    "name": "CP PLUS SOLAR PANEL WITH BATTERY KIT - CP-SL06K YI86VjM0JDVUUNDr",
+    "category": "solar",
+    "brand": "CP PLUS",
+    "image": "https://cpplusworld.com/prodassets/product/small/55926f8d-03c0-4c9a-8efc-8d29a64024d2.png",
+    "badge": "Solar Powered",
+    "priceRange": "₹6,090",
+    "price": 6090,
+    "mrp": 8200,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Continuous Solar Powered Operation",
+      "High-Capacity Lithium Battery Kit",
+      "Weatherproof Outdoor IP66 Casing",
+      "Zero Electric Wiring Required",
+      "Mobile View Anywhere"
+    ],
+    "description": "Complete solar security camera kit engineered for agricultural farms, open lands, and remote properties without grid electricity.",
+    "popular": true
+  },
+  {
+    "id": "prod-17",
+    "name": "Consistent 500GB HDD - 2YRS",
+    "category": "storage",
+    "brand": "CONSISTENT",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/b7a7fdc5-2cf3-44c3-9ae0-859b2ba9e3b1.png",
+    "badge": "500GB HDD",
+    "priceRange": "₹2,478",
+    "price": 2478,
+    "mrp": 3350,
+    "unit": "NOS",
+    "warranty": "2 Years Warranty",
+    "features": [
+      "Standard 3.5\" SATA Surveillance Drive",
+      "SATA 6Gb/s High Speed Interface",
+      "Low Power Consumption & Silent Operation",
+      "Tested for DVR Recording"
+    ],
+    "description": "Reliable SATA internal hard disk drive for CCTV video storage with 2 years replacement warranty.",
+    "popular": false
+  },
+  {
+    "id": "prod-18",
+    "name": "KRYSTAA 1TB SATA HDD - 2YRS",
+    "category": "storage",
+    "brand": "KRYSTAA",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/b7a7fdc5-2cf3-44c3-9ae0-859b2ba9e3b1.png",
+    "badge": "1TB HDD",
+    "priceRange": "₹6,608",
+    "price": 6608,
+    "mrp": 8900,
+    "unit": "NOS",
+    "warranty": "2 Years Warranty",
+    "features": [
+      "Standard 3.5\" SATA Surveillance Drive",
+      "SATA 6Gb/s High Speed Interface",
+      "Low Power Consumption & Silent Operation",
+      "Tested for DVR Recording"
+    ],
+    "description": "Reliable SATA internal hard disk drive for CCTV video storage with 2 years replacement warranty.",
+    "popular": false
+  },
+  {
+    "id": "prod-19",
+    "name": "Seagate 2TB SKYHAWK HDD - SV",
+    "category": "storage",
+    "brand": "SEAGATE",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/b7a7fdc5-2cf3-44c3-9ae0-859b2ba9e3b1.png",
+    "badge": "2TB Surveillance",
+    "priceRange": "₹12,980",
+    "price": 12980,
+    "mrp": 17500,
+    "unit": "NOS",
+    "warranty": "3 Years Warranty",
+    "features": [
+      "Engineered for 24/7 Surveillance Workloads",
+      "ImagePerfect Firmware (Zero Frame Drops)",
+      "Up to 64 HD Cameras Supported",
+      "1 Million Hours MTBF Reliability",
+      "3 Years Brand Warranty"
+    ],
+    "description": "Original Seagate SkyHawk Surveillance HDD designed specifically for continuous 24/7 DVR and NVR video recording.",
+    "popular": true
+  },
+  {
+    "id": "prod-20",
+    "name": "Seagate 4TB SKYHAWK HDD - SV",
+    "category": "storage",
+    "brand": "SEAGATE",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/b7a7fdc5-2cf3-44c3-9ae0-859b2ba9e3b1.png",
+    "badge": "4TB Surveillance",
+    "priceRange": "₹19,470",
+    "price": 19470,
+    "mrp": 26300,
+    "unit": "NOS",
+    "warranty": "3 Years Warranty",
+    "features": [
+      "Engineered for 24/7 Surveillance Workloads",
+      "ImagePerfect Firmware (Zero Frame Drops)",
+      "Up to 64 HD Cameras Supported",
+      "1 Million Hours MTBF Reliability",
+      "3 Years Brand Warranty"
+    ],
+    "description": "Original Seagate SkyHawk Surveillance HDD designed specifically for continuous 24/7 DVR and NVR video recording.",
+    "popular": true
+  },
+  {
+    "id": "prod-21",
+    "name": "128 GB MICRO SD CARD",
+    "category": "storage",
+    "brand": "MEKSHA",
+    "image": "/products/microsd.jpg",
+    "badge": "128GB MicroSD",
+    "priceRange": "₹2,124",
+    "price": 2124,
+    "mrp": 2850,
+    "unit": "PCS",
+    "warranty": "2 Years Warranty",
+    "features": [
+      "High Endurance Class 10 U3 / V30",
+      "Optimized for Continuous CCTV Video Loop",
+      "Shock, Temperature & Waterproof",
+      "Plug & Play for Wi-Fi & 4G Cameras"
+    ],
+    "description": "High-endurance Micro SD memory card for standalone Wi-Fi and 4G smart cameras with fast read/write speeds.",
+    "popular": false
+  },
+  {
+    "id": "prod-22",
+    "name": "64 GB MICRO SD CARD",
+    "category": "storage",
+    "brand": "MEKSHA",
+    "image": "/products/microsd.jpg",
+    "badge": "64GB MicroSD",
+    "priceRange": "₹1,357",
+    "price": 1357,
+    "mrp": 1850,
+    "unit": "PCS",
+    "warranty": "2 Years Warranty",
+    "features": [
+      "High Endurance Class 10 U3 / V30",
+      "Optimized for Continuous CCTV Video Loop",
+      "Shock, Temperature & Waterproof",
+      "Plug & Play for Wi-Fi & 4G Cameras"
+    ],
+    "description": "High-endurance Micro SD memory card for standalone Wi-Fi and 4G smart cameras with fast read/write speeds.",
+    "popular": false
+  },
+  {
+    "id": "prod-26",
     "name": "TRUEVIEW 4CH HD DVR (Two-Way Audio) - (T-38297-A)",
     "category": "dvr_nvr",
     "brand": "TRUEVIEW",
@@ -1024,7 +539,241 @@ export const PRODUCTS: Product[] = [
     "popular": false
   },
   {
-    "id": "prod-48",
+    "id": "prod-25",
+    "name": "CP Plus 8CH NVR - CP-UNR-108F1",
+    "category": "dvr_nvr",
+    "brand": "CP PLUS",
+    "image": "https://cpplusworld.com/prodassets/product/small/1eb53499-144f-4fd6-9a08-0007adc7c771.jpg",
+    "badge": "8CH NVR",
+    "priceRange": "₹6,490",
+    "price": 6490,
+    "mrp": 8750,
+    "unit": "NOS",
+    "warranty": "2 Years Brand Warranty",
+    "features": [
+      "8-Channel HD NVR Recording",
+      "High Speed Network Bandwidth",
+      "Compact Desktop / Rack Chassis",
+      "Plug & Play IP Camera Detection",
+      "Mobile App Live Streaming"
+    ],
+    "description": "CP PLUS 8-Channel NVR recorder suitable for homes, offices, and small retail showrooms.",
+    "popular": false
+  },
+  {
+    "id": "prod-23",
+    "name": "CP PLUS 16CH NVR - CP-UNR-4K2162-V3",
+    "category": "dvr_nvr",
+    "brand": "CP PLUS",
+    "image": "https://cpplusworld.com/prodassets/product/small/9801c8f0-6d8b-4f7b-b199-c616819f8ae4.png",
+    "badge": "16CH 4K NVR",
+    "priceRange": "₹12,862",
+    "price": 12862,
+    "mrp": 17350,
+    "unit": "NOS",
+    "warranty": "2 Years Brand Warranty",
+    "features": [
+      "16-Channel 4K High Definition NVR",
+      "SATA HDD Support up to 10TB",
+      "Multi-Screen Live Monitoring",
+      "Audio & Motion Alarm Triggering",
+      "CP PLUS InstaOn App Support"
+    ],
+    "description": "CP PLUS 16-Channel 4K NVR for commercial shops, multi-floor buildings, and warehouses.",
+    "popular": true
+  },
+  {
+    "id": "prod-24",
+    "name": "CP PLUS 32CH NVR - CP-UNR-4K4322-V4 (4K)",
+    "category": "dvr_nvr",
+    "brand": "CP PLUS",
+    "image": "https://cpplusworld.com/prodassets/product/small/dd6484c0-5c7a-49be-8c93-8103d785baf8.jpg",
+    "badge": "32CH 4K NVR",
+    "priceRange": "₹20,060",
+    "price": 20060,
+    "mrp": 27100,
+    "unit": "NOS",
+    "warranty": "2 Years Brand Warranty",
+    "features": [
+      "32-Channel 4K Ultra HD Recording",
+      "Dual SATA Ports up to 16TB Storage",
+      "H.265+ Smart Video Encoding",
+      "Commercial Enterprise Grade NVR",
+      "Instant Mobile App Remote Access"
+    ],
+    "description": "CP PLUS 32-Channel 4K Network Video Recorder for large commercial enterprises, apartments, and industrial facilities.",
+    "popular": true
+  },
+  {
+    "id": "prod-36",
+    "name": "MINI CCTV RACK - WALLMOUNT",
+    "category": "racks_accessories",
+    "brand": "MEKSHA",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/7691d991-ca0c-419b-95bb-09a18a0c1ecb.png",
+    "badge": "Mini CCTV Rack",
+    "priceRange": "₹1,062",
+    "price": 1062,
+    "mrp": 1450,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Mini Wall Mount CCTV Cabinet",
+      "Key Lock for Physical Security of DVR",
+      "Ventilated Side Panels for Heat Dissipation",
+      "Pre-Drilled Wall Mounting Holes"
+    ],
+    "description": "Mini wall mount enclosure to prevent tampering and theft of CCTV recording units.",
+    "popular": false
+  },
+  {
+    "id": "prod-37",
+    "name": "MINI CCTV RACK - WALLMOUNT",
+    "category": "racks_accessories",
+    "brand": "MEKSHA",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/7691d991-ca0c-419b-95bb-09a18a0c1ecb.png",
+    "badge": "Mini CCTV Rack",
+    "priceRange": "₹1,103",
+    "price": 1103,
+    "mrp": 1500,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Mini Wall Mount CCTV Cabinet",
+      "Key Lock for Physical Security of DVR",
+      "Ventilated Side Panels for Heat Dissipation",
+      "Pre-Drilled Wall Mounting Holes"
+    ],
+    "description": "Mini wall mount enclosure to prevent tampering and theft of CCTV recording units.",
+    "popular": false
+  },
+  {
+    "id": "prod-34",
+    "name": "2U RACK - WALL MOUNT",
+    "category": "racks_accessories",
+    "brand": "MEKSHA",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/7691d991-ca0c-419b-95bb-09a18a0c1ecb.png",
+    "badge": "2U Wall Mount",
+    "priceRange": "₹1,416",
+    "price": 1416,
+    "mrp": 1900,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "2U Compact Wall Mount Enclosure",
+      "Lockable Front Door with Ventilation",
+      "Powder Coated Rust-Proof Steel",
+      "Ideal for 4CH / 8CH DVR Setups"
+    ],
+    "description": "Compact 2U wall mount CCTV rack to house DVR, SMPS, and cables cleanly in homes and shops.",
+    "popular": false
+  },
+  {
+    "id": "prod-35",
+    "name": "6U RACK WALL MOUNT - 500D",
+    "category": "racks_accessories",
+    "brand": "MEKSHA",
+    "image": "/products/rack_6u_server.jpg",
+    "badge": "6U Wall Mount",
+    "priceRange": "₹2,714",
+    "price": 2714,
+    "mrp": 3650,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "6U Standard 19\" Wall Mount Rack (500mm Depth)",
+      "Toughened Glass Front Door with Lock & Key",
+      "Cable Entry Cutouts on Top and Bottom",
+      "High Load Bearing Powder Coated Steel"
+    ],
+    "description": "Heavy duty 6U server and CCTV rack cabinet to secure NVR, DVR, PoE switch, and power supplies.",
+    "popular": false
+  },
+  {
+    "id": "prod-27",
+    "name": "D-Link 5 Port Switch - DES-1005C",
+    "category": "networking",
+    "brand": "D-LINK",
+    "image": "https://www.dlink.com/in/en/-/media/product-pages/des/1005c/preview-image/des1005cfrontin.png",
+    "badge": "Ethernet Switch",
+    "priceRange": "₹1,133",
+    "price": 1133,
+    "mrp": 1550,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "5 Fast Ethernet 10/100 Ports",
+      "Energy Efficient Green Ethernet",
+      "Plug & Play Easy Installation",
+      "Compact Desktop Footprint"
+    ],
+    "description": "D-Link / Maxxion 5-Port desktop ethernet switch for expanding network connections in CCTV and office setups.",
+    "popular": false
+  },
+  {
+    "id": "prod-28",
+    "name": "FYBER 8+2 PORT 10/100 POE - FYA-82FE (COMPACT)",
+    "category": "networking",
+    "brand": "FYBER",
+    "image": "https://rukminim3.flixcart.com/image/480/480/xif0q/network-switch/6/y/q/fya-82fe-fyber-original-imahfbmhtwr7pwgj.jpeg?q=90",
+    "badge": "PoE Switch",
+    "priceRange": "₹2,950",
+    "price": 2950,
+    "mrp": 4000,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "8 PoE Ports + 2 Uplink Ports (10/100 Mbps)",
+      "Up to 250m Long Distance PoE Transmission",
+      "Surge & Lightning Protection",
+      "Metal Sturdy Desktop/Rack Mount Case"
+    ],
+    "description": "Power over Ethernet (PoE) network switch to deliver both power and data to IP cameras over single Cat6 cable.",
+    "popular": true
+  },
+  {
+    "id": "prod-29",
+    "name": "MAXXION 5 PORT DESKTOP SWITCH - (MX-DS1105)",
+    "category": "networking",
+    "brand": "MAXXION",
+    "image": "/products/maxxion_switch.jpg",
+    "badge": "Ethernet Switch",
+    "priceRange": "₹1,003",
+    "price": 1003,
+    "mrp": 1350,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "5 Fast Ethernet 10/100 Ports",
+      "Energy Efficient Green Ethernet",
+      "Plug & Play Easy Installation",
+      "Compact Desktop Footprint"
+    ],
+    "description": "D-Link / Maxxion 5-Port desktop ethernet switch for expanding network connections in CCTV and office setups.",
+    "popular": false
+  },
+  {
+    "id": "prod-30",
+    "name": "TP-LINK USB TYPE CTO GIGA LAN ADAPTER - UE300C 22487E3011735",
+    "category": "networking",
+    "brand": "TP-LINK",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/1faa6cf5-1fdb-44bf-a020-ec9bddb331da.png",
+    "badge": "Gigabit Adapter",
+    "priceRange": "₹1,829",
+    "price": 1829,
+    "mrp": 2450,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "USB Type-C to RJ45 Gigabit Ethernet",
+      "Foldable & Compact Portable Design",
+      "Plug & Play on Windows, Mac, Linux",
+      "Supports up to 1000 Mbps High Speed"
+    ],
+    "description": "TP-Link high-speed Gigabit LAN adapter for laptops, PCs and network testing.",
+    "popular": false
+  },
+  {
+    "id": "prod-31",
     "name": "TRUEVIEW 4G WI-FI ROUTER - R300 WHITE - (T18258-A) SOCNYA25102310633| SOCNYA25102310614",
     "category": "networking",
     "brand": "TRUEVIEW",
@@ -1045,7 +794,7 @@ export const PRODUCTS: Product[] = [
     "popular": false
   },
   {
-    "id": "prod-49",
+    "id": "prod-32",
     "name": "TRUEVIEW 8+2 10/100 POE SWITCH",
     "category": "networking",
     "brand": "TRUEVIEW",
@@ -1066,7 +815,7 @@ export const PRODUCTS: Product[] = [
     "popular": true
   },
   {
-    "id": "prod-50",
+    "id": "prod-33",
     "name": "TRUEVIEW 8+2 10/100 POE SWITCH - (T38262-A) FA08EA5A42DF",
     "category": "networking",
     "brand": "TRUEVIEW",
@@ -1085,6 +834,257 @@ export const PRODUCTS: Product[] = [
     ],
     "description": "Power over Ethernet (PoE) network switch to deliver both power and data to IP cameras over single Cat6 cable.",
     "popular": true
+  },
+  {
+    "id": "prod-39",
+    "name": "FYBER 4CH CCTV SMPS FYUS-51",
+    "category": "cables_power",
+    "brand": "FYBER",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/d5234608-3eb1-476b-956c-d0455253b5c2.png",
+    "badge": "4CH SMPS",
+    "priceRange": "₹1,003",
+    "price": 1003,
+    "mrp": 1350,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Regulated 12V DC Centralized Power Output",
+      "Short Circuit & Overload Protection",
+      "Perforated Heavy Metal Casing",
+      "Individual Fuse Protection per Channel"
+    ],
+    "description": "Fyber centralized CCTV SMPS power supply box to power 4 or 8 cameras safely from a single power point.",
+    "popular": false
+  },
+  {
+    "id": "prod-40",
+    "name": "FYBER 8CH CCTV SMPS FYUS-61 202512610204015",
+    "category": "cables_power",
+    "brand": "FYBER",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/d5234608-3eb1-476b-956c-d0455253b5c2.png",
+    "badge": "8CH SMPS",
+    "priceRange": "₹1,003",
+    "price": 1003,
+    "mrp": 1350,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Regulated 12V DC Centralized Power Output",
+      "Short Circuit & Overload Protection",
+      "Perforated Heavy Metal Casing",
+      "Individual Fuse Protection per Channel"
+    ],
+    "description": "Fyber centralized CCTV SMPS power supply box to power 4 or 8 cameras safely from a single power point.",
+    "popular": false
+  },
+  {
+    "id": "prod-41",
+    "name": "Cat6 cable pure copper",
+    "category": "cables_power",
+    "brand": "MEKSHA",
+    "image": "/products/cat6_copper_coil.jpg",
+    "badge": "Pure Copper",
+    "priceRange": "₹47",
+    "price": 47,
+    "mrp": 65,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Pure Copper High Conductivity",
+      "Gigabit Cat6 Specification",
+      "Weatherproof Outer Sheath",
+      "Low Interference Twisted Pairs"
+    ],
+    "description": "High grade pure copper Cat6 networking cable sold per meter for custom wiring lengths.",
+    "popular": false
+  },
+  {
+    "id": "prod-42",
+    "name": "CP PLUS 3+1 CCTV CABLE - 90R-V3",
+    "category": "cables_power",
+    "brand": "CP PLUS",
+    "image": "https://5.imimg.com/data5/SELLER/Default/2025/10/555585028/RX/TC/AS/129092759/cp-plus-cp-ecc-90r-3-1-cctv-cable-500x500.jpg",
+    "badge": "90M Coil",
+    "priceRange": "₹1,711",
+    "price": 1711,
+    "mrp": 2300,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Coaxial Video Cable + 3 Power/Audio Wires",
+      "90 Meters Factory Sealed Coil",
+      "Low Signal Loss & Noise Shielding",
+      "Weatherproof PVC Insulation"
+    ],
+    "description": "CP PLUS 3+1 CCTV cable 90m bundle designed for analog and HD DVR camera wiring.",
+    "popular": false
+  },
+  {
+    "id": "prod-43",
+    "name": "CP PLUS Cat6 UTP SOLID CABLE 305M - CP-BUT-6TGL1",
+    "category": "cables_power",
+    "brand": "CP PLUS",
+    "image": "/products/cat6_box.jpg",
+    "badge": "305M Drum Box",
+    "priceRange": "₹12,036",
+    "price": 12036,
+    "mrp": 16250,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Original CP PLUS Solid Copper Cat6 Cable",
+      "305 Meters Full Length Reel in Pull Box",
+      "Gigabit Transmission Speeds (up to 250 MHz)",
+      "Durable Outer Jacket with Meter Markings"
+    ],
+    "description": "CP PLUS 305m pure solid Cat6 networking cable drum for professional IP CCTV camera installations.",
+    "popular": true
+  },
+  {
+    "id": "prod-48",
+    "name": "MAXXION CCTV WIRED DC PINS",
+    "category": "cables_power",
+    "brand": "MAXXION",
+    "image": "/products/bnc_dc_pins.jpg",
+    "badge": "Accessory",
+    "priceRange": "₹12",
+    "price": 12,
+    "mrp": 32,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Standard 12V 2.1mm DC Power Connector",
+      "Pre-Wired Heavy Gauge Copper Leads",
+      "Polarity Color Coded (Red/Black)",
+      "Secure Camera Power Connection"
+    ],
+    "description": "Maxxion CCTV wired DC male power pins for connecting 12V power supply to security cameras.",
+    "popular": false
+  },
+  {
+    "id": "prod-49",
+    "name": "MAXXION WIRED BNC CONNECTORS - ELITE",
+    "category": "cables_power",
+    "brand": "MAXXION",
+    "image": "/products/bnc_dc_pins.jpg",
+    "badge": "Accessory",
+    "priceRange": "₹47",
+    "price": 47,
+    "mrp": 67,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Pure Copper Core BNC Connector",
+      "Screw Terminal / Pre-Wired Easy Fit",
+      "Heavy Shielding Against Signal Interference",
+      "Standard for All HD DVR Cameras"
+    ],
+    "description": "Maxxion Elite wired BNC connectors for crisp, noise-free video transmission from HD cameras.",
+    "popular": false
+  },
+  {
+    "id": "prod-44",
+    "name": "FYBER RJ45 CONNECTORS - FYJC5E",
+    "category": "cables_power",
+    "brand": "FYBER",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/19b8d19f-4ded-4f09-89ba-3daa9b7a4f2e.png",
+    "badge": "Accessory",
+    "priceRange": "₹0",
+    "price": 0,
+    "mrp": 20,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Gold Plated 8P8C Pins for Best Contact",
+      "Clear Polycarbonate Durable Housing",
+      "Compatible with Cat5e & Cat6 Cables",
+      "Pack / Loose Available"
+    ],
+    "description": "High quality RJ45 crimp modular connectors for terminating IP camera network cables.",
+    "popular": false
+  },
+  {
+    "id": "prod-45",
+    "name": "FYBER RJ45 CONNECTORS - FY-RJC5E",
+    "category": "cables_power",
+    "brand": "FYBER",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/19b8d19f-4ded-4f09-89ba-3daa9b7a4f2e.png",
+    "badge": "Accessory",
+    "priceRange": "₹9",
+    "price": 9,
+    "mrp": 29,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Gold Plated 8P8C Pins for Best Contact",
+      "Clear Polycarbonate Durable Housing",
+      "Compatible with Cat5e & Cat6 Cables",
+      "Pack / Loose Available"
+    ],
+    "description": "High quality RJ45 crimp modular connectors for terminating IP camera network cables.",
+    "popular": false
+  },
+  {
+    "id": "prod-50",
+    "name": "RJ 45 JOINTER - 1X1",
+    "category": "cables_power",
+    "brand": "MEKSHA",
+    "image": "https://dms.mydukaan.io/original/jpeg/download-and-upload/19b8d19f-4ded-4f09-89ba-3daa9b7a4f2e.png",
+    "badge": "Accessory",
+    "priceRange": "₹59",
+    "price": 59,
+    "mrp": 100,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Heavy Duty Standard CCTV Accessory",
+      "Durable Construction",
+      "Direct Shop Stock Available"
+    ],
+    "description": "Essential installation accessory for secure CCTV system deployment.",
+    "popular": false
+  },
+  {
+    "id": "prod-46",
+    "name": "iFYBER 4X4 MODULAR BOX - FYJC-77(B)",
+    "category": "cables_power",
+    "brand": "FYBER",
+    "image": "/products/junction_box.jpg",
+    "badge": "Accessory",
+    "priceRange": "₹53",
+    "price": 53,
+    "mrp": 73,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Waterproof & Dustproof Junction Box",
+      "Pre-Marked Knockouts for Cable Glands",
+      "UV Resistant High Impact Plastic",
+      "Clean Concealed Camera Base Mounting"
+    ],
+    "description": "iFyber waterproof modular junction box to conceal and protect camera connectors from rain and dust.",
+    "popular": false
+  },
+  {
+    "id": "prod-47",
+    "name": "iFYBER 5X5 MODULAR BOX - FYJC-88(B)",
+    "category": "cables_power",
+    "brand": "FYBER",
+    "image": "/products/junction_box.jpg",
+    "badge": "Accessory",
+    "priceRange": "₹65",
+    "price": 65,
+    "mrp": 100,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "Waterproof & Dustproof Junction Box",
+      "Pre-Marked Knockouts for Cable Glands",
+      "UV Resistant High Impact Plastic",
+      "Clean Concealed Camera Base Mounting"
+    ],
+    "description": "iFyber waterproof modular junction box to conceal and protect camera connectors from rain and dust.",
+    "popular": false
   }
 ];
 

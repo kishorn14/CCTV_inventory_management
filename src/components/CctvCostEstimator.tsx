@@ -1,0 +1,1323 @@
+import React, { useState, useMemo } from 'react';
+import { 
+  Calculator, 
+  Camera, 
+  HardDrive, 
+  Box, 
+  Zap, 
+  Plus, 
+  Minus, 
+  MessageSquare, 
+  Phone, 
+  ChevronRight,
+  RefreshCw,
+  CheckCircle2,
+  Server
+} from 'lucide-react';
+import { useShop } from '../context/ShopContext';
+import { isCameraProduct } from '../data/cameraFootageData';
+import { createWhatsAppLink, SHOP_INFO } from '../utils/whatsapp';
+
+export const CctvCostEstimator: React.FC = () => {
+  const { products } = useShop();
+
+  // 1. Live dynamic product categories directly from store catalog
+  const cameraProducts = useMemo(() => {
+    return products.filter(p => isCameraProduct(p) && (p.price || 0) > 0);
+  }, [products]);
+
+  const hddProducts = useMemo(() => {
+    return products.filter(p => p.category === 'storage' && (p.price || 0) > 0);
+  }, [products]);
+
+  const recorderProducts = useMemo(() => {
+    return products.filter(p => p.category === 'dvr_nvr' && (p.price || 0) > 0);
+  }, [products]);
+
+  const rackProducts = useMemo(() => {
+    return products.filter(p => 
+      (p.name.toLowerCase().includes('rack') || p.badge?.toLowerCase().includes('rack')) && 
+      !p.name.toLowerCase().includes('connector') &&
+      !p.name.toLowerCase().includes('jointer') &&
+      !p.name.toLowerCase().includes('box') &&
+      (p.price || 0) > 0
+    );
+  }, [products]);
+
+  const powerProducts = useMemo(() => {
+    return products.filter(p => 
+      (p.name.toLowerCase().includes('smps') || p.name.toLowerCase().includes('poe') || p.name.toLowerCase().includes('switch')) && 
+      (p.price || 0) > 0
+    );
+  }, [products]);
+
+  const cableProducts = useMemo(() => {
+    return products.filter(p => 
+      (p.name.toLowerCase().includes('cable') || p.name.toLowerCase().includes('solid cable')) && 
+      (p.price || 0) > 0
+    );
+  }, [products]);
+
+  // Step 1: Camera & Filter state
+  const [cameraFilter, setCameraFilter] = useState<'all' | 'ip' | 'analog' | 'wifi' | 'solar'>('all');
+  const [selectedCameraId, setSelectedCameraId] = useState<string>('');
+  const [cameraCount, setCameraCount] = useState<number>(4);
+
+  // Subsequent Component Selections
+  const [selectedHddId, setSelectedHddId] = useState<string>('auto'); // 'auto' | 'none' | specific id
+  const [selectedRecorderId, setSelectedRecorderId] = useState<string>('auto'); // 'auto' | 'none' | specific id
+  const [selectedRackId, setSelectedRackId] = useState<string>('none'); // 'none' | specific id
+  const [includePowerSupply, setIncludePowerSupply] = useState<boolean>(true);
+  const [includeCables, setIncludeCables] = useState<boolean>(true);
+  const [includeConnectors, setIncludeConnectors] = useState<boolean>(true);
+  const [includeInstallation, setIncludeInstallation] = useState<boolean>(true);
+
+  // Active step guide (1 to 5)
+  const [activeStep, setActiveStep] = useState<number>(1);
+  const [notificationMsg, setNotificationMsg] = useState<string | null>(null);
+
+  // Helper to show guidance prompt and advance step
+  const advanceToStep = (step: number, message: string) => {
+    setActiveStep(step);
+    setNotificationMsg(message);
+    // Smooth scroll to step if needed
+    const stepEl = document.getElementById(`estimator-step-${step}`);
+    if (stepEl) {
+      stepEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  };
+
+  // Selected camera resolved
+  const selectedCamera = useMemo(() => {
+    if (selectedCameraId) {
+      const found = cameraProducts.find(p => p.id === selectedCameraId);
+      if (found) return found;
+    }
+    return cameraProducts[0];
+  }, [cameraProducts, selectedCameraId]);
+
+  const isIpCamera = useMemo(() => {
+    if (!selectedCamera) return false;
+    return selectedCamera.category === 'ip_cameras' || selectedCamera.name.toUpperCase().includes('IP');
+  }, [selectedCamera]);
+
+  const isStandaloneCamera = useMemo(() => {
+    if (!selectedCamera) return false;
+    return selectedCamera.category === 'wifi_4g' || selectedCamera.category === 'solar';
+  }, [selectedCamera]);
+
+  // Filtered cameras for Step 1 selection
+  const filteredCameras = useMemo(() => {
+    if (cameraFilter === 'all') return cameraProducts;
+    if (cameraFilter === 'ip') return cameraProducts.filter(p => p.category === 'ip_cameras');
+    if (cameraFilter === 'analog') return cameraProducts.filter(p => p.category === 'hd_analog');
+    if (cameraFilter === 'wifi') return cameraProducts.filter(p => p.category === 'wifi_4g');
+    if (cameraFilter === 'solar') return cameraProducts.filter(p => p.category === 'solar');
+    return cameraProducts;
+  }, [cameraProducts, cameraFilter]);
+
+  // Dynamic Auto Recommendations for Recorder
+  const recommendedRecorder = useMemo(() => {
+    if (isStandaloneCamera) return null;
+    if (isIpCamera) {
+      if (cameraCount <= 8) {
+        return recorderProducts.find(p => p.name.includes('8CH')) || recorderProducts[0];
+      } else if (cameraCount <= 16) {
+        return recorderProducts.find(p => p.name.includes('16CH')) || recorderProducts[0];
+      } else {
+        return recorderProducts.find(p => p.name.includes('32CH')) || recorderProducts[0];
+      }
+    } else {
+      // Analog DVR
+      return recorderProducts.find(p => p.name.includes('DVR')) || recorderProducts[0];
+    }
+  }, [cameraCount, isIpCamera, isStandaloneCamera, recorderProducts]);
+
+  const resolvedRecorder = useMemo(() => {
+    if (selectedRecorderId === 'none') return null;
+    if (selectedRecorderId === 'auto') return recommendedRecorder;
+    return recorderProducts.find(p => p.id === selectedRecorderId) || null;
+  }, [selectedRecorderId, recommendedRecorder, recorderProducts]);
+
+  // Recommended HDD Storage
+  const recommendedHdd = useMemo(() => {
+    if (isStandaloneCamera) {
+      return hddProducts.find(p => p.name.includes('128 GB')) || hddProducts.find(p => p.name.includes('64 GB'));
+    }
+    if (cameraCount <= 4) {
+      return hddProducts.find(p => p.name.includes('1TB')) || hddProducts.find(p => p.name.includes('500GB'));
+    } else if (cameraCount <= 8) {
+      return hddProducts.find(p => p.name.includes('2TB')) || hddProducts.find(p => p.name.includes('1TB'));
+    } else {
+      return hddProducts.find(p => p.name.includes('4TB')) || hddProducts.find(p => p.name.includes('2TB'));
+    }
+  }, [cameraCount, isStandaloneCamera, hddProducts]);
+
+  const resolvedHdd = useMemo(() => {
+    if (selectedHddId === 'none') return null;
+    if (selectedHddId === 'auto') return recommendedHdd;
+    return hddProducts.find(p => p.id === selectedHddId) || null;
+  }, [selectedHddId, recommendedHdd, hddProducts]);
+
+  // Selected Rack
+  const resolvedRack = useMemo(() => {
+    if (selectedRackId === 'none') return null;
+    return rackProducts.find(p => p.id === selectedRackId) || null;
+  }, [selectedRackId, rackProducts]);
+
+  // Resolved Power (PoE switch or SMPS)
+  const resolvedPower = useMemo(() => {
+    if (!includePowerSupply) return null;
+    if (isStandaloneCamera) return null;
+    if (isIpCamera) {
+      return powerProducts.find(p => p.name.includes('POE') || p.name.includes('PoE')) || powerProducts[0];
+    } else {
+      return powerProducts.find(p => p.name.includes('SMPS')) || powerProducts[0];
+    }
+  }, [includePowerSupply, isIpCamera, isStandaloneCamera, powerProducts]);
+
+  // Resolved Cable
+  const resolvedCable = useMemo(() => {
+    if (!includeCables) return null;
+    if (isStandaloneCamera) return null;
+    if (isIpCamera) {
+      return cableProducts.find(p => p.name.includes('Cat6 cable pure copper')) || cableProducts[0];
+    } else {
+      return cableProducts.find(p => p.name.includes('3+1')) || cableProducts[0];
+    }
+  }, [includeCables, isIpCamera, isStandaloneCamera, cableProducts]);
+
+  // Connectors & Accessories Cost
+  const connectorsUnitCost = isIpCamera ? 65 : 55; // per camera point
+  const connectorsTotalCost = includeConnectors && !isStandaloneCamera ? connectorsUnitCost * cameraCount : 0;
+
+  // Doorstep Installation labor rate
+  const installationUnitCost = isStandaloneCamera ? 450 : (isIpCamera ? 550 : 450);
+  const installationTotalCost = includeInstallation ? installationUnitCost * cameraCount : 0;
+
+  // Total Calculation
+  const cameraTotal = (selectedCamera?.price || 0) * cameraCount;
+  const hddTotal = resolvedHdd?.price || 0;
+  const recorderTotal = resolvedRecorder?.price || 0;
+  const rackTotal = resolvedRack?.price || 0;
+  const powerTotal = resolvedPower?.price || 0;
+  
+  const cableTotal = useMemo(() => {
+    if (!resolvedCable) return 0;
+    if (resolvedCable.name.includes('305M')) return resolvedCable.price || 0;
+    const meters = Math.max(cameraCount * 20, 40);
+    return (resolvedCable.price || 47) * meters;
+  }, [resolvedCable, cameraCount]);
+
+  const grandTotal = cameraTotal + hddTotal + recorderTotal + rackTotal + powerTotal + cableTotal + connectorsTotalCost + installationTotalCost;
+
+  // Reset function
+  const handleReset = () => {
+    setSelectedCameraId(cameraProducts[0]?.id || '');
+    setCameraCount(4);
+    setSelectedHddId('auto');
+    setSelectedRecorderId('auto');
+    setSelectedRackId('none');
+    setIncludePowerSupply(true);
+    setIncludeCables(true);
+    setIncludeConnectors(true);
+    setIncludeInstallation(true);
+    setActiveStep(1);
+    setNotificationMsg(null);
+  };
+
+  // WhatsApp Quotation Message
+  const waEstimateText = useMemo(() => {
+    let msg = `*MEKSHA CCTV SOLUTIONS - ESTIMATED PACKAGE QUOTATION*\n`;
+    msg += `-------------------------------------------\n`;
+    msg += `📷 *Cameras:* ${cameraCount}x ${selectedCamera?.name || 'CCTV Camera'}\n`;
+    msg += `   └ Rate: ₹${(selectedCamera?.price || 0).toLocaleString('en-IN')} × ${cameraCount} = ₹${cameraTotal.toLocaleString('en-IN')}\n\n`;
+
+    if (resolvedHdd) {
+      msg += `💾 *Storage:* ${resolvedHdd.name}\n`;
+      msg += `   └ Price: ₹${(resolvedHdd.price || 0).toLocaleString('en-IN')}\n\n`;
+    }
+
+    if (resolvedRecorder) {
+      msg += `📼 *Recorder:* ${resolvedRecorder.name}\n`;
+      msg += `   └ Price: ₹${(resolvedRecorder.price || 0).toLocaleString('en-IN')}\n\n`;
+    }
+
+    if (resolvedRack) {
+      msg += `🗄️ *Enclosure:* ${resolvedRack.name}\n`;
+      msg += `   └ Price: ₹${(resolvedRack.price || 0).toLocaleString('en-IN')}\n\n`;
+    }
+
+    if (resolvedPower) {
+      msg += `⚡ *Power/PoE:* ${resolvedPower.name}\n`;
+      msg += `   └ Price: ₹${(resolvedPower.price || 0).toLocaleString('en-IN')}\n\n`;
+    }
+
+    if (resolvedCable) {
+      msg += `🔌 *Cabling:* ${resolvedCable.name} (~${cameraCount * 20}m)\n`;
+      msg += `   └ Est. Price: ₹${cableTotal.toLocaleString('en-IN')}\n\n`;
+    }
+
+    if (connectorsTotalCost > 0) {
+      msg += `🔩 *Connectors & Junction Boxes:* ${cameraCount} points\n`;
+      msg += `   └ Price: ₹${connectorsTotalCost.toLocaleString('en-IN')}\n\n`;
+    }
+
+    if (includeInstallation) {
+      msg += `🛠️ *Doorstep Installation:* ${cameraCount} points fitting & mobile setup\n`;
+      msg += `   └ Labor: ₹${installationTotalCost.toLocaleString('en-IN')}\n\n`;
+    }
+
+    msg += `-------------------------------------------\n`;
+    msg += `*ESTIMATED TOTAL: ₹${grandTotal.toLocaleString('en-IN')}*\n`;
+    msg += `✓ All prices inclusive of GST & Brand Warranty\n\n`;
+    msg += `Please confirm stock availability, schedule doorstep site survey & book installation.`;
+
+    return msg;
+  }, [
+    selectedCamera, 
+    cameraCount, 
+    cameraTotal, 
+    resolvedHdd, 
+    resolvedRecorder, 
+    resolvedRack, 
+    resolvedPower, 
+    resolvedCable, 
+    cableTotal, 
+    connectorsTotalCost, 
+    includeInstallation, 
+    installationTotalCost, 
+    grandTotal
+  ]);
+
+  const waLink = createWhatsAppLink(waEstimateText, SHOP_INFO.whatsappNumber);
+
+  return (
+    <section 
+      id="cctv-cost-estimator"
+      style={{
+        background: 'linear-gradient(180deg, #090e17 0%, #0f172a 50%, #1e293b 100%)',
+        color: '#f8fafc',
+        padding: '36px 16px 44px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}
+    >
+      <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+        
+        {/* Estimator Header Banner */}
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'rgba(37, 99, 235, 0.25)',
+            border: '1px solid rgba(59, 130, 246, 0.4)',
+            color: '#60a5fa',
+            padding: '5px 14px',
+            borderRadius: '9999px',
+            fontSize: '0.8rem',
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            marginBottom: '10px'
+          }}>
+            <Calculator size={15} /> Instant CCTV Package Cost Estimator
+          </div>
+          <h2 style={{ fontSize: 'clamp(1.4rem, 3.2vw, 2.1rem)', fontWeight: 800, margin: '0 0 8px', color: '#ffffff' }}>
+            Customize &amp; Estimate Your CCTV System In Seconds
+          </h2>
+          <p style={{ color: '#94a3b8', fontSize: '0.92rem', maxWidth: '680px', margin: '0 auto' }}>
+            Select your camera model. The estimator automatically guides you through selecting matching storage (HDD), recording unit (DVR/NVR), racks, cables, and setup using live shop prices.
+          </p>
+
+          {/* Stepper Navigation Strip */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '8px',
+            marginTop: '20px',
+            flexWrap: 'wrap'
+          }}>
+            {[
+              { num: 1, label: '1. Camera', icon: Camera },
+              { num: 2, label: '2. HDD Storage', icon: HardDrive },
+              { num: 3, label: '3. DVR / NVR', icon: Server },
+              { num: 4, label: '4. Rack Enclosure', icon: Box },
+              { num: 5, label: '5. Cabling & Accessories', icon: Zap }
+            ].map(step => {
+              const isActive = activeStep === step.num;
+              const isPast = activeStep > step.num;
+              const Icon = step.icon;
+              return (
+                <button
+                  key={step.num}
+                  onClick={() => setActiveStep(step.num)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '7px 14px',
+                    borderRadius: '9999px',
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    transition: 'all 0.18s ease',
+                    border: isActive 
+                      ? '1.5px solid #3b82f6' 
+                      : (isPast ? '1px solid #10b981' : '1px solid rgba(255, 255, 255, 0.15)'),
+                    background: isActive 
+                      ? '#2563eb' 
+                      : (isPast ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255, 255, 255, 0.04)'),
+                    color: isActive ? '#ffffff' : (isPast ? '#34d399' : '#94a3b8')
+                  }}
+                >
+                  {isPast ? <CheckCircle2 size={14} color="#34d399" /> : <Icon size={14} />}
+                  <span>{step.label}</span>
+                </button>
+              );
+            })}
+
+            <button
+              onClick={handleReset}
+              title="Reset estimator back to default"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '7px 12px',
+                borderRadius: '9999px',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                background: 'rgba(239, 68, 68, 0.12)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                color: '#f87171'
+              }}
+            >
+              <RefreshCw size={13} /> Reset
+            </button>
+          </div>
+        </div>
+
+        {/* Guided Banner Notification Prompt */}
+        {notificationMsg && (
+          <div style={{
+            maxWidth: '800px',
+            margin: '0 auto 18px auto',
+            background: 'rgba(37, 99, 235, 0.18)',
+            border: '1px solid #3b82f6',
+            borderRadius: '10px',
+            padding: '10px 16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            fontSize: '0.86rem',
+            color: '#bfdbfe'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ChevronRight size={16} color="#60a5fa" />
+              <span>{notificationMsg}</span>
+            </div>
+            <button
+              onClick={() => setNotificationMsg(null)}
+              style={{ background: 'none', border: 'none', color: '#93c5fd', cursor: 'pointer', fontSize: '0.8rem' }}
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
+
+        {/* 2-Column Layout: Component Configurator (Left) + Live Total Bill Card (Right) */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
+          gap: '24px',
+          alignItems: 'start'
+        }}>
+          
+          {/* LEFT: Step-by-Step Auto Guided Components Builder */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            
+            {/* STEP 1: Select Camera & Quantity */}
+            <div 
+              id="estimator-step-1"
+              style={{
+                background: '#1e293b',
+                border: activeStep === 1 ? '2px solid #2563eb' : '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '14px',
+                padding: '18px 20px',
+                boxShadow: activeStep === 1 ? '0 0 25px rgba(37, 99, 235, 0.25)' : '0 4px 20px rgba(0, 0, 0, 0.25)',
+                transition: 'border 0.2s ease, box-shadow 0.2s ease'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
+                <div 
+                  onClick={() => setActiveStep(1)} 
+                  style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
+                >
+                  <span style={{
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '50%',
+                    background: '#2563eb',
+                    color: '#fff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 800,
+                    fontSize: '0.85rem'
+                  }}>
+                    1
+                  </span>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>
+                      Step 1: Select CCTV Camera Model
+                    </h3>
+                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                      Selected: <strong style={{ color: '#38bdf8' }}>{selectedCamera?.name}</strong>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Camera Quantity Controller */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: '#0f172a',
+                  padding: '4px 10px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(255, 255, 255, 0.15)'
+                }}>
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', marginRight: '4px' }}>Qty:</span>
+                  <button
+                    onClick={() => setCameraCount(Math.max(1, cameraCount - 1))}
+                    style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '3px' }}
+                    title="Decrease camera count"
+                  >
+                    <Minus size={15} />
+                  </button>
+                  <span style={{ fontWeight: 800, fontSize: '0.92rem', color: '#38bdf8', minWidth: '42px', textAlign: 'center' }}>
+                    {cameraCount}
+                  </span>
+                  <button
+                    onClick={() => setCameraCount(Math.min(32, cameraCount + 1))}
+                    style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: '3px' }}
+                    title="Increase camera count"
+                  >
+                    <Plus size={15} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Camera Filter Tabs */}
+              <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '10px', marginBottom: '10px' }}>
+                {[
+                  { id: 'all', label: `All Cameras (${cameraProducts.length})` },
+                  { id: 'ip', label: 'CP PLUS IP' },
+                  { id: 'analog', label: 'HD Analog' },
+                  { id: 'wifi', label: '360° Wi-Fi & 4G' },
+                  { id: 'solar', label: 'Solar Kit' }
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setCameraFilter(tab.id as any)}
+                    style={{
+                      padding: '5px 11px',
+                      borderRadius: '6px',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      border: cameraFilter === tab.id ? '1px solid #3b82f6' : '1px solid rgba(255,255,255,0.1)',
+                      background: cameraFilter === tab.id ? '#1d4ed8' : '#0f172a',
+                      color: cameraFilter === tab.id ? '#ffffff' : '#94a3b8',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Camera Grid with Clean Scroll */}
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', 
+                gap: '8px', 
+                maxHeight: '270px', 
+                overflowY: 'auto',
+                paddingRight: '4px'
+              }}>
+                {filteredCameras.map(cam => {
+                  const isSelected = selectedCamera?.id === cam.id;
+                  return (
+                    <div
+                      key={cam.id}
+                      onClick={() => {
+                        setSelectedCameraId(cam.id);
+                        advanceToStep(2, `Camera selected: "${cam.name}". Next: Select HDD storage capacity.`);
+                      }}
+                      style={{
+                        padding: '10px 12px',
+                        borderRadius: '10px',
+                        background: isSelected ? 'rgba(37, 99, 235, 0.25)' : '#0f172a',
+                        border: isSelected ? '2px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.08)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        transition: 'all 0.18s ease'
+                      }}
+                    >
+                      <img 
+                        src={cam.image} 
+                        alt={cam.name} 
+                        style={{ width: '42px', height: '42px', borderRadius: '6px', objectFit: 'contain', background: '#fff', padding: '2px' }} 
+                      />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{
+                          fontSize: '0.8rem',
+                          fontWeight: 700,
+                          color: isSelected ? '#ffffff' : '#e2e8f0',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}>
+                          {cam.name}
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2px' }}>
+                          <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{cam.brand}</span>
+                          <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80' }}>
+                            ₹{(cam.price || 0).toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* STEP 2: Automatic HDD Storage Selection */}
+            <div 
+              id="estimator-step-2"
+              style={{
+                background: '#1e293b',
+                border: activeStep === 2 ? '2px solid #2563eb' : '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '14px',
+                padding: '18px 20px',
+                boxShadow: activeStep === 2 ? '0 0 25px rgba(37, 99, 235, 0.25)' : '0 4px 20px rgba(0, 0, 0, 0.25)',
+                transition: 'border 0.2s ease, box-shadow 0.2s ease'
+              }}
+            >
+              <div 
+                onClick={() => setActiveStep(2)}
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', cursor: 'pointer' }}
+              >
+                <span style={{
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '50%',
+                  background: activeStep >= 2 ? '#2563eb' : '#334155',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 800,
+                  fontSize: '0.85rem'
+                }}>
+                  2
+                </span>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>
+                    Step 2: Select Hard Disk (HDD) Storage Size
+                  </h3>
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                    Continuous CCTV video recording retention (Auto-recommended: <strong style={{ color: '#38bdf8' }}>{recommendedHdd?.name}</strong>)
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
+                {/* Auto Recommend Option */}
+                <div
+                  onClick={() => { 
+                    setSelectedHddId('auto'); 
+                    advanceToStep(3, `Storage set to Auto Recommended (${recommendedHdd?.name}). Next: Select DVR / NVR.`); 
+                  }}
+                  style={{
+                    padding: '10px',
+                    borderRadius: '10px',
+                    background: selectedHddId === 'auto' ? 'rgba(37, 99, 235, 0.28)' : '#0f172a',
+                    border: selectedHddId === 'auto' ? '2px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.08)',
+                    cursor: 'pointer',
+                    textAlign: 'center'
+                  }}
+                >
+                  <div style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 800 }}>★ AUTO RECOMMENDED</div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff', marginTop: '2px' }}>
+                    {recommendedHdd ? recommendedHdd.name.split('-')[0] : 'Auto Storage'}
+                  </div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80', marginTop: '4px' }}>
+                    ₹{(recommendedHdd?.price || 0).toLocaleString('en-IN')}
+                  </div>
+                </div>
+
+                {/* Specific HDDs from catalog */}
+                {hddProducts.map(hdd => {
+                  const isSelected = selectedHddId === hdd.id;
+                  return (
+                    <div
+                      key={hdd.id}
+                      onClick={() => { 
+                        setSelectedHddId(hdd.id); 
+                        advanceToStep(3, `Selected HDD: ${hdd.name}. Next: Select DVR / NVR.`); 
+                      }}
+                      style={{
+                        padding: '10px',
+                        borderRadius: '10px',
+                        background: isSelected ? 'rgba(37, 99, 235, 0.28)' : '#0f172a',
+                        border: isSelected ? '2px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.08)',
+                        cursor: 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{hdd.brand}</div>
+                      <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {hdd.name}
+                      </div>
+                      <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80', marginTop: '4px' }}>
+                        ₹{(hdd.price || 0).toLocaleString('en-IN')}
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* None Option */}
+                <div
+                  onClick={() => { 
+                    setSelectedHddId('none'); 
+                    advanceToStep(3, `HDD skipped (Already have drive). Next: Select DVR / NVR.`); 
+                  }}
+                  style={{
+                    padding: '10px',
+                    borderRadius: '10px',
+                    background: selectedHddId === 'none' ? 'rgba(239, 68, 68, 0.2)' : '#0f172a',
+                    border: selectedHddId === 'none' ? '2px solid #ef4444' : '1px solid rgba(255, 255, 255, 0.08)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>Already Have HDD</div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#ef4444', marginTop: '2px' }}>₹0 (Skip)</div>
+                </div>
+              </div>
+            </div>
+
+            {/* STEP 3: Automatic DVR / NVR Unit Selection */}
+            <div 
+              id="estimator-step-3"
+              style={{
+                background: '#1e293b',
+                border: activeStep === 3 ? '2px solid #2563eb' : '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '14px',
+                padding: '18px 20px',
+                boxShadow: activeStep === 3 ? '0 0 25px rgba(37, 99, 235, 0.25)' : '0 4px 20px rgba(0, 0, 0, 0.25)',
+                transition: 'border 0.2s ease, box-shadow 0.2s ease'
+              }}
+            >
+              <div 
+                onClick={() => setActiveStep(3)}
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', cursor: 'pointer' }}
+              >
+                <span style={{
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '50%',
+                  background: activeStep >= 3 ? '#2563eb' : '#334155',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 800,
+                  fontSize: '0.85rem'
+                }}>
+                  3
+                </span>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>
+                    Step 3: Select DVR / NVR Recording Unit
+                  </h3>
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                    {isStandaloneCamera 
+                      ? 'Wi-Fi / 4G Solar cameras support internal SD recording; NVR is optional'
+                      : `Matching channels for ${cameraCount} cameras (Auto-recommended: ${recommendedRecorder?.name || 'Auto'})`
+                    }
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '8px' }}>
+                {/* Auto Recommend Option */}
+                <div
+                  onClick={() => { 
+                    setSelectedRecorderId('auto'); 
+                    advanceToStep(4, `Recorder set to Auto Matching (${recommendedRecorder?.name || 'None'}). Next: Select Rack Enclosure.`); 
+                  }}
+                  style={{
+                    padding: '10px',
+                    borderRadius: '10px',
+                    background: selectedRecorderId === 'auto' ? 'rgba(37, 99, 235, 0.28)' : '#0f172a',
+                    border: selectedRecorderId === 'auto' ? '2px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.08)',
+                    cursor: 'pointer',
+                    textAlign: 'center'
+                  }}
+                >
+                  <div style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 800 }}>★ AUTO MATCHING</div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {resolvedRecorder ? resolvedRecorder.name.split('-')[0] : 'Auto Matching'}
+                  </div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80', marginTop: '4px' }}>
+                    ₹{(resolvedRecorder?.price || 0).toLocaleString('en-IN')}
+                  </div>
+                </div>
+
+                {/* Specific Recorders from catalog */}
+                {recorderProducts.map(rec => {
+                  const isSelected = selectedRecorderId === rec.id;
+                  return (
+                    <div
+                      key={rec.id}
+                      onClick={() => { 
+                        setSelectedRecorderId(rec.id); 
+                        advanceToStep(4, `Selected Recorder: ${rec.name}. Next: Select Rack Enclosure.`); 
+                      }}
+                      style={{
+                        padding: '10px',
+                        borderRadius: '10px',
+                        background: isSelected ? 'rgba(37, 99, 235, 0.28)' : '#0f172a',
+                        border: isSelected ? '2px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.08)',
+                        cursor: 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{rec.brand}</div>
+                      <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {rec.name}
+                      </div>
+                      <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80', marginTop: '4px' }}>
+                        ₹{(rec.price || 0).toLocaleString('en-IN')}
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* None / Standalone Option */}
+                <div
+                  onClick={() => { 
+                    setSelectedRecorderId('none'); 
+                    advanceToStep(4, `Recorder skipped. Next: Select CCTV Wall Mount Rack.`); 
+                  }}
+                  style={{
+                    padding: '10px',
+                    borderRadius: '10px',
+                    background: selectedRecorderId === 'none' ? 'rgba(239, 68, 68, 0.2)' : '#0f172a',
+                    border: selectedRecorderId === 'none' ? '2px solid #ef4444' : '1px solid rgba(255, 255, 255, 0.08)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>No NVR / Standalone</div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#ef4444', marginTop: '2px' }}>₹0 (Skip)</div>
+                </div>
+              </div>
+            </div>
+
+            {/* STEP 4: CCTV Rack Enclosure Selection */}
+            <div 
+              id="estimator-step-4"
+              style={{
+                background: '#1e293b',
+                border: activeStep === 4 ? '2px solid #2563eb' : '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '14px',
+                padding: '18px 20px',
+                boxShadow: activeStep === 4 ? '0 0 25px rgba(37, 99, 235, 0.25)' : '0 4px 20px rgba(0, 0, 0, 0.25)',
+                transition: 'border 0.2s ease, box-shadow 0.2s ease'
+              }}
+            >
+              <div 
+                onClick={() => setActiveStep(4)}
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', cursor: 'pointer' }}
+              >
+                <span style={{
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '50%',
+                  background: activeStep >= 4 ? '#2563eb' : '#334155',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 800,
+                  fontSize: '0.85rem'
+                }}>
+                  4
+                </span>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>
+                    Step 4: Select CCTV Wall Mount Rack
+                  </h3>
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                    Lockable metal chassis to secure DVR, HDD, power supply &amp; wiring
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px' }}>
+                <div
+                  onClick={() => { 
+                    setSelectedRackId('none'); 
+                    advanceToStep(5, `Rack excluded. Next: Review cables, power supplies & connectors.`); 
+                  }}
+                  style={{
+                    padding: '10px',
+                    borderRadius: '10px',
+                    background: selectedRackId === 'none' ? 'rgba(239, 68, 68, 0.2)' : '#0f172a',
+                    border: selectedRackId === 'none' ? '2px solid #ef4444' : '1px solid rgba(255, 255, 255, 0.08)',
+                    cursor: 'pointer',
+                    textAlign: 'center'
+                  }}
+                >
+                  <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>No Rack Enclosure</div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#ef4444', marginTop: '2px' }}>₹0 (Skip)</div>
+                </div>
+
+                {rackProducts.map(rk => {
+                  const isSelected = selectedRackId === rk.id;
+                  return (
+                    <div
+                      key={rk.id}
+                      onClick={() => { 
+                        setSelectedRackId(rk.id); 
+                        advanceToStep(5, `Rack selected: ${rk.name}. Next: Review accessories & connectors.`); 
+                      }}
+                      style={{
+                        padding: '10px',
+                        borderRadius: '10px',
+                        background: isSelected ? 'rgba(37, 99, 235, 0.28)' : '#0f172a',
+                        border: isSelected ? '2px solid #3b82f6' : '1px solid rgba(255, 255, 255, 0.08)',
+                        cursor: 'pointer',
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {rk.name}
+                      </div>
+                      <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#4ade80', marginTop: '4px' }}>
+                        ₹{(rk.price || 0).toLocaleString('en-IN')}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* STEP 5: Cables, Power, Connectors & Installation Options */}
+            <div 
+              id="estimator-step-5"
+              style={{
+                background: '#1e293b',
+                border: activeStep === 5 ? '2px solid #2563eb' : '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '14px',
+                padding: '18px 20px',
+                boxShadow: activeStep === 5 ? '0 0 25px rgba(37, 99, 235, 0.25)' : '0 4px 20px rgba(0, 0, 0, 0.25)',
+                transition: 'border 0.2s ease, box-shadow 0.2s ease'
+              }}
+            >
+              <div 
+                onClick={() => setActiveStep(5)}
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', cursor: 'pointer' }}
+              >
+                <span style={{
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '50%',
+                  background: activeStep >= 5 ? '#2563eb' : '#334155',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 800,
+                  fontSize: '0.85rem'
+                }}>
+                  5
+                </span>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>
+                    Step 5: Cables, Power, Connectors &amp; Doorstep Setup
+                  </h3>
+                  <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                    Turnkey accessories required for turnkey operation (Toggle to customize)
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+                {/* Power Supply Toggle */}
+                <div 
+                  onClick={() => setIncludePowerSupply(!includePowerSupply)}
+                  style={{
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: includePowerSupply ? 'rgba(34, 197, 94, 0.15)' : '#0f172a',
+                    border: includePowerSupply ? '1px solid #22c55e' : '1px solid rgba(255, 255, 255, 0.1)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff' }}>
+                      {isIpCamera ? 'PoE Switch Unit' : 'SMPS Power Supply'}
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                      {resolvedPower ? resolvedPower.name.slice(0, 25) : 'Auto assigned'}
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: includePowerSupply ? '#4ade80' : '#94a3b8' }}>
+                    {includePowerSupply ? `+₹${powerTotal.toLocaleString('en-IN')}` : 'Excluded'}
+                  </div>
+                </div>
+
+                {/* Cable Bundle Toggle */}
+                <div 
+                  onClick={() => setIncludeCables(!includeCables)}
+                  style={{
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: includeCables ? 'rgba(34, 197, 94, 0.15)' : '#0f172a',
+                    border: includeCables ? '1px solid #22c55e' : '1px solid rgba(255, 255, 255, 0.1)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff' }}>
+                      {isIpCamera ? 'Pure Copper Cat6' : '3+1 CCTV Cable'}
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                      ~{cameraCount * 20}m wiring run
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: includeCables ? '#4ade80' : '#94a3b8' }}>
+                    {includeCables ? `+₹${cableTotal.toLocaleString('en-IN')}` : 'Excluded'}
+                  </div>
+                </div>
+
+                {/* Connectors & Modular Boxes Toggle */}
+                <div 
+                  onClick={() => setIncludeConnectors(!includeConnectors)}
+                  style={{
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: includeConnectors ? 'rgba(34, 197, 94, 0.15)' : '#0f172a',
+                    border: includeConnectors ? '1px solid #22c55e' : '1px solid rgba(255, 255, 255, 0.1)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff' }}>
+                      Connectors &amp; Junction Boxes
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                      {isIpCamera ? 'RJ45 + Modular Boxes' : 'BNC + DC + Modular Boxes'}
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: includeConnectors ? '#4ade80' : '#94a3b8' }}>
+                    {includeConnectors ? `+₹${connectorsTotalCost.toLocaleString('en-IN')}` : 'Excluded'}
+                  </div>
+                </div>
+
+                {/* Turnkey Installation Toggle */}
+                <div 
+                  onClick={() => setIncludeInstallation(!includeInstallation)}
+                  style={{
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    background: includeInstallation ? 'rgba(34, 197, 94, 0.15)' : '#0f172a',
+                    border: includeInstallation ? '1px solid #22c55e' : '1px solid rgba(255, 255, 255, 0.1)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff' }}>
+                      Doorstep Fitting &amp; Setup
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                      Davanagere district fitting &amp; app config
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 800, color: includeInstallation ? '#4ade80' : '#94a3b8' }}>
+                    {includeInstallation ? `+₹${installationTotalCost.toLocaleString('en-IN')}` : 'Self Install'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          {/* RIGHT: Live Estimated Bill Breakdown Card */}
+          <div style={{
+            position: 'sticky',
+            top: '80px',
+            background: '#1e293b',
+            border: '2px solid rgba(59, 130, 246, 0.5)',
+            borderRadius: '16px',
+            padding: '22px',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '12px' }}>
+              <div>
+                <span style={{ fontSize: '0.75rem', color: '#38bdf8', fontWeight: 700, textTransform: 'uppercase' }}>
+                  Live Package Summary
+                </span>
+                <h3 style={{ margin: '2px 0 0', fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>
+                  {cameraCount} Camera CCTV Package
+                </h3>
+              </div>
+              <span style={{
+                background: '#22c55e',
+                color: '#fff',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                padding: '3px 8px',
+                borderRadius: '9999px'
+              }}>
+                Live Store Rates
+              </span>
+            </div>
+
+            {/* Itemized List */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.85rem', marginBottom: '18px' }}>
+              
+              {/* Cameras */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
+                <div>
+                  <div style={{ fontWeight: 600, color: '#fff' }}>
+                    📷 {cameraCount}x {selectedCamera?.name || 'Camera'}
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                    ₹{(selectedCamera?.price || 0).toLocaleString('en-IN')} each
+                  </div>
+                </div>
+                <div style={{ fontWeight: 700, color: '#fff' }}>
+                  ₹{cameraTotal.toLocaleString('en-IN')}
+                </div>
+              </div>
+
+              {/* HDD */}
+              {resolvedHdd && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
+                  <div>
+                    <div style={{ fontWeight: 600, color: '#fff' }}>
+                      💾 {resolvedHdd.name}
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                      Continuous Recording Storage
+                    </div>
+                  </div>
+                  <div style={{ fontWeight: 700, color: '#fff' }}>
+                    ₹{(resolvedHdd.price || 0).toLocaleString('en-IN')}
+                  </div>
+                </div>
+              )}
+
+              {/* Recorder */}
+              {resolvedRecorder && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
+                  <div>
+                    <div style={{ fontWeight: 600, color: '#fff' }}>
+                      📼 {resolvedRecorder.name}
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                      Recording Control Unit
+                    </div>
+                  </div>
+                  <div style={{ fontWeight: 700, color: '#fff' }}>
+                    ₹{(resolvedRecorder.price || 0).toLocaleString('en-IN')}
+                  </div>
+                </div>
+              )}
+
+              {/* Rack */}
+              {resolvedRack && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
+                  <div>
+                    <div style={{ fontWeight: 600, color: '#fff' }}>
+                      🗄️ {resolvedRack.name}
+                    </div>
+                  </div>
+                  <div style={{ fontWeight: 700, color: '#fff' }}>
+                    ₹{(resolvedRack.price || 0).toLocaleString('en-IN')}
+                  </div>
+                </div>
+              )}
+
+              {/* Power */}
+              {resolvedPower && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
+                  <div>
+                    <div style={{ fontWeight: 600, color: '#fff' }}>
+                      ⚡ {resolvedPower.name}
+                    </div>
+                  </div>
+                  <div style={{ fontWeight: 700, color: '#fff' }}>
+                    ₹{powerTotal.toLocaleString('en-IN')}
+                  </div>
+                </div>
+              )}
+
+              {/* Cabling */}
+              {resolvedCable && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
+                  <div>
+                    <div style={{ fontWeight: 600, color: '#fff' }}>
+                      🔌 {resolvedCable.name.slice(0, 24)} (~{cameraCount * 20}m)
+                    </div>
+                  </div>
+                  <div style={{ fontWeight: 700, color: '#fff' }}>
+                    ₹{cableTotal.toLocaleString('en-IN')}
+                  </div>
+                </div>
+              )}
+
+              {/* Connectors */}
+              {connectorsTotalCost > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
+                  <div>
+                    <div style={{ fontWeight: 600, color: '#fff' }}>
+                      🔩 Connectors &amp; Modular Boxes
+                    </div>
+                  </div>
+                  <div style={{ fontWeight: 700, color: '#fff' }}>
+                    ₹{connectorsTotalCost.toLocaleString('en-IN')}
+                  </div>
+                </div>
+              )}
+
+              {/* Installation */}
+              {includeInstallation && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#cbd5e1' }}>
+                  <div>
+                    <div style={{ fontWeight: 600, color: '#fff' }}>
+                      🛠️ Fitting &amp; Mobile App Setup
+                    </div>
+                  </div>
+                  <div style={{ fontWeight: 700, color: '#fff' }}>
+                    ₹{installationTotalCost.toLocaleString('en-IN')}
+                  </div>
+                </div>
+              )}
+
+            </div>
+
+            {/* Total Sum Display */}
+            <div style={{
+              background: '#0f172a',
+              borderRadius: '12px',
+              padding: '16px',
+              marginBottom: '18px',
+              border: '1px solid rgba(255, 255, 255, 0.1)'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: 600 }}>
+                  Estimated Package Total:
+                </span>
+                <span style={{
+                  fontSize: '1.65rem',
+                  fontWeight: 900,
+                  color: '#4ade80',
+                  fontFamily: 'Outfit, sans-serif'
+                }}>
+                  ₹{grandTotal.toLocaleString('en-IN')}
+                </span>
+              </div>
+              <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '4px', textAlign: 'right' }}>
+                ✓ GST &amp; Genuine Brand Warranty Included
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '12px 18px',
+                  borderRadius: '10px',
+                  background: '#25D366',
+                  color: '#ffffff',
+                  textDecoration: 'none',
+                  fontWeight: 700,
+                  fontSize: '0.92rem',
+                  boxShadow: '0 4px 14px rgba(37, 211, 102, 0.35)',
+                  transition: 'all 0.18s ease'
+                }}
+              >
+                <MessageSquare size={18} />
+                <span>Get This Quotation on WhatsApp</span>
+              </a>
+
+              <a
+                href={`tel:${SHOP_INFO.phone}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '11px 18px',
+                  borderRadius: '10px',
+                  background: '#334155',
+                  color: '#ffffff',
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                  fontSize: '0.88rem',
+                  border: '1px solid rgba(255, 255, 255, 0.15)'
+                }}
+              >
+                <Phone size={16} />
+                <span>Call Store (+91 63664 06305)</span>
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  );
+};

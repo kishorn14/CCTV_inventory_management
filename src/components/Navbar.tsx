@@ -7,7 +7,8 @@ import {
   FileText,
   MapPin,
   Clock,
-  ShieldCheck
+  ShieldCheck,
+  Calculator
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { createWhatsAppLink } from '../utils/whatsapp';
@@ -111,6 +112,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts })
             </div>
 
             <a
+              href="#cctv-cost-estimator"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                color: '#1d4ed8',
+                background: '#eff6ff',
+                border: '1px solid #bfdbfe',
+                fontSize: '0.86rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                padding: '7px 14px',
+                borderRadius: '8px'
+              }}
+            >
+              <Calculator size={15} />
+              Cost Estimator
+            </a>
+
+            <a
               href="#products"
               onClick={onOpenProducts}
               style={{
@@ -187,6 +208,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts })
                 <MapPin size={14} /> Mittlakatte Road, Davanagere - 577004
               </div>
             </div>
+
+            <a
+              href="#cctv-cost-estimator"
+              onClick={() => setMobileMenuOpen(false)}
+              className="btn btn-outline btn-sm btn-block"
+              style={{ color: '#1d4ed8', borderColor: '#bfdbfe', background: '#eff6ff' }}
+            >
+              <Calculator size={16} /> Instant Cost Estimator
+            </a>
 
             <a
               href="#products"

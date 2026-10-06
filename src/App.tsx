@@ -9,9 +9,10 @@ import { FloatingActions } from './components/FloatingActions';
 import { ServiceBookingModal } from './components/ServiceBookingModal';
 import { ProductDetailModal } from './components/ProductDetailModal';
 import { CameraFootageModal } from './components/CameraFootageModal';
+import { CctvCostEstimator } from './components/CctvCostEstimator';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { CategoryType, Product } from './types';
-import { Phone, MessageCircle, ShieldCheck, MapPin, CheckCircle2 } from 'lucide-react';
+import { Phone, MessageCircle, ShieldCheck, MapPin, CheckCircle2, Calculator } from 'lucide-react';
 
 function MainApp() {
   const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => {
@@ -151,6 +152,20 @@ function MainApp() {
             flexWrap: 'wrap'
           }}>
             <a
+              href="#cctv-cost-estimator"
+              className="btn btn-primary"
+              style={{
+                fontSize: '0.9rem',
+                padding: '8px 18px',
+                borderRadius: '8px',
+                gap: '6px'
+              }}
+            >
+              <Calculator size={16} />
+              Instant Cost Estimator
+            </a>
+
+            <a
               href="tel:6366406305"
               className="btn btn-call"
               style={{
@@ -183,7 +198,10 @@ function MainApp() {
         </div>
       </div>
 
-      {/* 3. Product Catalog Grid (All 50 Products from MyBillBook - Always Visible & Interactive) */}
+      {/* 3. Live CCTV Package Cost Estimator (Interactive Component Configurator) */}
+      <CctvCostEstimator />
+
+      {/* 4. Product Catalog Grid (All 50 Products from MyBillBook - Always Visible & Interactive) */}
       <ProductCatalog
         selectedCategory={selectedCategory}
         onSelectCategory={handleSelectCategory}

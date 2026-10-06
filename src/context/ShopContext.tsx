@@ -32,11 +32,11 @@ interface ShopContextType {
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  PRODUCTS: 'meksha_shop_products_v8',
-  SERVICES: 'meksha_shop_services_v8',
-  BRANDS: 'meksha_shop_brands_v8',
-  SHOP_INFO: 'meksha_shop_info_v8',
-  CCTV_PRICING: 'meksha_cctv_pricing_v8',
+  PRODUCTS: 'meksha_shop_products_v9',
+  SERVICES: 'meksha_shop_services_v9',
+  BRANDS: 'meksha_shop_brands_v9',
+  SHOP_INFO: 'meksha_shop_info_v9',
+  CCTV_PRICING: 'meksha_cctv_pricing_v9',
   ADMIN_PASS: 'meksha_shop_admin_pass_v4'
 };
 
@@ -46,7 +46,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // 1. Products state with auto-migration / cleanup
   const [products, setProducts] = useState<Product[]>(() => {
     try {
-      // Clean up legacy v2/v3/v4 storage if present
+      // Clean up legacy storage if present
+      localStorage.removeItem('meksha_shop_products_v8');
+      localStorage.removeItem('meksha_shop_services_v8');
+      localStorage.removeItem('meksha_shop_brands_v8');
+      localStorage.removeItem('meksha_shop_info_v8');
       localStorage.removeItem('meksha_shop_products_v4');
       localStorage.removeItem('meksha_shop_services_v4');
       localStorage.removeItem('meksha_shop_brands_v4');
