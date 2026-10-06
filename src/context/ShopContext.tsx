@@ -32,11 +32,11 @@ interface ShopContextType {
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  PRODUCTS: 'meksha_shop_products_v7',
-  SERVICES: 'meksha_shop_services_v7',
-  BRANDS: 'meksha_shop_brands_v7',
-  SHOP_INFO: 'meksha_shop_info_v7',
-  CCTV_PRICING: 'meksha_cctv_pricing_v7',
+  PRODUCTS: 'meksha_shop_products_v8',
+  SERVICES: 'meksha_shop_services_v8',
+  BRANDS: 'meksha_shop_brands_v8',
+  SHOP_INFO: 'meksha_shop_info_v8',
+  CCTV_PRICING: 'meksha_cctv_pricing_v8',
   ADMIN_PASS: 'meksha_shop_admin_pass_v4'
 };
 

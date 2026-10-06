@@ -106,9 +106,9 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
       image: PRESET_IMAGES.cctv[0],
       badge: 'New Arrival',
       priceRange: '₹3,500 - ₹5,000',
-      warranty: '2 Years Brand Warranty',
-      featuresText: 'High Quality Build\nFree Doorstep Fitting\nGenuine Company Warranty',
-      description: 'Brand new high performance model with full official warranty and express installation.',
+      warranty: '',
+      featuresText: 'High Quality Build\nFree Doorstep Fitting\nGenuine Company Support',
+      description: 'Brand new high performance model with express installation.',
       popular: false
     });
     setIsModalOpen(true);
@@ -123,7 +123,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
       image: product.image,
       badge: product.badge || '',
       priceRange: product.priceRange,
-      warranty: product.warranty,
+      warranty: product.warranty || '',
       featuresText: (product.features || []).join('\n'),
       description: product.description,
       popular: !!product.popular
@@ -145,7 +145,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
       image: formData.image,
       badge: formData.badge ? formData.badge : undefined,
       priceRange: formData.priceRange,
-      warranty: formData.warranty,
+      warranty: formData.warranty.trim() ? formData.warranty.trim() : undefined,
       features: features.length > 0 ? features : ['100% Genuine Brand', 'Doorstep Service Support'],
       description: formData.description,
       popular: formData.popular
@@ -361,9 +361,15 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                 <span style={{ color: '#64748b', fontSize: '0.75rem' }}>Price: </span>
                 <span style={{ color: '#1d4ed8', fontWeight: 700 }}>{product.priceRange}</span>
               </div>
-              <div style={{ color: '#059669', fontSize: '0.78rem', fontWeight: 600 }}>
-                🛡️ {product.warranty}
-              </div>
+              {product.warranty ? (
+                <div style={{ color: '#059669', fontSize: '0.78rem', fontWeight: 600 }}>
+                  🛡️ {product.warranty}
+                </div>
+              ) : (
+                <div style={{ color: '#94a3b8', fontSize: '0.75rem', fontStyle: 'italic' }}>
+                  No warranty set
+                </div>
+              )}
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
@@ -428,8 +434,12 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                 <td style={{ padding: '14px 18px', color: '#059669', fontWeight: 800 }}>
                   {product.priceRange}
                 </td>
-                <td style={{ padding: '14px 18px', color: '#64748b', fontSize: '0.82rem' }}>
-                  {product.warranty}
+                <td style={{ padding: '14px 18px', fontSize: '0.82rem' }}>
+                  {product.warranty ? (
+                    <span style={{ color: '#059669', fontWeight: 600 }}>🛡️ {product.warranty}</span>
+                  ) : (
+                    <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>No warranty set</span>
+                  )}
                 </td>
                 <td style={{ padding: '14px 18px', textAlign: 'right' }}>
                   <div style={{ display: 'inline-flex', gap: '8px' }}>
@@ -562,15 +572,17 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Warranty Details *</label>
+                  <label className="form-label">Warranty (Optional - leave blank if none)</label>
                   <input
                     type="text"
                     className="form-input"
-                    placeholder="e.g. 66 Months Warranty"
+                    placeholder="e.g. 2 Years Brand Warranty (Leave blank if none)"
                     value={formData.warranty}
                     onChange={e => setFormData({ ...formData, warranty: e.target.value })}
-                    required
                   />
+                  <span style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '2px', display: 'block' }}>
+                    Only products with warranty filled here will display a warranty badge on the customer store.
+                  </span>
                 </div>
               </div>
 

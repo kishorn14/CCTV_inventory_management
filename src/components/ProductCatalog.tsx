@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { 
   Search, 
-  MessageCircle, 
-  Phone, 
   Sparkles,
   Camera,
   Wifi,
@@ -13,26 +11,29 @@ import {
   Zap,
   Box,
   Eye,
+  FileText,
   CheckCircle2
 } from 'lucide-react';
 import { Product, CategoryType } from '../types';
 import { CATEGORIES } from '../data/shopData';
 import { useShop } from '../context/ShopContext';
-import { createWhatsAppLink } from '../utils/whatsapp';
+import { isCameraProduct } from '../data/cameraFootageData';
 
 interface ProductCatalogProps {
   selectedCategory: CategoryType;
   onSelectCategory: (cat: CategoryType) => void;
   onViewProduct: (product: Product) => void;
+  onOpenFootageModal?: (product: Product) => void;
   onClose?: () => void;
 }
 
 export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   selectedCategory,
   onSelectCategory,
-  onViewProduct
+  onViewProduct,
+  onOpenFootageModal
 }) => {
-  const { products, shopInfo } = useShop();
+  const { products } = useShop();
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredProducts = products.filter((product) => {
@@ -242,12 +243,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               const hasDiscount = mrp > sellingPrice && sellingPrice > 0;
               const discountPercent = hasDiscount ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0;
 
-              const inquiryText = sellingPrice > 0
-                ? `Hello Meksha CCTV Solutions! I am interested in purchasing:\n\n*${product.name}*\nBrand: ${product.brand}\nSelling Price: ₹${sellingPrice.toLocaleString('en-IN')}\n\nPlease share availability, best quotation and delivery/installation details.`
-                : `Hello Meksha CCTV Solutions! I want to enquire about the price and availability of:\n\n*${product.name}*\nBrand: ${product.brand}\n\nPlease share quotation.`;
-
-              const waLink = createWhatsAppLink(inquiryText, shopInfo.whatsappPhone);
-
               return (
                 <div 
                   key={product.id} 
@@ -284,13 +279,28 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
                     <div>
                       {/* Stock & Warranty Badge Row */}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '4px' }}>
                         <span className="dukaan-stock-badge">
                           ⚡ In Stock · Davanagere
                         </span>
-                        <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>
-                          {product.unit ? `Unit: ${product.unit}` : ''}
-                        </span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          {product.warranty && product.warranty.trim() !== '' && (
+                            <span style={{ 
+                              fontSize: '0.70rem', 
+                              color: '#059669', 
+                              fontWeight: 700, 
+                              background: '#ecfdf5', 
+                              padding: '2px 6px', 
+                              borderRadius: '4px', 
+                              border: '1px solid #a7f3d0' 
+                            }}>
+                              🛡️ {product.warranty}
+                            </span>
+                          )}
+                          <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>
+                            {product.unit ? `Unit: ${product.unit}` : ''}
+                          </span>
+                        </div>
                       </div>
 
                       {/* Product Title */}
@@ -335,53 +345,53 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       </div>
                     </div>
 
-                    {/* Action Buttons: WhatsApp Quote + Direct Call */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto', gap: '6px' }}>
-                      <a
-                        href={waLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-whatsapp btn-sm"
-                        style={{
-                          fontSize: '0.8rem',
-                          padding: '6px 10px',
-                          gap: '5px',
-                          borderRadius: '8px',
-                          whiteSpace: 'nowrap'
-                        }}
-                        title="Request quotation on WhatsApp"
-                      >
-                        <MessageCircle size={15} />
-                        <span>WhatsApp Quote</span>
-                      </a>
-
-                      <a
-                        href={`tel:${shopInfo.phone}`}
-                        className="btn btn-call btn-sm"
-                        style={{
-                          fontSize: '0.8rem',
-                          padding: '6px 10px',
-                          gap: '4px',
-                          borderRadius: '8px'
-                        }}
-                        title="Call shop directly"
-                      >
-                        <Phone size={14} />
-                        <span>Call</span>
-                      </a>
-
+                    {/* Action Buttons: Details Button (All Items) + Eye Symbol (Cameras Only) */}
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                       <button
                         onClick={() => onViewProduct(product)}
-                        className="btn btn-outline btn-sm"
                         style={{
-                          padding: '6px 8px',
+                          flex: 1,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                          padding: '9px 14px',
                           borderRadius: '8px',
-                          color: '#475569'
+                          background: '#0f172a',
+                          color: '#ffffff',
+                          fontSize: '0.84rem',
+                          fontWeight: 600,
+                          border: 'none',
+                          cursor: 'pointer',
+                          transition: 'all 0.18s ease'
                         }}
-                        title="View details & specifications"
                       >
-                        <Eye size={15} />
+                        <FileText size={15} />
+                        <span>Details</span>
                       </button>
+
+                      {isCameraProduct(product) && onOpenFootageModal && (
+                        <button
+                          onClick={() => onOpenFootageModal(product)}
+                          style={{
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '8px',
+                            background: '#eff6ff',
+                            border: '1.5px solid #2563eb',
+                            color: '#2563eb',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'all 0.18s ease',
+                            flexShrink: 0
+                          }}
+                          title="Watch Sample CCTV Footage (Day & Night Vision)"
+                        >
+                          <Eye size={18} />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

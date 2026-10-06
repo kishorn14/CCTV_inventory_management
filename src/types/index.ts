@@ -26,7 +26,7 @@ export interface Product {
   price?: number;
   mrp?: number;
   unit?: string;
-  warranty: string;
+  warranty?: string;
   features: string[];
   description: string;
   popular?: boolean;

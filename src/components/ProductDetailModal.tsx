@@ -11,12 +11,16 @@ import { Product } from '../types';
 import { useShop } from '../context/ShopContext';
 import { formatProductInquiry, createWhatsAppLink } from '../utils/whatsapp';
 
+import { isCameraProduct } from '../data/cameraFootageData';
+import { Eye } from 'lucide-react';
+
 interface ProductDetailModalProps {
   product: Product | null;
   onClose: () => void;
+  onWatchFootage?: (product: Product) => void;
 }
 
-export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product, onClose }) => {
+export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product, onClose, onWatchFootage }) => {
   const { shopInfo } = useShop();
   if (!product) return null;
 
@@ -121,12 +125,37 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
             paddingBottom: '16px',
             borderBottom: '1px solid #e2e8f0'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#059669', fontWeight: 700, fontSize: '0.9rem' }}>
-              <ShieldCheck size={18} /> {product.warranty}
-            </div>
+            {product.warranty && product.warranty.trim() !== '' && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#059669', fontWeight: 700, fontSize: '0.9rem' }}>
+                <ShieldCheck size={18} /> {product.warranty}
+              </div>
+            )}
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#1d4ed8', fontWeight: 700, fontSize: '0.9rem' }}>
               <Truck size={18} /> Free Installation / Delivery
             </div>
+            {isCameraProduct(product) && onWatchFootage && (
+              <button
+                onClick={() => {
+                  onClose();
+                  onWatchFootage(product);
+                }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  background: '#eff6ff',
+                  color: '#2563eb',
+                  border: '1px solid #bfdbfe',
+                  fontWeight: 700,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer'
+                }}
+              >
+                <Eye size={15} /> Watch CCTV Sample Footage
+              </button>
+            )}
           </div>
 
           <p style={{ color: '#475569', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '20px' }}>

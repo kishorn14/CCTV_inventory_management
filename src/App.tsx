@@ -8,6 +8,7 @@ import { Footer } from './components/Footer';
 import { FloatingActions } from './components/FloatingActions';
 import { ServiceBookingModal } from './components/ServiceBookingModal';
 import { ProductDetailModal } from './components/ProductDetailModal';
+import { CameraFootageModal } from './components/CameraFootageModal';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { CategoryType, Product } from './types';
 import { Phone, MessageCircle, ShieldCheck, MapPin, CheckCircle2 } from 'lucide-react';
@@ -24,6 +25,7 @@ function MainApp() {
   const [bookingCategory, setBookingCategory] = useState<CategoryType>('all');
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('all');
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
+  const [footageProduct, setFootageProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     const handleUrlChange = () => {
@@ -186,6 +188,7 @@ function MainApp() {
         selectedCategory={selectedCategory}
         onSelectCategory={handleSelectCategory}
         onViewProduct={(prod) => setViewProduct(prod)}
+        onOpenFootageModal={(prod) => setFootageProduct(prod)}
       />
 
       {/* 4. Google Reviews (From Davanagere Customers - Identical to reference site carousel) */}
@@ -214,6 +217,12 @@ function MainApp() {
       <ProductDetailModal
         product={viewProduct}
         onClose={() => setViewProduct(null)}
+        onWatchFootage={(prod) => setFootageProduct(prod)}
+      />
+
+      <CameraFootageModal
+        product={footageProduct}
+        onClose={() => setFootageProduct(null)}
       />
     </div>
   );
