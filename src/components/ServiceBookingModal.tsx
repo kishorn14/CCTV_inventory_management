@@ -80,6 +80,53 @@ const DEFAULT_SERVICE_OPTIONS: Record<CategoryType, string[]> = {
     'Farm / Construction Site Perimeter Security Setup',
     'SIM Card Activation & Mobile Live Monitoring Test',
     'Solar Panel Battery Angle & Surge Protection Check'
+  ],
+  wifi_4g: [
+    'Smart 360° Wi-Fi Camera Setup & Mobile Pairing',
+    '4G SIM Standalone Camera Installation',
+    'Memory Card Setup & Cloud Recording Support',
+    'Two-Way Audio & Motion Tracking Configuration'
+  ],
+  ip_cameras: [
+    'CP PLUS IP Camera Installation & PoE Cabling',
+    'Audio / Built-in Mic Recording Setup',
+    'Full-Color / Dual Light Night Vision Testing',
+    'Mobile Viewing Configuration (gCMOB / InstaOn)'
+  ],
+  hd_analog: [
+    'HD Dome / Bullet Camera Fitting',
+    'Coaxial 3+1 Cabling & BNC Pin Crimping',
+    'Dual Light Night Vision Alignment'
+  ],
+  dvr_nvr: [
+    'DVR / NVR Recording Unit Setup & HDD Installation',
+    'Password Reset & Network Connection',
+    'Multi-Channel Screen Layout & Mobile App Sync'
+  ],
+  solar: [
+    'Solar Powered 4G Security Camera Setup',
+    'Solar Panel Mounting & Battery Charging Optimization',
+    'Remote Farmhouse Surveillance Configuration'
+  ],
+  storage: [
+    'Surveillance Hard Disk (Seagate SkyHawk) Installation',
+    'HDD Replacement & Video Recording Retention Audit',
+    'MicroSD Card High Endurance Setup'
+  ],
+  networking: [
+    'PoE Switch Installation & Port Distribution',
+    '4G Wi-Fi Router Setup for Remote CCTV',
+    'Gigabit Network Cabling & Testing'
+  ],
+  cables_power: [
+    'Cat6 Solid Pure Copper Cable Laying',
+    'Centralized SMPS Power Supply Installation',
+    'Short Circuit & Power Spike Protection'
+  ],
+  racks_accessories: [
+    'Wall Mount Server Rack (6U / 2U / Mini) Installation',
+    'CCTV Conduit Pipe & Junction Box Fitting',
+    'Neat Wire Dressing & Equipment Securing'
   ]
 };
 

@@ -1,20 +1,16 @@
 import { useState, useEffect } from 'react';
 import { ShopProvider } from './context/ShopContext';
 import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { TrustedBrands } from './components/TrustedBrands';
 import { GoogleReviews } from './components/GoogleReviews';
 import { ProductCatalog } from './components/ProductCatalog';
-import { EstimatorCalculator } from './components/EstimatorCalculator';
-import { FaqSection } from './components/FaqSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { FloatingActions } from './components/FloatingActions';
 import { ServiceBookingModal } from './components/ServiceBookingModal';
 import { ProductDetailModal } from './components/ProductDetailModal';
-import { CctvEstimatorModal } from './components/CctvEstimatorModal';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { CategoryType, Product } from './types';
+import { Phone, MessageCircle, ShieldCheck, MapPin, CheckCircle2 } from 'lucide-react';
 
 function MainApp() {
   const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => {
@@ -25,10 +21,8 @@ function MainApp() {
   });
 
   const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [isEstimatorOpen, setIsEstimatorOpen] = useState(false);
-  const [bookingCategory, setBookingCategory] = useState<CategoryType>('cctv');
+  const [bookingCategory, setBookingCategory] = useState<CategoryType>('all');
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('all');
-  const [isCatalogVisible, setIsCatalogVisible] = useState<boolean>(false);
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
 
   useEffect(() => {
@@ -37,10 +31,6 @@ function MainApp() {
       const hash = window.location.hash.toLowerCase();
       const search = window.location.search.toLowerCase();
       setIsAdminRoute(path.includes('admin') || hash.includes('admin') || search.includes('admin'));
-
-      if (hash.includes('products')) {
-        setIsCatalogVisible(true);
-      }
     };
 
     window.addEventListener('popstate', handleUrlChange);
@@ -63,20 +53,17 @@ function MainApp() {
     window.scrollTo(0, 0);
   };
 
-  const handleOpenBooking = (category: CategoryType = 'cctv') => {
+  const handleOpenBooking = (category: CategoryType = 'all') => {
     setBookingCategory(category);
     setIsBookingOpen(true);
   };
 
   const handleSelectCategory = (category: CategoryType) => {
     setSelectedCategory(category);
-    setIsCatalogVisible(true);
-    setTimeout(() => {
-      const el = document.getElementById('products');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 80);
+    const el = document.getElementById('products');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   if (isAdminRoute) {
@@ -85,56 +72,139 @@ function MainApp() {
 
   return (
     <div className="app-wrapper">
-      {/* Top Navigation */}
+      {/* 1. Top Contact Bar & Main Navigation Header */}
       <Navbar 
-        onOpenBooking={() => handleOpenBooking('cctv')} 
+        onOpenBooking={() => handleOpenBooking('all')} 
         onOpenProducts={() => handleSelectCategory('all')}
-        onOpenEstimator={() => setIsEstimatorOpen(true)}
       />
 
-      {/* Hero Showcase */}
-      <Hero
-        onOpenBooking={(cat) => handleOpenBooking(cat || 'cctv')}
+      {/* 2. Compact, Direct Store Hero Strip (No long text or quotes, straight to the point) */}
+      <div style={{
+        background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)',
+        borderBottom: '1px solid #e2e8f0',
+        padding: '24px 0 16px 0'
+      }}>
+        <div className="container" style={{ textAlign: 'center' }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            background: '#eff6ff',
+            border: '1px solid #bfdbfe',
+            color: '#1d4ed8',
+            padding: '5px 14px',
+            borderRadius: '9999px',
+            fontSize: '0.8rem',
+            fontWeight: 700,
+            marginBottom: '12px'
+          }}>
+            <ShieldCheck size={15} /> Authorized Dealer · Wholesale &amp; Retail Store
+          </div>
+
+          <h1 style={{
+            fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
+            fontWeight: 900,
+            color: '#0f172a',
+            lineHeight: 1.2,
+            marginBottom: '8px',
+            letterSpacing: '-0.02em'
+          }}>
+            CCTV Security Cameras &amp; Accessories in <span style={{ color: '#2563eb' }}>Davanagere</span>
+          </h1>
+
+          <p style={{
+            color: '#475569',
+            fontSize: '0.94rem',
+            maxWidth: '650px',
+            margin: '0 auto 16px auto',
+            lineHeight: 1.5
+          }}>
+            Direct shop prices on CP PLUS IP cameras, Trueview 360° Wi-Fi cameras, 4G solar setups, DVR/NVR units, Seagate hard disks, PoE switches, and cabling accessories.
+          </p>
+
+          {/* Quick Trust Badges */}
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '12px',
+            marginBottom: '16px'
+          }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', fontWeight: 600, color: '#059669', background: '#ecfdf5', padding: '4px 12px', borderRadius: '6px' }}>
+              <CheckCircle2 size={14} /> Genuine Brand Warranty
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', fontWeight: 600, color: '#059669', background: '#ecfdf5', padding: '4px 12px', borderRadius: '6px' }}>
+              <CheckCircle2 size={14} /> GST Invoicing Included
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', fontWeight: 600, color: '#059669', background: '#ecfdf5', padding: '4px 12px', borderRadius: '6px' }}>
+              <MapPin size={14} /> Same-Day Fitting in Davanagere
+            </span>
+          </div>
+
+          {/* Direct CTA Buttons */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '10px',
+            flexWrap: 'wrap'
+          }}>
+            <a
+              href="tel:6366406305"
+              className="btn btn-call"
+              style={{
+                fontSize: '0.9rem',
+                padding: '8px 18px',
+                borderRadius: '8px',
+                gap: '6px'
+              }}
+            >
+              <Phone size={16} />
+              Call: +91 63664 06305
+            </a>
+
+            <a
+              href="https://wa.me/916366406305?text=Hello%20Meksha%20CCTV%20Solutions%2C%20I%20would%20like%20to%20get%20a%20quotation%20for%20cameras."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-whatsapp"
+              style={{
+                fontSize: '0.9rem',
+                padding: '8px 18px',
+                borderRadius: '8px',
+                gap: '6px'
+              }}
+            >
+              <MessageCircle size={16} />
+              Request Quote on WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Product Catalog Grid (All 50 Products from MyBillBook - Always Visible & Interactive) */}
+      <ProductCatalog
+        selectedCategory={selectedCategory}
         onSelectCategory={handleSelectCategory}
-        onOpenEstimator={() => setIsEstimatorOpen(true)}
+        onViewProduct={(prod) => setViewProduct(prod)}
       />
 
-      {/* Authorized Dealer & Trusted CCTV Brand Partners (Hikvision, CP PLUS, Dahua, Uniview, Imou) */}
-      <TrustedBrands />
-
-      {/* Product Catalog & Category Filters - Only shown when user clicks Explore / Category */}
-      {isCatalogVisible && (
-        <ProductCatalog
-          selectedCategory={selectedCategory}
-          onSelectCategory={handleSelectCategory}
-          onViewProduct={(prod) => setViewProduct(prod)}
-          onClose={() => setIsCatalogVisible(false)}
-        />
-      )}
-
-      {/* Interactive CCTV Security Cost Estimator Teaser Section */}
-      <EstimatorCalculator onOpenEstimator={() => setIsEstimatorOpen(true)} />
-
-      {/* Google Reviews & Customer Testimonials (Connected to Google Maps Share Link) */}
+      {/* 4. Google Reviews (From Davanagere Customers - Identical to reference site carousel) */}
       <GoogleReviews />
 
-      {/* FAQs */}
-      <FaqSection />
-
-      {/* Shop Location & Contact Form */}
+      {/* 5. Shop Location & Direct Contact Section */}
       <ContactSection />
 
-      {/* Footer */}
+      {/* 6. Footer */}
       <Footer
         onSelectCategory={handleSelectCategory}
-        onOpenBooking={() => handleOpenBooking('cctv')}
+        onOpenBooking={() => handleOpenBooking('all')}
         onGoToAdmin={navigateToAdmin}
       />
 
-      {/* Floating Sticky Actions (WhatsApp + Call) */}
-      <FloatingActions onOpenBooking={() => handleOpenBooking('cctv')} />
+      {/* 7. Floating Sticky Bottom Bar for Mobile */}
+      <FloatingActions onOpenBooking={() => handleOpenBooking('all')} />
 
-      {/* Modals */}
+      {/* 8. Modals */}
       <ServiceBookingModal
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
@@ -145,20 +215,16 @@ function MainApp() {
         product={viewProduct}
         onClose={() => setViewProduct(null)}
       />
-
-      {/* CCTV Cost Estimator Modal (Opens ONLY when user clicks Estimate Cost) */}
-      <CctvEstimatorModal
-        isOpen={isEstimatorOpen}
-        onClose={() => setIsEstimatorOpen(false)}
-      />
     </div>
   );
 }
 
-export default function App() {
+export function App() {
   return (
     <ShopProvider>
       <MainApp />
     </ShopProvider>
   );
 }
+
+export default App;

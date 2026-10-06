@@ -91,19 +91,24 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
             <h4 style={{ color: '#ffffff', fontSize: '1.05rem', fontWeight: 700, marginBottom: '16px' }}>
               CCTV Cameras &amp; Kits
             </h4>
-            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {[
-                { label: 'HD Dome & Bullet Kits', id: 'kits' as CategoryType },
-                { label: 'Smart Wi-Fi & PTZ Cameras', id: 'wifi' as CategoryType },
-                { label: '4K IP & Commercial NVR', id: 'ip_nvr' as CategoryType },
-                { label: '4G SIM & Solar Cameras', id: 'solar_4g' as CategoryType },
-                { label: 'All CCTV Packages', id: 'cctv' as CategoryType },
+                { label: 'Wi-Fi & 4G Cameras', id: 'wifi_4g' as CategoryType },
+                { label: 'CP PLUS IP Cameras', id: 'ip_cameras' as CategoryType },
+                { label: 'HD & Analog Cameras', id: 'hd_analog' as CategoryType },
+                { label: 'DVR & NVR Recording Units', id: 'dvr_nvr' as CategoryType },
+                { label: 'Solar 4G Cameras', id: 'solar' as CategoryType },
+                { label: 'Hard Disks & SD Storage', id: 'storage' as CategoryType },
+                { label: 'PoE Switches & Routers', id: 'networking' as CategoryType },
+                { label: 'Cables & SMPS Power', id: 'cables_power' as CategoryType },
+                { label: 'Racks & Accessories', id: 'racks_accessories' as CategoryType },
+                { label: 'All Shop Products (50)', id: 'all' as CategoryType },
               ].map((item) => (
                 <li key={item.id}>
                   <a
                     href="#products"
                     onClick={() => onSelectCategory(item.id)}
-                    style={{ color: '#9ca3af', transition: 'color 0.2s ease' }}
+                    style={{ color: '#9ca3af', transition: 'color 0.2s ease', textDecoration: 'none' }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = '#60a5fa')}
                     onMouseLeave={(e) => (e.currentTarget.style.color = '#9ca3af')}
                   >

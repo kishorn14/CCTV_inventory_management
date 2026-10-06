@@ -1,4 +1,19 @@
-export type CategoryType = 'all' | 'cctv' | 'kits' | 'wifi' | 'ip_nvr' | 'solar_4g';
+export type CategoryType = 
+  | 'all' 
+  | 'wifi_4g' 
+  | 'ip_cameras' 
+  | 'hd_analog' 
+  | 'dvr_nvr' 
+  | 'solar' 
+  | 'storage' 
+  | 'networking' 
+  | 'cables_power' 
+  | 'racks_accessories'
+  | 'cctv' 
+  | 'kits' 
+  | 'wifi' 
+  | 'ip_nvr' 
+  | 'solar_4g';
 
 export interface Product {
   id: string;
@@ -8,6 +23,9 @@ export interface Product {
   image: string;
   badge?: string;
   priceRange: string;
+  price?: number;
+  mrp?: number;
+  unit?: string;
   warranty: string;
   features: string[];
   description: string;

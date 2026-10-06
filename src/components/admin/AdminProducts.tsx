@@ -33,6 +33,35 @@ const PRESET_IMAGES: Record<CategoryType, string[]> = {
   ],
   solar_4g: [
     'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80'
+  ],
+  wifi_4g: [
+    'https://dms.mydukaan.io/original/jpeg/download-and-upload/d4579b9c-357c-402a-b1f0-863495f37583.png',
+    'https://dms.mydukaan.io/original/jpeg/download-and-upload/6a31cb86-553b-4a3f-a63a-157236a306dd.png'
+  ],
+  ip_cameras: [
+    'https://dms.mydukaan.io/original/jpeg/download-and-upload/a99b70d4-d5c9-4d7e-b1b8-453714a701d8.png',
+    'https://dms.mydukaan.io/original/jpeg/download-and-upload/7e13a7bd-368f-4d00-9e74-411262b2b98c.png'
+  ],
+  hd_analog: [
+    'https://dms.mydukaan.io/original/jpeg/download-and-upload/a99b70d4-d5c9-4d7e-b1b8-453714a701d8.png'
+  ],
+  dvr_nvr: [
+    'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80'
+  ],
+  solar: [
+    'https://dms.mydukaan.io/original/jpeg/media/476bc181-01e5-44a8-9872-bcca3baa81a3.png'
+  ],
+  storage: [
+    'https://dms.mydukaan.io/original/jpeg/download-and-upload/b7a7fdc5-2cf3-44c3-9ae0-859b2ba9e3b1.png'
+  ],
+  networking: [
+    'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80'
+  ],
+  cables_power: [
+    'https://dms.mydukaan.io/original/jpeg/download-and-upload/d5234608-3eb1-476b-956c-d0455253b5c2.png'
+  ],
+  racks_accessories: [
+    'https://dms.mydukaan.io/original/jpeg/download-and-upload/7691d991-ca0c-419b-95bb-09a18a0c1ecb.png'
   ]
 };
 
