@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Calculator, 
   Camera, 
@@ -26,6 +26,25 @@ interface CctvCostEstimatorProps {
 
 export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose }) => {
   const { products } = useShop();
+
+  // Lock background scroll when modal is open and handle Escape key
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && onClose) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
 
   // 1. Live dynamic product categories directly from store catalog
   const cameraProducts = useMemo(() => {
@@ -335,71 +354,152 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   const waLink = createWhatsAppLink(waEstimateText, SHOP_INFO.whatsappNumber);
 
   return (
-    <section 
-      id="cctv-cost-estimator"
+    <div 
+      id="cctv-cost-estimator-modal"
+      className="estimator-modal-overlay"
+      onClick={onClose}
       style={{
-        background: 'linear-gradient(180deg, #090e17 0%, #0f172a 50%, #1e293b 100%)',
-        color: '#f8fafc',
-        padding: '36px 16px 44px',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-        position: 'relative',
-        overflow: 'hidden'
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(2, 6, 23, 0.84)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
+        zIndex: 9999,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '12px',
+        boxSizing: 'border-box',
+        animation: 'fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
       }}
     >
-      <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-        
-        {/* Estimator Header Banner */}
-        <div style={{ position: 'relative', textAlign: 'center', marginBottom: '24px' }}>
+      <div 
+        className="estimator-modal-dialog"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: '100%',
+          maxWidth: '1240px',
+          maxHeight: '94vh',
+          display: 'flex',
+          flexDirection: 'column',
+          background: 'linear-gradient(180deg, #090e17 0%, #0f172a 60%, #111c2e 100%)',
+          color: '#f8fafc',
+          borderRadius: '20px',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08)',
+          overflow: 'hidden',
+          position: 'relative'
+        }}
+      >
+        {/* Sticky Fixed Header Bar with High-Contrast Top-Right Close Button */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '12px 18px',
+          background: 'rgba(15, 23, 42, 0.95)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          flexShrink: 0,
+          gap: '12px',
+          zIndex: 20
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+            <div style={{
+              background: '#2563eb',
+              color: '#ffffff',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '0.82rem',
+              fontWeight: 800,
+              flexShrink: 0
+            }}>
+              <Calculator size={16} />
+              <span>CCTV Cost Estimator</span>
+            </div>
+            <span style={{ 
+              fontSize: '0.8rem', 
+              color: '#94a3b8', 
+              whiteSpace: 'nowrap', 
+              overflow: 'hidden', 
+              textOverflow: 'ellipsis' 
+            }}>
+              Interactive Price Configurator
+            </span>
+          </div>
+
           {onClose && (
             <button
               onClick={onClose}
+              aria-label="Close Estimator Popup"
               style={{
-                position: 'absolute',
-                top: '-4px',
-                right: '0',
                 display: 'inline-flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 gap: '6px',
-                background: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                color: '#e2e8f0',
-                padding: '6px 14px',
-                borderRadius: '8px',
-                fontSize: '0.82rem',
+                background: 'rgba(239, 68, 68, 0.18)',
+                border: '1px solid rgba(239, 68, 68, 0.45)',
+                color: '#fca5a5',
+                padding: '7px 16px',
+                borderRadius: '10px',
+                fontSize: '0.85rem',
                 fontWeight: 700,
                 cursor: 'pointer',
-                transition: 'all 0.18s ease',
-                zIndex: 10
+                transition: 'all 0.15s ease',
+                flexShrink: 0
               }}
-              title="Close and hide cost estimator"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#ef4444';
+                e.currentTarget.style.color = '#ffffff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(239, 68, 68, 0.18)';
+                e.currentTarget.style.color = '#fca5a5';
+              }}
             >
-              <X size={16} /> Close Estimator
+              <X size={18} />
+              <span>Close</span>
             </button>
           )}
+        </div>
 
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            background: 'rgba(37, 99, 235, 0.25)',
-            border: '1px solid rgba(59, 130, 246, 0.4)',
-            color: '#60a5fa',
-            padding: '5px 14px',
-            borderRadius: '9999px',
-            fontSize: '0.8rem',
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em',
-            marginBottom: '10px'
-          }}>
-            <Calculator size={15} /> Instant CCTV Package Cost Estimator
-          </div>
-          <h2 style={{ fontSize: 'clamp(1.4rem, 3.2vw, 2.1rem)', fontWeight: 800, margin: '0 0 8px', color: '#ffffff' }}>
-            Customize &amp; Estimate Your CCTV System In Seconds
-          </h2>
-          <p style={{ color: '#94a3b8', fontSize: '0.92rem', maxWidth: '680px', margin: '0 auto' }}>
-            Select individual quantities beside each camera model (mix &amp; match bullets, domes, and Wi-Fi cams). The estimator automatically guides you through matching storage (HDD), recording unit (DVR/NVR), racks, cables, and setup.
-          </p>
+        {/* Scrollable Modal Content */}
+        <div style={{
+          overflowY: 'auto',
+          padding: '24px 20px 36px',
+          flex: 1,
+          overscrollBehavior: 'contain'
+        }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            
+            {/* Estimator Header Banner Inside Modal */}
+            <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'rgba(37, 99, 235, 0.25)',
+                border: '1px solid rgba(59, 130, 246, 0.4)',
+                color: '#60a5fa',
+                padding: '5px 14px',
+                borderRadius: '9999px',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                marginBottom: '10px'
+              }}>
+                <Calculator size={15} /> Instant CCTV Package Cost Estimator
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.3rem, 3vw, 1.9rem)', fontWeight: 800, margin: '0 0 8px', color: '#ffffff' }}>
+                Customize &amp; Estimate Your CCTV System In Seconds
+              </h2>
+              <p style={{ color: '#94a3b8', fontSize: '0.9rem', maxWidth: '680px', margin: '0 auto' }}>
+                Select individual quantities beside each camera model (mix &amp; match bullets, domes, and Wi-Fi cams). The estimator automatically guides you through matching storage (HDD), recording unit (DVR/NVR), racks, cables, and setup.
+              </p>
 
           {/* Stepper Navigation Strip */}
           <div style={{
@@ -1471,6 +1571,41 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                 <Phone size={16} />
                 <span>Call Store (+91 63664 06305)</span>
               </a>
+
+              {onClose && (
+                <button
+                  type="button"
+                  onClick={onClose}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    width: '100%',
+                    padding: '10px 18px',
+                    borderRadius: '10px',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    color: '#94a3b8',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    fontSize: '0.86rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    marginTop: '4px',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)';
+                    e.currentTarget.style.color = '#fca5a5';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                    e.currentTarget.style.color = '#94a3b8';
+                  }}
+                >
+                  <X size={15} />
+                  <span>Close &amp; Return to Shop</span>
+                </button>
+              )}
             </div>
 
           </div>
@@ -1478,6 +1613,9 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
         </div>
 
       </div>
-    </section>
+
+    </div>
+  </div>
+</div>
   );
 };

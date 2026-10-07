@@ -31,12 +31,6 @@ function MainApp() {
 
   const handleOpenEstimator = () => {
     setIsEstimatorOpen(true);
-    setTimeout(() => {
-      const el = document.getElementById('cctv-cost-estimator');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 60);
   };
 
   const handleCloseEstimator = () => {
@@ -94,6 +88,7 @@ function MainApp() {
       <Navbar 
         onOpenBooking={() => handleOpenBooking('all')} 
         onOpenProducts={() => handleSelectCategory('all')}
+        onOpenEstimator={handleOpenEstimator}
       />
 
       {/* 2. Compact, Direct Store Hero Strip (No long text or quotes, straight to the point) */}
@@ -185,11 +180,7 @@ function MainApp() {
         </div>
       </div>
 
-      {/* 3. Live CCTV Package Cost Estimator (Interactive Component Configurator) */}
-      {/* 3. Live CCTV Package Cost Estimator - Opened ONLY when user clicks Cost Estimator button */}
-      {isEstimatorOpen && (
-        <CctvCostEstimator onClose={handleCloseEstimator} />
-      )}
+
 
       {/* 4. Product Catalog Grid (All 50 Products from MyBillBook - Always Visible & Interactive) */}
       <ProductCatalog
@@ -215,7 +206,11 @@ function MainApp() {
       {/* 7. Floating Sticky Bottom Bar for Mobile */}
       <FloatingActions onOpenBooking={() => handleOpenBooking('all')} />
 
-      {/* 8. Modals */}
+      {/* 8. Modals & Overlays */}
+      {isEstimatorOpen && (
+        <CctvCostEstimator onClose={handleCloseEstimator} />
+      )}
+
       <ServiceBookingModal
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
