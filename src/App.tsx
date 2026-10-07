@@ -12,7 +12,7 @@ import { CameraFootageModal } from './components/CameraFootageModal';
 import { CctvCostEstimator } from './components/CctvCostEstimator';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { CategoryType, Product } from './types';
-import { Phone, MessageCircle, ShieldCheck, MapPin, CheckCircle2, Calculator } from 'lucide-react';
+import { Phone, MessageCircle, ShieldCheck, Calculator } from 'lucide-react';
 
 function MainApp() {
   const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => {
@@ -124,40 +124,11 @@ function MainApp() {
             fontWeight: 900,
             color: '#0f172a',
             lineHeight: 1.2,
-            marginBottom: '8px',
+            marginBottom: '16px',
             letterSpacing: '-0.02em'
           }}>
             CCTV Security Cameras &amp; Accessories in <span style={{ color: '#2563eb' }}>Davanagere</span>
           </h1>
-
-          <p style={{
-            color: '#475569',
-            fontSize: '0.94rem',
-            maxWidth: '650px',
-            margin: '0 auto 16px auto',
-            lineHeight: 1.5
-          }}>
-            Direct shop prices on CP PLUS IP cameras, Trueview 360° Wi-Fi cameras, 4G solar setups, DVR/NVR units, Seagate hard disks, PoE switches, and cabling accessories.
-          </p>
-
-          {/* Quick Trust Badges */}
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            gap: '12px',
-            marginBottom: '16px'
-          }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', fontWeight: 600, color: '#059669', background: '#ecfdf5', padding: '4px 12px', borderRadius: '6px' }}>
-              <CheckCircle2 size={14} /> Genuine Brand Warranty
-            </span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', fontWeight: 600, color: '#059669', background: '#ecfdf5', padding: '4px 12px', borderRadius: '6px' }}>
-              <CheckCircle2 size={14} /> GST Invoicing Included
-            </span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', fontWeight: 600, color: '#059669', background: '#ecfdf5', padding: '4px 12px', borderRadius: '6px' }}>
-              <MapPin size={14} /> Same-Day Fitting in Davanagere
-            </span>
-          </div>
 
           {/* Direct CTA Buttons */}
           <div style={{
