@@ -95,7 +95,7 @@ function MainApp() {
       <div style={{
         background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 100%)',
         borderBottom: '1px solid #e2e8f0',
-        padding: '24px 0 16px 0'
+        padding: '14px 0 10px 0'
       }}>
         <div className="container" style={{ textAlign: 'center' }}>
           <div style={{
@@ -105,21 +105,21 @@ function MainApp() {
             background: '#eff6ff',
             border: '1px solid #bfdbfe',
             color: '#1d4ed8',
-            padding: '5px 14px',
+            padding: '4px 12px',
             borderRadius: '9999px',
-            fontSize: '0.8rem',
+            fontSize: '0.78rem',
             fontWeight: 700,
-            marginBottom: '12px'
+            marginBottom: '6px'
           }}>
-            <ShieldCheck size={15} /> Authorized Dealer · Wholesale &amp; Retail Store
+            <ShieldCheck size={14} /> Authorized Dealer · Wholesale &amp; Retail Store
           </div>
 
           <h1 style={{
-            fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
+            fontSize: 'clamp(1.4rem, 3.8vw, 2rem)',
             fontWeight: 900,
             color: '#0f172a',
             lineHeight: 1.2,
-            marginBottom: '16px',
+            marginBottom: '10px',
             letterSpacing: '-0.02em'
           }}>
             CCTV Security Cameras &amp; Accessories in <span style={{ color: '#2563eb' }}>Davanagere</span>

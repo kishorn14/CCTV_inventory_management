@@ -74,7 +74,7 @@ export const GoogleReviews: React.FC = () => {
     <section 
       id="reviews" 
       style={{
-        padding: '55px 16px 50px',
+        padding: '24px 16px 24px',
         background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%)',
         position: 'relative',
         overflow: 'hidden'
@@ -87,12 +87,12 @@ export const GoogleReviews: React.FC = () => {
           display: 'inline-flex',
           alignItems: 'center',
           gap: '8px',
-          padding: '6px 16px',
+          padding: '5px 14px',
           borderRadius: '9999px',
           background: '#ffffff',
           border: '1.5px solid #e2e8f0',
           boxShadow: '0 2px 8px rgba(15, 23, 42, 0.06)',
-          marginBottom: '14px'
+          marginBottom: '8px'
         }}>
           <GoogleGIcon size={18} />
           <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a' }}>
@@ -110,22 +110,22 @@ export const GoogleReviews: React.FC = () => {
 
         {/* Section Heading */}
         <h2 style={{
-          fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
+          fontSize: 'clamp(1.4rem, 3.8vw, 2rem)',
           fontWeight: 800,
           color: '#0f172a',
           lineHeight: 1.25,
-          marginBottom: '10px'
+          marginBottom: '6px'
         }}>
           Real Reviews from Davangere Customers
         </h2>
 
         {/* Section Subtitle */}
         <p style={{
-          fontSize: 'clamp(0.85rem, 2.2vw, 0.95rem)',
+          fontSize: 'clamp(0.84rem, 2vw, 0.92rem)',
           color: '#64748b',
-          lineHeight: 1.55,
+          lineHeight: 1.5,
           maxWidth: '620px',
-          margin: '0 auto 28px'
+          margin: '0 auto 16px'
         }}>
           Directly from our verified <strong>Google Business Profile</strong> — see genuine customer feedback, farm installations, and home CCTV setups across Davangere &amp; Karnataka.
         </p>
@@ -148,14 +148,14 @@ export const GoogleReviews: React.FC = () => {
           <div 
             style={{
               background: '#ffffff',
-              borderRadius: '24px',
+              borderRadius: '20px',
               border: '1.5px solid #e2e8f0',
-              padding: '28px 26px 24px',
-              boxShadow: '0 14px 38px -10px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03)',
+              padding: '20px 20px 16px',
+              boxShadow: '0 10px 30px -8px rgba(15, 23, 42, 0.07)',
               textAlign: 'left',
               position: 'relative',
               transition: 'all 0.3s ease',
-              minHeight: '230px',
+              minHeight: 'auto',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between'
@@ -166,7 +166,7 @@ export const GoogleReviews: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginBottom: '14px',
+              marginBottom: '10px',
               flexWrap: 'wrap',
               gap: '10px'
             }}>
@@ -213,12 +213,12 @@ export const GoogleReviews: React.FC = () => {
 
             {/* Review Comment Text */}
             <p style={{
-              fontSize: '0.96rem',
+              fontSize: '0.94rem',
               color: '#1e293b',
-              lineHeight: 1.65,
+              lineHeight: 1.55,
               fontWeight: 500,
               fontStyle: 'normal',
-              marginBottom: currentReview.photos && currentReview.photos.length > 0 ? '14px' : '20px'
+              marginBottom: currentReview.photos && currentReview.photos.length > 0 ? '10px' : '14px'
             }}>
               “{currentReview.comment}”
             </p>
@@ -226,9 +226,9 @@ export const GoogleReviews: React.FC = () => {
             {/* Customer Installation Photos Attached to Review */}
             {currentReview.photos && currentReview.photos.length > 0 && (
               <div style={{
-                marginBottom: '18px',
-                padding: '12px 14px',
-                borderRadius: '14px',
+                marginBottom: '12px',
+                padding: '10px 12px',
+                borderRadius: '12px',
                 background: '#f8fafc',
                 border: '1px dashed #cbd5e1'
               }}>
@@ -441,7 +441,7 @@ export const GoogleReviews: React.FC = () => {
         </div>
 
         {/* Carousel Pagination Dots & Swipe Helper */}
-        <div style={{ marginTop: '18px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+        <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
           {/* Dots */}
           <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
             {reviews.map((_, idx) => (
@@ -450,8 +450,8 @@ export const GoogleReviews: React.FC = () => {
                 onClick={() => setCurrentIndex(idx)}
                 aria-label={`Go to review ${idx + 1}`}
                 style={{
-                  width: currentIndex === idx ? '24px' : '8px',
-                  height: '8px',
+                  width: currentIndex === idx ? '22px' : '7px',
+                  height: '7px',
                   borderRadius: '9999px',
                   background: currentIndex === idx ? '#2563eb' : '#cbd5e1',
                   border: 'none',
@@ -463,18 +463,18 @@ export const GoogleReviews: React.FC = () => {
             ))}
           </div>
 
-          <span style={{ fontSize: '0.74rem', color: '#94a3b8', letterSpacing: '0.02em' }}>
+          <span style={{ fontSize: '0.72rem', color: '#94a3b8', letterSpacing: '0.02em' }}>
             ‹ Swipe to see more verified reviews ›
           </span>
         </div>
 
         {/* Action Buttons: View All Reviews, Write a Review, Get Directions */}
         <div style={{
-          marginTop: '24px',
+          marginTop: '14px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '12px',
+          gap: '10px',
           flexWrap: 'wrap'
         }}>
           {/* View All Google Reviews */}

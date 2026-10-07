@@ -145,11 +145,11 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   }, [selectedCategory, categories]);
 
   return (
-    <section id="products" style={{ position: 'relative', scrollMarginTop: '80px', padding: '24px 0 60px 0' }}>
+    <section id="products" style={{ position: 'relative', scrollMarginTop: '80px', padding: '16px 0 16px 0' }}>
       <div className="container">
         
         {/* Compact, Clean Search Bar */}
-        <div style={{ maxWidth: '640px', margin: '0 auto 20px auto', position: 'relative' }}>
+        <div style={{ maxWidth: '640px', margin: '0 auto 12px auto', position: 'relative' }}>
           <Search 
             size={18} 
             color="#64748b" 
@@ -216,8 +216,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             display: 'flex', 
             overflowX: 'auto', 
             gap: '8px', 
-            padding: '4px 4px 18px 4px', 
-            marginBottom: '20px',
+            padding: '2px 2px 8px 2px', 
+            marginBottom: '12px',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none'
           }}

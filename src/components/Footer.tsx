@@ -17,17 +17,17 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
     <footer style={{
       background: '#070b14',
       borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-      paddingTop: '60px',
-      paddingBottom: '30px',
+      paddingTop: '32px',
+      paddingBottom: '20px',
       color: '#9ca3af',
-      fontSize: '0.9rem'
+      fontSize: '0.88rem'
     }}>
       <div className="container">
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '40px',
-          marginBottom: '50px'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '24px',
+          marginBottom: '24px'
         }}>
           {/* Col 1: Brand Summary */}
           <div>

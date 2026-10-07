@@ -143,12 +143,12 @@ textarea {
 }
 
 .section-padding {
-  padding: 50px 0;
+  padding: 28px 0;
 }
 
 @media (min-width: 768px) {
   .section-padding {
-    padding: 85px 0;
+    padding: 42px 0;
   }
 }
 
@@ -169,30 +169,30 @@ textarea {
 .section-header {
   text-align: center;
   max-width: 700px;
-  margin: 0 auto 36px auto;
+  margin: 0 auto 20px auto;
 }
 
 .section-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
+  padding: 5px 12px;
   background: var(--primary-blue-subtle);
   border: 1px solid #bfdbfe;
   border-radius: var(--radius-full);
   color: var(--primary-blue);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
 .section-title {
-  font-size: 1.85rem;
+  font-size: 1.75rem;
   font-weight: 800;
   color: var(--text-primary);
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   line-height: 1.25;
 }
 
@@ -393,7 +393,7 @@ textarea {
 
 /* Forms */
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 11px;
 }
 
 .form-label {
@@ -1268,18 +1268,22 @@ textarea {
    ========================================================= */
 
 .category-horizontal-section {
-  margin-bottom: 38px;
+  margin-bottom: 20px;
   position: relative;
+}
+
+.category-horizontal-section:last-child {
+  margin-bottom: 0;
 }
 
 .category-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
   padding: 0 4px;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 }
 
 .category-title-wrap {
@@ -1346,11 +1350,11 @@ textarea {
 
 .horizontal-product-track {
   display: flex;
-  gap: 16px;
+  gap: 14px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  padding: 6px 4px 18px 4px;
+  padding: 4px 2px 8px 2px;
 }
 
 /* Visible horizontal scrollbar track matching user screenshot */
