@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   ShoppingBag,
+  Layers,
   Wrench,
   Settings,
   Database,
@@ -11,6 +12,7 @@ import {
 } from 'lucide-react';
 import { AdminLogin } from './AdminLogin';
 import { AdminProducts } from './AdminProducts';
+import { AdminCategories } from './AdminCategories';
 import { AdminBrands } from './AdminBrands';
 import { AdminServices } from './AdminServices';
 import { AdminCctvPricing } from './AdminCctvPricing';
@@ -23,12 +25,12 @@ interface AdminPortalProps {
 }
 
 export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
-  const { shopInfo } = useShop();
+  const { shopInfo, categories } = useShop();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     return sessionStorage.getItem('mekha_admin_logged_in') === 'true';
   });
 
-  const [activeTab, setActiveTab] = useState<'products' | 'brands' | 'cctv_pricing' | 'services' | 'settings' | 'backup'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'categories' | 'brands' | 'cctv_pricing' | 'services' | 'settings' | 'backup'>('products');
 
   const handleLogout = () => {
     sessionStorage.removeItem('mekha_admin_logged_in');
@@ -41,6 +43,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
 
   const navTabs = [
     { id: 'products', label: 'Products & Pricing', icon: ShoppingBag },
+    { id: 'categories', label: `Categories & Order (${categories.length})`, icon: Layers },
     { id: 'cctv_pricing', label: 'Cost Estimator Products (33)', icon: Video },
     { id: 'brands', label: 'Brand Partners', icon: Award },
     { id: 'services', label: 'Services & AMC', icon: Wrench },
@@ -168,7 +171,13 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
 
         {/* Tab Content */}
         {activeTab === 'products' && (
-          <AdminProducts onGoToEstimatorPricing={() => setActiveTab('cctv_pricing')} />
+          <AdminProducts 
+            onGoToEstimatorPricing={() => setActiveTab('cctv_pricing')} 
+            onGoToCategories={() => setActiveTab('categories')}
+          />
+        )}
+        {activeTab === 'categories' && (
+          <AdminCategories onGoToProducts={() => setActiveTab('products')} />
         )}
         {activeTab === 'brands' && <AdminBrands />}
         {activeTab === 'cctv_pricing' && <AdminCctvPricing />}

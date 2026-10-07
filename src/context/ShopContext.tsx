@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product, ServiceItem, ShopContactInfo, CctvPricingConfig, DEFAULT_CCTV_PRICING, BrandPartner, DEFAULT_BRANDS } from '../types';
-import { PRODUCTS as DEFAULT_PRODUCTS, SERVICES as DEFAULT_SERVICES } from '../data/shopData';
+import { Product, ProductCategory, ServiceItem, ShopContactInfo, CctvPricingConfig, DEFAULT_CCTV_PRICING, BrandPartner, DEFAULT_BRANDS } from '../types';
+import { PRODUCTS as DEFAULT_PRODUCTS, SERVICES as DEFAULT_SERVICES, DEFAULT_PRODUCT_CATEGORIES, getInitialCategoryNumber } from '../data/shopData';
 import { SHOP_INFO as DEFAULT_SHOP_INFO } from '../utils/whatsapp';
 
 interface ShopContextType {
   products: Product[];
+  categories: ProductCategory[];
   services: ServiceItem[];
   brands: BrandPartner[];
   shopInfo: ShopContactInfo;
@@ -13,6 +14,10 @@ interface ShopContextType {
   addProduct: (product: Omit<Product, 'id'>) => void;
   updateProduct: (id: string, updated: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
+  updateProductCategoryNumber: (productId: string, categoryNumber: number | undefined) => void;
+  addCategory: (category: Omit<ProductCategory, 'id'>) => void;
+  updateCategory: (id: string, updated: Partial<ProductCategory>) => void;
+  deleteCategory: (id: string) => void;
   addService: (service: Omit<ServiceItem, 'id'>) => void;
   updateService: (id: string, updated: Partial<ServiceItem>) => void;
   deleteService: (id: string) => void;
@@ -24,6 +29,10 @@ interface ShopContextType {
   updateCctvPricing: (pricing: CctvPricingConfig) => void;
   resetCctvPricing: () => void;
   updateAdminPassword: (newPass: string) => void;
+  cart: Record<string, number>;
+  addToCart: (productId: string) => void;
+  updateCartQuantity: (productId: string, quantity: number) => void;
+  clearCart: () => void;
   resetToDefaults: () => void;
   exportDataJSON: () => string;
   importDataJSON: (jsonString: string) => boolean;
@@ -32,7 +41,8 @@ interface ShopContextType {
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  PRODUCTS: 'meksha_shop_products_v11',
+  PRODUCTS: 'meksha_shop_products_v12',
+  CATEGORIES: 'meksha_shop_categories_v2',
   SERVICES: 'meksha_shop_services_v9',
   BRANDS: 'meksha_shop_brands_v9',
   SHOP_INFO: 'meksha_shop_info_v9',
@@ -43,10 +53,27 @@ const STORAGE_KEYS = {
 const DEFAULT_PASS = 'meksha@2026';
 
 export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // 1. Products state with auto-migration / cleanup
+  // 1. Categories state (orderNumber determines order: 1 comes first, 2 below 1, etc.)
+  const [categories, setCategories] = useState<ProductCategory[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.CATEGORIES);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.sort((a: ProductCategory, b: ProductCategory) => a.orderNumber - b.orderNumber);
+        }
+      }
+    } catch {
+      // fallback
+    }
+    return DEFAULT_PRODUCT_CATEGORIES;
+  });
+
+  // 2. Products state with auto-migration / cleanup
   const [products, setProducts] = useState<Product[]>(() => {
     try {
       // Clean up legacy storage if present
+      localStorage.removeItem('meksha_shop_products_v11');
       localStorage.removeItem('meksha_shop_products_v10');
       localStorage.removeItem('meksha_shop_products_v9');
       localStorage.removeItem('meksha_shop_products_v8');
@@ -70,10 +97,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
           return parsed.map((p: Product) => {
-            if (p.id === 'prod-21' || p.id === 'prod-22' || (p.name && p.name.toUpperCase().includes('MICRO SD'))) {
-              return { ...p, brand: '' };
-            }
-            return p;
+            const catNum = p.categoryNumber !== undefined ? p.categoryNumber : getInitialCategoryNumber(p.category);
+            const brandClean = (p.id === 'prod-21' || p.id === 'prod-22' || (p.name && p.name.toUpperCase().includes('MICRO SD'))) ? '' : (p.brand || '');
+            return { ...p, categoryNumber: catNum, brand: brandClean };
           });
         }
       }
@@ -218,6 +244,45 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   });
 
+  // 6. Cart state
+  const [cart, setCart] = useState<Record<string, number>>(() => {
+    try {
+      const saved = localStorage.getItem('meksha_shop_cart_v1');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('meksha_shop_cart_v1', JSON.stringify(cart));
+    } catch {}
+  }, [cart]);
+
+  const addToCart = (productId: string) => {
+    setCart(prev => ({
+      ...prev,
+      [productId]: (prev[productId] || 0) + 1
+    }));
+  };
+
+  const updateCartQuantity = (productId: string, quantity: number) => {
+    setCart(prev => {
+      const next = { ...prev };
+      if (quantity <= 0) {
+        delete next[productId];
+      } else {
+        next[productId] = quantity;
+      }
+      return next;
+    });
+  };
+
+  const clearCart = () => {
+    setCart({});
+  };
+
   // Sync state changes to localStorage
   useEffect(() => {
     try {
@@ -261,6 +326,14 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     try {
+      localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(categories));
+    } catch (e) {
+      console.error('Failed to save categories to localStorage', e);
+    }
+  }, [categories]);
+
+  useEffect(() => {
+    try {
       localStorage.setItem(STORAGE_KEYS.ADMIN_PASS, adminPassword);
     } catch (e) {
       console.error('Failed to save admin password to localStorage', e);
@@ -276,6 +349,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const parsed = JSON.parse(e.newValue);
           if (Array.isArray(parsed)) {
             setProducts(parsed);
+          }
+        } else if (e.key === STORAGE_KEYS.CATEGORIES) {
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed)) {
+            setCategories(parsed);
           }
         } else if (e.key === STORAGE_KEYS.SERVICES) {
           const parsed = JSON.parse(e.newValue);
@@ -319,6 +397,24 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const deleteProduct = (id: string) => {
     setProducts(prev => prev.filter(p => p.id !== id));
+  };
+
+  const updateProductCategoryNumber = (productId: string, categoryNumber: number | undefined) => {
+    setProducts(prev => prev.map(p => p.id === productId ? { ...p, categoryNumber } : p));
+  };
+
+  // Category CRUD
+  const addCategory = (categoryData: Omit<ProductCategory, 'id'>) => {
+    const id = `cat-${Date.now()}`;
+    setCategories(prev => [...prev, { ...categoryData, id }].sort((a, b) => a.orderNumber - b.orderNumber));
+  };
+
+  const updateCategory = (id: string, updated: Partial<ProductCategory>) => {
+    setCategories(prev => prev.map(c => c.id === id ? { ...c, ...updated } : c).sort((a, b) => a.orderNumber - b.orderNumber));
+  };
+
+  const deleteCategory = (id: string) => {
+    setCategories(prev => prev.filter(c => c.id !== id));
   };
 
   // Service CRUD
@@ -373,6 +469,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Reset to default seed
   const resetToDefaults = () => {
     setProducts(DEFAULT_PRODUCTS);
+    setCategories(DEFAULT_PRODUCT_CATEGORIES);
     setServices(DEFAULT_SERVICES);
     setBrands(DEFAULT_BRANDS);
     setCctvPricing(DEFAULT_CCTV_PRICING);
@@ -398,6 +495,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const exportDataJSON = () => {
     return JSON.stringify({
       products,
+      categories,
       services,
       brands,
       shopInfo,
@@ -411,6 +509,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const parsed = JSON.parse(jsonString);
       if (parsed.products && Array.isArray(parsed.products)) {
         setProducts(parsed.products);
+      }
+      if (parsed.categories && Array.isArray(parsed.categories)) {
+        setCategories(parsed.categories);
       }
       if (parsed.services && Array.isArray(parsed.services)) {
         setServices(parsed.services);
@@ -433,6 +534,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <ShopContext.Provider value={{
       products,
+      categories,
       services,
       brands,
       shopInfo,
@@ -441,6 +543,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       addProduct,
       updateProduct,
       deleteProduct,
+      updateProductCategoryNumber,
+      addCategory,
+      updateCategory,
+      deleteCategory,
       addService,
       updateService,
       deleteService,
@@ -452,6 +558,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateCctvPricing,
       resetCctvPricing,
       updateAdminPassword,
+      cart,
+      addToCart,
+      updateCartQuantity,
+      clearCart,
       resetToDefaults,
       exportDataJSON,
       importDataJSON

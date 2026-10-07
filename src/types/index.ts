@@ -15,10 +15,18 @@ export type CategoryType =
   | 'ip_nvr' 
   | 'solar_4g';
 
+export interface ProductCategory {
+  id: string;
+  name: string;
+  orderNumber: number; // 1, 2, 3, 4... (determines display order)
+  description?: string;
+}
+
 export interface Product {
   id: string;
   name: string;
   category: CategoryType;
+  categoryNumber?: number; // Category Order Number (e.g. 1, 2, 3...) assigned by admin
   brand: string;
   image: string;
   badge?: string;

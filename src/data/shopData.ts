@@ -1,4 +1,37 @@
-import { Product, ServiceItem, Review } from '../types';
+import { Product, ProductCategory, ServiceItem, Review } from '../types';
+
+export const DEFAULT_PRODUCT_CATEGORIES: ProductCategory[] = [
+  { id: 'cat-1', orderNumber: 1, name: 'Smart Wi-Fi 360° & 4G Solar Cameras' },
+  { id: 'cat-2', orderNumber: 2, name: 'CP PLUS IP Network Cameras' },
+  { id: 'cat-3', orderNumber: 3, name: 'HD & Analog Surveillance Cameras' },
+  { id: 'cat-4', orderNumber: 4, name: 'Surveillance Hard Disks & Memory Cards' },
+  { id: 'cat-5', orderNumber: 5, name: 'DVR & NVR Video Recorders' },
+  { id: 'cat-6', orderNumber: 6, name: 'PoE Switches & Networking' },
+  { id: 'cat-7', orderNumber: 7, name: 'CCTV Racks, Cables & Connectors' },
+];
+
+export const getInitialCategoryNumber = (cat: string): number => {
+  switch (cat) {
+    case 'wifi_4g':
+    case 'solar':
+      return 1;
+    case 'ip_cameras':
+      return 2;
+    case 'hd_analog':
+      return 3;
+    case 'storage':
+      return 4;
+    case 'dvr_nvr':
+      return 5;
+    case 'networking':
+      return 6;
+    case 'cables_power':
+    case 'racks_accessories':
+      return 7;
+    default:
+      return 1;
+  }
+};
 
 export const CATEGORIES = [
   { id: 'all', label: 'All Products (50)', icon: 'Sparkles', active: true },
@@ -13,7 +46,7 @@ export const CATEGORIES = [
   { id: 'cables_power', label: 'Cables & Connectors', icon: 'Zap', active: true },
 ] as const;
 
-export const PRODUCTS: Product[] = [
+const RAW_PRODUCTS: Product[] = [
   {
     "id": "prod-1",
     "name": "4mp ip Bullet Illuamx With Mic(CP-UNC-TA41L3C-D-LQ)",
@@ -1091,6 +1124,11 @@ export const PRODUCTS: Product[] = [
     "popular": false
   }
 ];
+
+export const PRODUCTS: Product[] = RAW_PRODUCTS.map(p => ({
+  ...p,
+  categoryNumber: p.categoryNumber !== undefined ? p.categoryNumber : getInitialCategoryNumber(p.category)
+}));
 
 export const SERVICES: ServiceItem[] = [
   {

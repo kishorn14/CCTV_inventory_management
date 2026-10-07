@@ -8,7 +8,8 @@ import {
   Check,
   Lock,
   Video,
-  Compass
+  Compass,
+  Layers
 } from 'lucide-react';
 import { useShop } from '../../context/ShopContext';
 import { Product, CategoryType } from '../../types';
@@ -69,10 +70,11 @@ const PRESET_IMAGES: Record<CategoryType, string[]> = {
 
 interface AdminProductsProps {
   onGoToEstimatorPricing?: () => void;
+  onGoToCategories?: () => void;
 }
 
-export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPricing }) => {
-  const { products, addProduct, updateProduct, deleteProduct } = useShop();
+export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPricing, onGoToCategories }) => {
+  const { products, addProduct, updateProduct, deleteProduct, categories, updateProductCategoryNumber } = useShop();
   const [categoryFilter, setCategoryFilter] = useState<CategoryType>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -89,6 +91,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
   const [formData, setFormData] = useState({
     name: '',
     category: 'cctv' as CategoryType,
+    categoryNumber: undefined as number | undefined,
     brand: '',
     image: PRESET_IMAGES.cctv[0],
     badge: '',
@@ -107,6 +110,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
     setFormData({
       name: '',
       category: categoryFilter !== 'all' ? categoryFilter : 'cctv',
+      categoryNumber: 1,
       brand: '',
       image: PRESET_IMAGES.cctv[0],
       badge: 'New Arrival',
@@ -127,6 +131,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
     setFormData({
       name: product.name,
       category: product.category,
+      categoryNumber: product.categoryNumber,
       brand: product.brand,
       image: product.image,
       badge: product.badge || '',
@@ -152,6 +157,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
     const productPayload = {
       name: formData.name,
       category: formData.category,
+      categoryNumber: formData.categoryNumber !== undefined && formData.categoryNumber !== null ? Number(formData.categoryNumber) : undefined,
       brand: formData.brand,
       image: formData.image,
       badge: formData.badge ? formData.badge : undefined,
@@ -237,27 +243,52 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
           </div>
         </div>
 
-        {onGoToEstimatorPricing && (
-          <button
-            type="button"
-            onClick={onGoToEstimatorPricing}
-            style={{
-              padding: '8px 16px',
-              borderRadius: '8px',
-              border: 'none',
-              background: '#1d4ed8',
-              color: '#ffffff',
-              fontSize: '0.82rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
-            <span>Manage Estimator Rates (33) &rarr;</span>
-          </button>
-        )}
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {onGoToCategories && (
+            <button
+              type="button"
+              onClick={onGoToCategories}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '8px',
+                border: '1.5px solid #bfdbfe',
+                background: '#eff6ff',
+                color: '#1d4ed8',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <Layers size={15} />
+              <span>Manage Categories &amp; Order ({categories.length}) &rarr;</span>
+            </button>
+          )}
+
+          {onGoToEstimatorPricing && (
+            <button
+              type="button"
+              onClick={onGoToEstimatorPricing}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '8px',
+                border: 'none',
+                background: '#1d4ed8',
+                color: '#ffffff',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <span>Manage Estimator Rates (33) &rarr;</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Top Header & Add Button */}
@@ -363,6 +394,61 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
               </div>
             </div>
 
+            {/* Inline Category Number Box for Mobile */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '8px 12px',
+              borderRadius: '8px',
+              background: '#eff6ff',
+              border: '1px solid #bfdbfe',
+              fontSize: '0.85rem'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#1e40af' }}>
+                  Category #:
+                </span>
+                <input
+                  type="number"
+                  min="1"
+                  value={product.categoryNumber ?? ''}
+                  onChange={(e) => {
+                    const val = e.target.value === '' ? undefined : Number(e.target.value);
+                    updateProductCategoryNumber(product.id, val);
+                  }}
+                  placeholder="None"
+                  style={{
+                    width: '56px',
+                    padding: '4px 6px',
+                    borderRadius: '6px',
+                    border: '1.5px solid #3b82f6',
+                    fontSize: '0.88rem',
+                    fontWeight: 800,
+                    textAlign: 'center',
+                    color: '#1d4ed8',
+                    background: '#ffffff',
+                    outline: 'none'
+                  }}
+                />
+              </div>
+              {(() => {
+                const matchedCat = categories.find(c => c.orderNumber === product.categoryNumber);
+                if (matchedCat) {
+                  return (
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#1d4ed8', background: '#dbeafe', padding: '2px 8px', borderRadius: '4px', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      #{matchedCat.orderNumber} {matchedCat.name}
+                    </span>
+                  );
+                }
+                return (
+                  <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontStyle: 'italic' }}>
+                    {product.categoryNumber ? `Cat #${product.categoryNumber}` : 'No Category #'}
+                  </span>
+                );
+              })()}
+            </div>
+
             <div style={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -414,7 +500,8 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
           <thead>
             <tr style={{ borderBottom: '1px solid #e2e8f0', background: '#f8fafc', color: '#64748b', fontWeight: 700 }}>
               <th style={{ padding: '14px 18px' }}>Product</th>
-              <th style={{ padding: '14px 18px' }}>Category</th>
+              <th style={{ padding: '14px 18px', width: '170px' }}>Category #</th>
+              <th style={{ padding: '14px 18px' }}>Type / Tag</th>
               <th style={{ padding: '14px 18px' }}>Brand</th>
               <th style={{ padding: '14px 18px' }}>Price Range</th>
               <th style={{ padding: '14px 18px' }}>Warranty</th>
@@ -439,6 +526,82 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                         ★ {product.badge}
                       </span>
                     )}
+                  </div>
+                </td>
+                <td style={{ padding: '14px 18px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b' }}>#</span>
+                      <input
+                        type="number"
+                        min="1"
+                        value={product.categoryNumber ?? ''}
+                        onChange={(e) => {
+                          const val = e.target.value === '' ? undefined : Number(e.target.value);
+                          updateProductCategoryNumber(product.id, val);
+                        }}
+                        placeholder="No #"
+                        style={{
+                          width: '56px',
+                          padding: '5px 6px',
+                          borderRadius: '6px',
+                          border: '1.5px solid #cbd5e1',
+                          fontSize: '0.86rem',
+                          fontWeight: 800,
+                          textAlign: 'center',
+                          color: '#1d4ed8',
+                          background: '#f8fafc',
+                          outline: 'none',
+                          transition: 'all 0.15s ease'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#2563eb';
+                          e.target.style.background = '#ffffff';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = '#cbd5e1';
+                          e.target.style.background = '#f8fafc';
+                        }}
+                        title="Category number (1 = appears first, 2 = second, etc.)"
+                      />
+                    </div>
+                    {(() => {
+                      const matchedCat = categories.find(c => c.orderNumber === product.categoryNumber);
+                      if (matchedCat) {
+                        return (
+                          <span 
+                            style={{ 
+                              fontSize: '0.72rem', 
+                              fontWeight: 700, 
+                              color: '#1d4ed8', 
+                              background: '#eff6ff', 
+                              padding: '2px 6px', 
+                              borderRadius: '4px', 
+                              border: '1px solid #bfdbfe',
+                              maxWidth: '135px',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}
+                            title={`Category #${matchedCat.orderNumber}: ${matchedCat.name}`}
+                          >
+                            {matchedCat.name}
+                          </span>
+                        );
+                      }
+                      if (product.categoryNumber !== undefined) {
+                        return (
+                          <span style={{ fontSize: '0.7rem', color: '#d97706', fontStyle: 'italic' }}>
+                            Cat #{product.categoryNumber}
+                          </span>
+                        );
+                      }
+                      return (
+                        <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontStyle: 'italic' }}>
+                          No category #
+                        </span>
+                      );
+                    })()}
                   </div>
                 </td>
                 <td style={{ padding: '14px 18px', color: '#1d4ed8', textTransform: 'capitalize', fontWeight: 600 }}>
@@ -553,7 +716,58 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '12px' }}>
                 <div className="form-group">
-                  <label className="form-label">Category</label>
+                  <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Category Number (1, 2, 3...)</span>
+                    {onGoToCategories && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsModalOpen(false);
+                          onGoToCategories();
+                        }}
+                        style={{ background: 'none', border: 'none', color: '#1d4ed8', fontSize: '0.74rem', cursor: 'pointer', textDecoration: 'underline' }}
+                      >
+                        Manage Categories
+                      </button>
+                    )}
+                  </label>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <input
+                      type="number"
+                      min="1"
+                      className="form-input"
+                      style={{ width: '80px', fontWeight: 800, textAlign: 'center', color: '#1d4ed8' }}
+                      placeholder="1"
+                      value={formData.categoryNumber ?? ''}
+                      onChange={e => setFormData({ 
+                        ...formData, 
+                        categoryNumber: e.target.value === '' ? undefined : Number(e.target.value) 
+                      })}
+                    />
+                    <select
+                      className="form-select"
+                      style={{ flex: 1, fontSize: '0.85rem' }}
+                      value={formData.categoryNumber ?? ''}
+                      onChange={e => {
+                        const val = e.target.value === '' ? undefined : Number(e.target.value);
+                        setFormData({ ...formData, categoryNumber: val });
+                      }}
+                    >
+                      <option value="">-- Or Choose Existing Category --</option>
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.orderNumber}>
+                          #{cat.orderNumber} - {cat.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <span style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '3px', display: 'block' }}>
+                    Category 1 appears first at the top of the storefront, 2 below 1, etc.
+                  </span>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Category Filter Tag</label>
                   <select
                     className="form-select"
                     value={formData.category}

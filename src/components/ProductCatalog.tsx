@@ -1,21 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search, 
   Sparkles,
-  Camera,
-  Wifi,
-  Shield,
-  Sun,
-  HardDrive,
-  Network,
-  Zap,
-  Box,
   Eye,
   FileText,
-  CheckCircle2
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  MessageCircle
 } from 'lucide-react';
 import { Product, CategoryType } from '../types';
-import { CATEGORIES } from '../data/shopData';
 import { useShop } from '../context/ShopContext';
 import { isCameraProduct } from '../data/cameraFootageData';
 
@@ -33,42 +27,126 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   onViewProduct,
   onOpenFootageModal
 }) => {
-  const { products } = useShop();
+  const { 
+    products, 
+    categories, 
+    cart, 
+    addToCart, 
+    updateCartQuantity, 
+    clearCart,
+    shopInfo 
+  } = useShop();
+
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategoryPill, setActiveCategoryPill] = useState<string>('all');
 
-  const filteredProducts = products.filter((product) => {
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+  // Sort categories strictly by orderNumber (1 comes first, 2 below 1, etc.)
+  const sortedCategories = [...categories].sort((a, b) => a.orderNumber - b.orderNumber);
+
+  // Search filter helper
+  const searchFilter = (product: Product) => {
     const q = searchQuery.toLowerCase().trim();
-    if (!q) return matchesCategory;
-
-    const matchesSearch = 
+    if (!q) return true;
+    return (
       (product.name || '').toLowerCase().includes(q) ||
       (product.brand || '').toLowerCase().includes(q) ||
       (product.description || '').toLowerCase().includes(q) ||
-      (Array.isArray(product.features) ? product.features.some(f => (f || '').toLowerCase().includes(q)) : false);
+      (Array.isArray(product.features) ? product.features.some(f => (f || '').toLowerCase().includes(q)) : false)
+    );
+  };
 
-    return matchesCategory && matchesSearch;
+  // Group products by category orderNumber
+  const categorizedGroups = sortedCategories.map(cat => {
+    const catProducts = products
+      .filter(p => p.categoryNumber === cat.orderNumber)
+      .filter(searchFilter);
+    return {
+      category: cat,
+      products: catProducts
+    };
   });
 
-  const getCategoryIcon = (id: string) => {
-    switch (id) {
-      case 'wifi_4g': return Wifi;
-      case 'ip_cameras': return Shield;
-      case 'hd_analog': return Camera;
-      case 'dvr_nvr': return HardDrive;
-      case 'solar': return Sun;
-      case 'storage': return DatabaseIcon;
-      case 'networking': return Network;
-      case 'cables_power': return Zap;
-      case 'racks_accessories': return Box;
-      default: return Sparkles;
+  // Any uncategorized products (no categoryNumber or categoryNumber doesn't match any category)
+  const uncategorizedProducts = products
+    .filter(p => !sortedCategories.some(c => c.orderNumber === p.categoryNumber))
+    .filter(searchFilter);
+
+  // Calculate total matching products
+  const totalMatchingProducts = categorizedGroups.reduce((acc, g) => acc + g.products.length, 0) + uncategorizedProducts.length;
+
+  // Cart summary calculations
+  const cartEntries = Object.entries(cart)
+    .map(([id, qty]) => {
+      const prod = products.find(p => p.id === id);
+      return prod ? { product: prod, qty } : null;
+    })
+    .filter((entry): entry is { product: Product; qty: number } => entry !== null && entry.qty > 0);
+
+  const totalCartCount = cartEntries.reduce((sum, item) => sum + item.qty, 0);
+  const totalCartPrice = cartEntries.reduce((sum, item) => sum + (item.product.price || 0) * item.qty, 0);
+
+  // WhatsApp formatted cart message
+  const generateWhatsAppCartUrl = () => {
+    const whatsappNum = (shopInfo.whatsappPhone || '916366406305').replace(/[^0-9]/g, '');
+    const itemsList = cartEntries.map(item => {
+      const p = item.product;
+      const priceText = p.price ? `₹${(p.price * item.qty).toLocaleString('en-IN')}` : 'Price on request';
+      return `• ${p.name} (Qty: ${item.qty}) - ${priceText}`;
+    }).join('\n');
+
+    const message = `Hello ${shopInfo.shopName || 'Mekha CCTV Solutions'},\nI would like to place an order for the following items:\n\n${itemsList}\n\n*Total Estimated:* ₹${totalCartPrice.toLocaleString('en-IN')}\n\nPlease confirm stock availability and installation in Davanagere.`;
+    return `https://wa.me/${whatsappNum}?text=${encodeURIComponent(message)}`;
+  };
+
+  // Smooth scroll helper for horizontal tracks
+  const scrollRow = (trackId: string, direction: 'left' | 'right') => {
+    const track = document.getElementById(trackId);
+    if (track) {
+      const scrollDistance = track.clientWidth * 0.75;
+      track.scrollBy({
+        left: direction === 'left' ? -scrollDistance : scrollDistance,
+        behavior: 'smooth'
+      });
     }
   };
 
-  const DatabaseIcon = HardDrive;
+  // Smooth scroll helper to jump to a specific category section
+  const scrollToCategorySection = (catId: string) => {
+    setActiveCategoryPill(catId);
+    if (onSelectCategory) {
+      onSelectCategory(catId as CategoryType);
+    }
+    if (catId === 'all') {
+      const el = document.getElementById('products');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      const el = document.getElementById(`cat-row-${catId}`);
+      if (el) {
+        const yOffset = -90;
+        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+  };
+
+  // React to parent category selection changes (from navbar or footer)
+  useEffect(() => {
+    if (selectedCategory && selectedCategory !== 'all') {
+      const matched = categories.find(c => c.id === selectedCategory);
+      if (matched) {
+        setActiveCategoryPill(matched.id);
+        const el = document.getElementById(`cat-row-${matched.id}`);
+        if (el) {
+          const yOffset = -90;
+          const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }
+    }
+  }, [selectedCategory, categories]);
 
   return (
-    <section id="products" style={{ position: 'relative', scrollMarginTop: '80px', padding: '24px 0 48px 0' }}>
+    <section id="products" style={{ position: 'relative', scrollMarginTop: '80px', padding: '24px 0 60px 0' }}>
       <div className="container">
         
         {/* Compact, Clean Search Bar */}
@@ -132,7 +210,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           )}
         </div>
 
-        {/* Category Pills Bar (Horizontally scrollable) */}
+        {/* Dynamic Category Navigation Pills (Ordered by orderNumber 1, 2, 3...) */}
         <div 
           className="scroll-pills" 
           style={{ 
@@ -145,17 +223,44 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             msOverflowStyle: 'none'
           }}
         >
-          {CATEGORIES.map((cat) => {
-            const Icon = getCategoryIcon(cat.id);
-            const isSelected = selectedCategory === cat.id;
-            const count = cat.id === 'all' 
-              ? products.length 
-              : products.filter(p => p.category === cat.id).length;
+          {/* All Categories Pill */}
+          <button
+            onClick={() => scrollToCategorySection('all')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '7px',
+              padding: '9px 16px',
+              borderRadius: '9999px',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.18s ease',
+              border: activeCategoryPill === 'all' ? '1px solid #1d4ed8' : '1px solid #e2e8f0',
+              background: activeCategoryPill === 'all' 
+                ? 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%)' 
+                : '#ffffff',
+              color: activeCategoryPill === 'all' ? '#ffffff' : '#334155',
+              boxShadow: activeCategoryPill === 'all' 
+                ? '0 3px 12px rgba(29, 78, 216, 0.28)' 
+                : '0 1px 3px rgba(0,0,0,0.03)',
+              whiteSpace: 'nowrap',
+              flexShrink: 0
+            }}
+          >
+            <Sparkles size={15} color={activeCategoryPill === 'all' ? '#ffffff' : '#2563eb'} />
+            <span>All Categories ({products.length})</span>
+          </button>
+
+          {/* Individual Category Pills in 1, 2, 3... Sequence */}
+          {sortedCategories.map((cat) => {
+            const isSelected = activeCategoryPill === cat.id;
+            const count = products.filter(p => p.categoryNumber === cat.orderNumber).length;
 
             return (
               <button
                 key={cat.id}
-                onClick={() => onSelectCategory(cat.id as CategoryType)}
+                onClick={() => scrollToCategorySection(cat.id)}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -178,13 +283,22 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   flexShrink: 0
                 }}
               >
-                <Icon size={15} color={isSelected ? '#ffffff' : '#2563eb'} />
-                <span>{cat.label}</span>
                 <span style={{
                   fontSize: '0.72rem',
                   padding: '2px 7px',
                   borderRadius: '9999px',
-                  background: isSelected ? 'rgba(255, 255, 255, 0.25)' : '#f1f5f9',
+                  background: isSelected ? 'rgba(255, 255, 255, 0.25)' : '#eff6ff',
+                  color: isSelected ? '#ffffff' : '#1d4ed8',
+                  fontWeight: 800
+                }}>
+                  #{cat.orderNumber}
+                </span>
+                <span>{cat.name}</span>
+                <span style={{
+                  fontSize: '0.72rem',
+                  padding: '2px 6px',
+                  borderRadius: '9999px',
+                  background: isSelected ? 'rgba(255, 255, 255, 0.2)' : '#f1f5f9',
                   color: isSelected ? '#ffffff' : '#64748b'
                 }}>
                   {count}
@@ -199,21 +313,23 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center', 
-          marginBottom: '16px',
+          marginBottom: '20px',
           padding: '0 4px',
           fontSize: '0.86rem',
-          color: '#64748b'
+          color: '#64748b',
+          flexWrap: 'wrap',
+          gap: '8px'
         }}>
           <div>
-            Showing <strong style={{ color: '#0f172a' }}>{filteredProducts.length}</strong> items from shop catalog
+            Showing <strong style={{ color: '#0f172a' }}>{totalMatchingProducts}</strong> items across <strong style={{ color: '#0f172a' }}>{sortedCategories.length}</strong> categories
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#059669', fontWeight: 600 }}>
-            <CheckCircle2 size={15} /> All 100% Genuine with Brand Warranty
+            <CheckCircle2 size={15} /> All 100% Genuine with Brand Warranty &amp; Doorstep Installation
           </div>
         </div>
 
-        {/* Products Grid (Dukaan / Reference Site Style) */}
-        {filteredProducts.length === 0 ? (
+        {/* Empty State if No Matching Products */}
+        {totalMatchingProducts === 0 ? (
           <div style={{
             textAlign: 'center',
             padding: '60px 20px',
@@ -225,184 +341,483 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               No items found matching "{searchQuery}".
             </p>
             <button 
-              onClick={() => { setSearchQuery(''); onSelectCategory('all'); }}
+              onClick={() => { setSearchQuery(''); scrollToCategorySection('all'); }}
               className="btn btn-primary btn-sm"
             >
-              View All Products (50)
+              Reset Search &amp; View All Products ({products.length})
             </button>
           </div>
         ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 270px), 1fr))',
-            gap: '18px'
-          }}>
-            {filteredProducts.map((product) => {
-              const sellingPrice = product.price || 0;
-              const mrp = product.mrp || 0;
-              const hasDiscount = mrp > sellingPrice && sellingPrice > 0;
-              const discountPercent = hasDiscount ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0;
+          /* Stacked Category Rows Ordered 1, 2, 3... */
+          <div>
+            {categorizedGroups.map(({ category: cat, products: catProducts }) => {
+              // Hide category row if search filtered out all items in this category
+              if (catProducts.length === 0) return null;
+
+              const trackId = `track-cat-${cat.id}`;
 
               return (
                 <div 
-                  key={product.id} 
-                  className="dukaan-card"
+                  key={cat.id} 
+                  id={`cat-row-${cat.id}`}
+                  className="category-horizontal-section"
                 >
-                  {/* Image Container with Badges */}
-                  <div 
-                    className="dukaan-card-img-wrap"
-                    onClick={() => onViewProduct(product)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {product.brand?.trim() && (
-                      <span className="dukaan-brand-tag">
-                        {product.brand}
+                  {/* Category Name Displayed Prominently Above the Products */}
+                  <div className="category-section-header">
+                    <div className="category-title-wrap">
+                      <span className="category-order-badge">
+                        #{cat.orderNumber}
                       </span>
-                    )}
-
-                    {discountPercent > 0 && (
-                      <span className="dukaan-discount-tag">
-                        {discountPercent}% OFF
+                      <h2 className="category-title-text">
+                        {cat.name}
+                      </h2>
+                      <span className="category-item-count">
+                        {catProducts.length} product{catProducts.length > 1 ? 's' : ''}
                       </span>
-                    )}
+                    </div>
 
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="dukaan-card-img"
-                      loading="lazy"
-                      onError={(e) => {
-                        e.currentTarget.src = 'https://dms.mydukaan.io/original/jpeg/download-and-upload/a99b70d4-d5c9-4d7e-b1b8-453714a701d8.png';
-                      }}
-                    />
+                    {/* Desktop Left / Right Scroll Navigation Arrows */}
+                    <div className="category-scroll-arrows">
+                      <button 
+                        onClick={() => scrollRow(trackId, 'left')}
+                        className="category-scroll-arrow-btn"
+                        title="Scroll Left"
+                      >
+                        <ChevronLeft size={20} />
+                      </button>
+                      <button 
+                        onClick={() => scrollRow(trackId, 'right')}
+                        className="category-scroll-arrow-btn"
+                        title="Scroll Right"
+                      >
+                        <ChevronRight size={20} />
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Product Details Body */}
-                  <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
-                    <div>
-                      {/* Stock & Warranty Badge Row */}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '4px' }}>
-                        <span className="dukaan-stock-badge">
-                          ⚡ In Stock · Davanagere
-                        </span>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          {product.warranty && product.warranty.trim() !== '' && (
-                            <span style={{ 
-                              fontSize: '0.70rem', 
-                              color: '#059669', 
-                              fontWeight: 700, 
-                              background: '#ecfdf5', 
-                              padding: '2px 6px', 
-                              borderRadius: '4px', 
-                              border: '1px solid #a7f3d0' 
-                            }}>
-                              🛡️ {product.warranty}
-                            </span>
-                          )}
-                          <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>
-                            {product.unit ? `Unit: ${product.unit}` : ''}
-                          </span>
-                        </div>
-                      </div>
+                  {/* Horizontal Scroll Track (Matching Reference Screenshot) */}
+                  <div id={trackId} className="horizontal-product-track">
+                    {catProducts.map((product) => {
+                      const sellingPrice = product.price || 0;
+                      const mrp = product.mrp || 0;
+                      const hasDiscount = mrp > sellingPrice && sellingPrice > 0;
+                      const discountPercent = hasDiscount ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0;
+                      const qty = cart[product.id] || 0;
 
-                      {/* Product Title */}
-                      <h3 
-                        onClick={() => onViewProduct(product)}
-                        style={{
-                          fontSize: '0.95rem',
-                          fontWeight: 700,
-                          color: '#0f172a',
-                          marginBottom: '10px',
-                          lineHeight: 1.35,
-                          height: '2.7em',
-                          overflow: 'hidden',
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
-                          cursor: 'pointer'
-                        }}
-                        title={product.name}
-                      >
-                        {product.name}
-                      </h3>
-
-                      {/* Price Section */}
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '14px', flexWrap: 'wrap' }}>
-                        {sellingPrice > 0 ? (
-                          <>
-                            <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#111827', fontFamily: 'Outfit, sans-serif' }}>
-                              ₹{sellingPrice.toLocaleString('en-IN')}
-                            </span>
-                            {mrp > sellingPrice && (
-                              <span style={{ fontSize: '0.85rem', color: '#94a3b8', textDecoration: 'line-through' }}>
-                                ₹{mrp.toLocaleString('en-IN')}
+                      return (
+                        <div 
+                          key={product.id}
+                          className="horizontal-product-card"
+                        >
+                          {/* Image Box with Badges */}
+                          <div 
+                            className="horizontal-card-img-wrap"
+                            onClick={() => onViewProduct(product)}
+                            title={`Click to view details of ${product.name}`}
+                          >
+                            {/* Brand Badge */}
+                            {product.brand?.trim() && (
+                              <span className="horizontal-brand-tag">
+                                {product.brand}
                               </span>
                             )}
-                          </>
-                        ) : (
-                          <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#1d4ed8' }}>
-                            Enquire for Price
-                          </span>
-                        )}
-                      </div>
-                    </div>
 
-                    {/* Action Buttons: Details Button (All Items) + Eye Symbol (Cameras Only) */}
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                      <button
-                        onClick={() => onViewProduct(product)}
-                        style={{
-                          flex: 1,
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '6px',
-                          padding: '9px 14px',
-                          borderRadius: '8px',
-                          background: '#0f172a',
-                          color: '#ffffff',
-                          fontSize: '0.84rem',
-                          fontWeight: 600,
-                          border: 'none',
-                          cursor: 'pointer',
-                          transition: 'all 0.18s ease'
-                        }}
-                      >
-                        <FileText size={15} />
-                        <span>Details</span>
-                      </button>
+                            {/* Green Discount Tag */}
+                            {discountPercent > 0 && (
+                              <span className="horizontal-discount-badge-top">
+                                {discountPercent}% OFF
+                              </span>
+                            )}
 
-                      {isCameraProduct(product) && onOpenFootageModal && (
-                        <button
-                          onClick={() => onOpenFootageModal(product)}
-                          style={{
-                            width: '38px',
-                            height: '38px',
-                            borderRadius: '8px',
-                            background: '#eff6ff',
-                            border: '1.5px solid #2563eb',
-                            color: '#2563eb',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer',
-                            transition: 'all 0.18s ease',
-                            flexShrink: 0
-                          }}
-                          title="Watch Sample CCTV Footage (Day & Night Vision)"
-                        >
-                          <Eye size={18} />
-                        </button>
-                      )}
-                    </div>
+                            {/* Eye Symbol for Camera Products (Watch Footage) */}
+                            {isCameraProduct(product) && onOpenFootageModal && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onOpenFootageModal(product);
+                                }}
+                                className="horizontal-footage-eye-btn"
+                                title="Watch Recorded Video Footage (Day & Night Vision)"
+                              >
+                                <Eye size={17} />
+                              </button>
+                            )}
+
+                            <img 
+                              src={product.image} 
+                              alt={product.name}
+                              className="horizontal-card-img"
+                              loading="lazy"
+                              onError={(e) => {
+                                e.currentTarget.src = 'https://dms.mydukaan.io/original/jpeg/download-and-upload/a99b70d4-d5c9-4d7e-b1b8-453714a701d8.png';
+                              }}
+                            />
+                          </div>
+
+                          {/* Card Content */}
+                          <div className="horizontal-card-body">
+                            {/* Stock & Warranty Badge */}
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px', marginBottom: '6px' }}>
+                              <span style={{ fontSize: '0.70rem', color: '#059669', fontWeight: 700, background: '#ecfdf5', padding: '1px 6px', borderRadius: '4px', border: '1px solid #a7f3d0' }}>
+                                ⚡ In Stock
+                              </span>
+                              {product.warranty && product.warranty.trim() !== '' && (
+                                <span style={{ fontSize: '0.68rem', color: '#059669', fontWeight: 700 }}>
+                                  🛡️ {product.warranty}
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Title (2 Lines Ellipsis) */}
+                            <h3 
+                              onClick={() => onViewProduct(product)}
+                              className="horizontal-card-title"
+                              title={product.name}
+                            >
+                              {product.name}
+                            </h3>
+
+                            {/* Price Row: Selling Price, MRP strikethrough, (XX% OFF) green */}
+                            <div className="horizontal-card-price-row">
+                              {sellingPrice > 0 ? (
+                                <>
+                                  <span className="horizontal-selling-price">
+                                    ₹{sellingPrice.toLocaleString('en-IN')}
+                                  </span>
+                                  {mrp > sellingPrice && (
+                                    <span className="horizontal-mrp-price">
+                                      ₹{mrp.toLocaleString('en-IN')}
+                                    </span>
+                                  )}
+                                  {discountPercent > 0 && (
+                                    <span className="horizontal-discount-text">
+                                      ({discountPercent}% OFF)
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#1d4ed8' }}>
+                                  {product.priceRange || 'Enquire for Price'}
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Action Buttons: ADD TO CART / - 1 + Quantity Controls */}
+                            <div style={{ marginTop: 'auto', paddingTop: '10px' }}>
+                              {qty === 0 ? (
+                                <button
+                                  onClick={() => addToCart(product.id)}
+                                  className="horizontal-add-cart-btn"
+                                >
+                                  ADD TO CART
+                                </button>
+                              ) : (
+                                <div className="horizontal-qty-box">
+                                  <button
+                                    onClick={() => updateCartQuantity(product.id, qty - 1)}
+                                    className="horizontal-qty-btn"
+                                    title="Decrease quantity"
+                                  >
+                                    –
+                                  </button>
+                                  <span className="horizontal-qty-num">
+                                    {qty}
+                                  </span>
+                                  <button
+                                    onClick={() => updateCartQuantity(product.id, qty + 1)}
+                                    className="horizontal-qty-btn"
+                                    title="Increase quantity"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              )}
+
+                              {/* View Full Specs text link */}
+                              <button
+                                onClick={() => onViewProduct(product)}
+                                style={{
+                                  width: '100%',
+                                  marginTop: '6px',
+                                  background: 'none',
+                                  border: 'none',
+                                  color: '#64748b',
+                                  fontSize: '0.74rem',
+                                  fontWeight: 600,
+                                  cursor: 'pointer',
+                                  textAlign: 'center',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  gap: '4px'
+                                }}
+                              >
+                                <FileText size={12} />
+                                <span>View Full Specs</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               );
             })}
+
+            {/* Uncategorized Products Row (If any products have no assigned category) */}
+            {uncategorizedProducts.length > 0 && (
+              <div 
+                id="cat-row-uncategorized"
+                className="category-horizontal-section"
+              >
+                <div className="category-section-header">
+                  <div className="category-title-wrap">
+                    <span className="category-order-badge" style={{ background: '#64748b' }}>
+                      #+
+                    </span>
+                    <h2 className="category-title-text">
+                      Additional CCTV Accessories &amp; Components
+                    </h2>
+                    <span className="category-item-count">
+                      {uncategorizedProducts.length} products
+                    </span>
+                  </div>
+
+                  <div className="category-scroll-arrows">
+                    <button 
+                      onClick={() => scrollRow('track-cat-uncategorized', 'left')}
+                      className="category-scroll-arrow-btn"
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                    <button 
+                      onClick={() => scrollRow('track-cat-uncategorized', 'right')}
+                      className="category-scroll-arrow-btn"
+                    >
+                      <ChevronRight size={20} />
+                    </button>
+                  </div>
+                </div>
+
+                <div id="track-cat-uncategorized" className="horizontal-product-track">
+                  {uncategorizedProducts.map((product) => {
+                    const sellingPrice = product.price || 0;
+                    const mrp = product.mrp || 0;
+                    const hasDiscount = mrp > sellingPrice && sellingPrice > 0;
+                    const discountPercent = hasDiscount ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0;
+                    const qty = cart[product.id] || 0;
+
+                    return (
+                      <div 
+                        key={product.id}
+                        className="horizontal-product-card"
+                      >
+                        <div 
+                          className="horizontal-card-img-wrap"
+                          onClick={() => onViewProduct(product)}
+                        >
+                          {product.brand?.trim() && (
+                            <span className="horizontal-brand-tag">
+                              {product.brand}
+                            </span>
+                          )}
+
+                          {discountPercent > 0 && (
+                            <span className="horizontal-discount-badge-top">
+                              {discountPercent}% OFF
+                            </span>
+                          )}
+
+                          {isCameraProduct(product) && onOpenFootageModal && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onOpenFootageModal(product);
+                              }}
+                              className="horizontal-footage-eye-btn"
+                            >
+                              <Eye size={17} />
+                            </button>
+                          )}
+
+                          <img 
+                            src={product.image} 
+                            alt={product.name}
+                            className="horizontal-card-img"
+                            loading="lazy"
+                            onError={(e) => {
+                              e.currentTarget.src = 'https://dms.mydukaan.io/original/jpeg/download-and-upload/a99b70d4-d5c9-4d7e-b1b8-453714a701d8.png';
+                            }}
+                          />
+                        </div>
+
+                        <div className="horizontal-card-body">
+                          <h3 
+                            onClick={() => onViewProduct(product)}
+                            className="horizontal-card-title"
+                            title={product.name}
+                          >
+                            {product.name}
+                          </h3>
+
+                          <div className="horizontal-card-price-row">
+                            {sellingPrice > 0 ? (
+                              <>
+                                <span className="horizontal-selling-price">
+                                  ₹{sellingPrice.toLocaleString('en-IN')}
+                                </span>
+                                {mrp > sellingPrice && (
+                                  <span className="horizontal-mrp-price">
+                                    ₹{mrp.toLocaleString('en-IN')}
+                                  </span>
+                                )}
+                                {discountPercent > 0 && (
+                                  <span className="horizontal-discount-text">
+                                    ({discountPercent}% OFF)
+                                  </span>
+                                )}
+                              </>
+                            ) : (
+                              <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#1d4ed8' }}>
+                                {product.priceRange || 'Enquire for Price'}
+                              </span>
+                            )}
+                          </div>
+
+                          <div style={{ marginTop: 'auto', paddingTop: '10px' }}>
+                            {qty === 0 ? (
+                              <button
+                                onClick={() => addToCart(product.id)}
+                                className="horizontal-add-cart-btn"
+                              >
+                                ADD TO CART
+                              </button>
+                            ) : (
+                              <div className="horizontal-qty-box">
+                                <button
+                                  onClick={() => updateCartQuantity(product.id, qty - 1)}
+                                  className="horizontal-qty-btn"
+                                >
+                                  –
+                                </button>
+                                <span className="horizontal-qty-num">
+                                  {qty}
+                                </span>
+                                <button
+                                  onClick={() => updateCartQuantity(product.id, qty + 1)}
+                                  className="horizontal-qty-btn"
+                                >
+                                  +
+                                </button>
+                              </div>
+                            )}
+
+                            <button
+                              onClick={() => onViewProduct(product)}
+                              style={{
+                                width: '100%',
+                                marginTop: '6px',
+                                background: 'none',
+                                border: 'none',
+                                color: '#64748b',
+                                fontSize: '0.74rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                textAlign: 'center',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '4px'
+                              }}
+                            >
+                              <FileText size={12} />
+                              <span>View Full Specs</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
       </div>
+
+      {/* Floating Sticky Cart Bar when items are selected */}
+      {totalCartCount > 0 && (
+        <div className="sticky-cart-bar">
+          <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{
+                background: '#eff6ff',
+                color: '#1d4ed8',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.1rem',
+                border: '1.5px solid #bfdbfe'
+              }}>
+                🛒
+              </div>
+              <div>
+                <div style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.98rem' }}>
+                  {totalCartCount} item{totalCartCount > 1 ? 's' : ''} in Cart: <span style={{ color: '#16a34a', fontWeight: 900 }}>₹{totalCartPrice.toLocaleString('en-IN')}</span>
+                </div>
+                <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                  Davanagere wholesale rates with genuine brand warranty
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button
+                onClick={clearCart}
+                style={{
+                  background: '#f8fafc',
+                  border: '1px solid #cbd5e1',
+                  color: '#64748b',
+                  borderRadius: '8px',
+                  padding: '9px 14px',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  cursor: 'pointer'
+                }}
+              >
+                Clear Cart
+              </button>
+
+              <a
+                href={generateWhatsAppCartUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
+                  color: '#ffffff',
+                  borderRadius: '8px',
+                  padding: '9px 18px',
+                  fontSize: '0.88rem',
+                  fontWeight: 800,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 14px rgba(37, 211, 102, 0.35)',
+                  cursor: 'pointer'
+                }}
+              >
+                <MessageCircle size={18} />
+                <span>Order on WhatsApp</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
