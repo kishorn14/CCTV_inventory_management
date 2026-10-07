@@ -254,9 +254,11 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     onClick={() => onViewProduct(product)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <span className="dukaan-brand-tag">
-                      {product.brand}
-                    </span>
+                    {product.brand?.trim() && (
+                      <span className="dukaan-brand-tag">
+                        {product.brand}
+                      </span>
+                    )}
 
                     {discountPercent > 0 && (
                       <span className="dukaan-discount-tag">

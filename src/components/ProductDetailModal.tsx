@@ -82,18 +82,20 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
             display: 'flex',
             gap: '8px'
           }}>
-            <span style={{
-              background: '#1d4ed8',
-              color: '#ffffff',
-              fontSize: '0.8rem',
-              fontWeight: 700,
-              padding: '4px 12px',
-              borderRadius: '9999px',
-              textTransform: 'uppercase',
-              boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
-            }}>
-              {product.brand}
-            </span>
+            {product.brand?.trim() && (
+              <span style={{
+                background: '#1d4ed8',
+                color: '#ffffff',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                padding: '4px 12px',
+                borderRadius: '9999px',
+                textTransform: 'uppercase',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+              }}>
+                {product.brand}
+              </span>
+            )}
             {product.badge && (
               <span style={{
                 background: '#f59e0b',

@@ -32,7 +32,7 @@ interface ShopContextType {
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  PRODUCTS: 'meksha_shop_products_v10',
+  PRODUCTS: 'meksha_shop_products_v11',
   SERVICES: 'meksha_shop_services_v9',
   BRANDS: 'meksha_shop_brands_v9',
   SHOP_INFO: 'meksha_shop_info_v9',
@@ -47,6 +47,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [products, setProducts] = useState<Product[]>(() => {
     try {
       // Clean up legacy storage if present
+      localStorage.removeItem('meksha_shop_products_v10');
       localStorage.removeItem('meksha_shop_products_v9');
       localStorage.removeItem('meksha_shop_products_v8');
       localStorage.removeItem('meksha_shop_services_v8');
@@ -68,7 +69,12 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
-          return parsed;
+          return parsed.map((p: Product) => {
+            if (p.id === 'prod-21' || p.id === 'prod-22' || (p.name && p.name.toUpperCase().includes('MICRO SD'))) {
+              return { ...p, brand: '' };
+            }
+            return p;
+          });
         }
       }
       return DEFAULT_PRODUCTS;

@@ -160,7 +160,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
       sampleVideoUrl: formData.sampleVideoUrl.trim() ? formData.sampleVideoUrl.trim() : undefined,
       nightVideoUrl: formData.nightVideoUrl.trim() ? formData.nightVideoUrl.trim() : undefined,
       is360Camera: formData.is360Camera,
-      features: features.length > 0 ? features : ['100% Genuine Brand', 'Doorstep Service Support'],
+      features: features.length > 0 ? features : [formData.brand ? '100% Genuine Brand' : 'Tested & Verified Quality', 'Doorstep Service Support'],
       description: formData.description,
       popular: formData.popular
     };
@@ -194,7 +194,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
   const filtered = products.filter(p => {
     const matchCat = categoryFilter === 'all' || p.category === categoryFilter;
     const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.brand.toLowerCase().includes(searchQuery.toLowerCase());
+      (p.brand || '').toLowerCase().includes(searchQuery.toLowerCase());
     return matchCat && matchSearch;
   });
 
@@ -348,9 +348,11 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
               />
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '2px' }}>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '2px 6px', borderRadius: '4px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe' }}>
-                    {product.brand}
-                  </span>
+                  {product.brand?.trim() && (
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '2px 6px', borderRadius: '4px', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe' }}>
+                      {product.brand}
+                    </span>
+                  )}
                   <span style={{ fontSize: '0.72rem', color: '#64748b', textTransform: 'capitalize' }}>
                     {product.category.replace('_', ' ')}
                   </span>
@@ -443,7 +445,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                   {product.category.replace('_', ' ')}
                 </td>
                 <td style={{ padding: '14px 18px', color: '#0f172a', fontWeight: 600 }}>
-                  {product.brand}
+                  {product.brand?.trim() ? product.brand : <span style={{ color: '#94a3b8' }}>—</span>}
                 </td>
                 <td style={{ padding: '14px 18px', color: '#059669', fontWeight: 800 }}>
                   {product.priceRange}
@@ -538,14 +540,13 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Brand *</label>
+                  <label className="form-label">Brand</label>
                   <input
                     type="text"
                     className="form-input"
-                    placeholder="e.g. Hikvision / CP PLUS / Dahua"
+                    placeholder="e.g. CP PLUS, Trueview (leave blank if unbranded)"
                     value={formData.brand}
                     onChange={e => setFormData({ ...formData, brand: e.target.value })}
-                    required
                   />
                 </div>
               </div>
