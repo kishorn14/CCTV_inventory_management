@@ -4,7 +4,6 @@ import {
   Sparkles,
   Eye,
   FileText,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   MessageCircle
@@ -283,16 +282,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   flexShrink: 0
                 }}
               >
-                <span style={{
-                  fontSize: '0.72rem',
-                  padding: '2px 7px',
-                  borderRadius: '9999px',
-                  background: isSelected ? 'rgba(255, 255, 255, 0.25)' : '#eff6ff',
-                  color: isSelected ? '#ffffff' : '#1d4ed8',
-                  fontWeight: 800
-                }}>
-                  #{cat.orderNumber}
-                </span>
                 <span>{cat.name}</span>
                 <span style={{
                   fontSize: '0.72rem',
@@ -308,25 +297,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           })}
         </div>
 
-        {/* Results Info & Counter */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          marginBottom: '20px',
-          padding: '0 4px',
-          fontSize: '0.86rem',
-          color: '#64748b',
-          flexWrap: 'wrap',
-          gap: '8px'
-        }}>
-          <div>
-            Showing <strong style={{ color: '#0f172a' }}>{totalMatchingProducts}</strong> items across <strong style={{ color: '#0f172a' }}>{sortedCategories.length}</strong> categories
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#059669', fontWeight: 600 }}>
-            <CheckCircle2 size={15} /> All 100% Genuine with Brand Warranty &amp; Doorstep Installation
-          </div>
-        </div>
 
         {/* Empty State if No Matching Products */}
         {totalMatchingProducts === 0 ? (
@@ -365,9 +335,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   {/* Category Name Displayed Prominently Above the Products */}
                   <div className="category-section-header">
                     <div className="category-title-wrap">
-                      <span className="category-order-badge">
-                        #{cat.orderNumber}
-                      </span>
                       <h2 className="category-title-text">
                         {cat.name}
                       </h2>
@@ -573,9 +540,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               >
                 <div className="category-section-header">
                   <div className="category-title-wrap">
-                    <span className="category-order-badge" style={{ background: '#64748b' }}>
-                      #+
-                    </span>
                     <h2 className="category-title-text">
                       Additional CCTV Accessories &amp; Components
                     </h2>
