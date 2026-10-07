@@ -143,12 +143,12 @@ textarea {
 }
 
 .section-padding {
-  padding: 28px 0;
+  padding: 14px 0;
 }
 
 @media (min-width: 768px) {
   .section-padding {
-    padding: 42px 0;
+    padding: 22px 0;
   }
 }
 
@@ -169,7 +169,7 @@ textarea {
 .section-header {
   text-align: center;
   max-width: 700px;
-  margin: 0 auto 20px auto;
+  margin: 0 auto 10px auto;
 }
 
 .section-badge {
@@ -1268,28 +1268,29 @@ textarea {
    ========================================================= */
 
 .category-horizontal-section {
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   position: relative;
 }
 
+.category-horizontal-section:last-of-type,
 .category-horizontal-section:last-child {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 .category-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
   padding: 0 4px;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .category-title-wrap {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -1350,16 +1351,16 @@ textarea {
 
 .horizontal-product-track {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  padding: 4px 2px 8px 2px;
+  padding: 2px 2px 4px 2px;
 }
 
 /* Visible horizontal scrollbar track matching user screenshot */
 .horizontal-product-track::-webkit-scrollbar {
-  height: 7px;
+  height: 5px;
 }
 
 .horizontal-product-track::-webkit-scrollbar-track {

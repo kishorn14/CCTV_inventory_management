@@ -74,7 +74,7 @@ export const GoogleReviews: React.FC = () => {
     <section 
       id="reviews" 
       style={{
-        padding: '24px 16px 24px',
+        padding: '6px 16px 8px',
         background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%)',
         position: 'relative',
         overflow: 'hidden'
@@ -87,45 +87,45 @@ export const GoogleReviews: React.FC = () => {
           display: 'inline-flex',
           alignItems: 'center',
           gap: '8px',
-          padding: '5px 14px',
+          padding: '4px 12px',
           borderRadius: '9999px',
           background: '#ffffff',
           border: '1.5px solid #e2e8f0',
           boxShadow: '0 2px 8px rgba(15, 23, 42, 0.06)',
-          marginBottom: '8px'
+          marginBottom: '4px'
         }}>
-          <GoogleGIcon size={18} />
-          <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#0f172a' }}>
+          <GoogleGIcon size={16} />
+          <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f172a' }}>
             Google Rating 4.9
           </span>
           <div style={{ display: 'flex', gap: '1px' }}>
             {[...Array(5)].map((_, i) => (
-              <Star key={i} size={13} fill="#f59e0b" color="#f59e0b" />
+              <Star key={i} size={12} fill="#f59e0b" color="#f59e0b" />
             ))}
           </div>
-          <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 600 }}>
+          <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>
             (82 Verified Reviews)
           </span>
         </div>
 
         {/* Section Heading */}
         <h2 style={{
-          fontSize: 'clamp(1.4rem, 3.8vw, 2rem)',
+          fontSize: 'clamp(1.35rem, 3.6vw, 1.9rem)',
           fontWeight: 800,
           color: '#0f172a',
           lineHeight: 1.25,
-          marginBottom: '6px'
+          marginBottom: '3px'
         }}>
           Real Reviews from Davangere Customers
         </h2>
 
         {/* Section Subtitle */}
         <p style={{
-          fontSize: 'clamp(0.84rem, 2vw, 0.92rem)',
+          fontSize: 'clamp(0.82rem, 1.9vw, 0.88rem)',
           color: '#64748b',
-          lineHeight: 1.5,
+          lineHeight: 1.45,
           maxWidth: '620px',
-          margin: '0 auto 16px'
+          margin: '0 auto 10px'
         }}>
           Directly from our verified <strong>Google Business Profile</strong> — see genuine customer feedback, farm installations, and home CCTV setups across Davangere &amp; Karnataka.
         </p>
@@ -148,10 +148,10 @@ export const GoogleReviews: React.FC = () => {
           <div 
             style={{
               background: '#ffffff',
-              borderRadius: '20px',
+              borderRadius: '16px',
               border: '1.5px solid #e2e8f0',
-              padding: '20px 20px 16px',
-              boxShadow: '0 10px 30px -8px rgba(15, 23, 42, 0.07)',
+              padding: '16px 16px 12px',
+              boxShadow: '0 8px 24px -8px rgba(15, 23, 42, 0.06)',
               textAlign: 'left',
               position: 'relative',
               transition: 'all 0.3s ease',
@@ -166,9 +166,9 @@ export const GoogleReviews: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginBottom: '10px',
+              marginBottom: '8px',
               flexWrap: 'wrap',
-              gap: '10px'
+              gap: '8px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{
@@ -441,17 +441,17 @@ export const GoogleReviews: React.FC = () => {
         </div>
 
         {/* Carousel Pagination Dots & Swipe Helper */}
-        <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+        <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
           {/* Dots */}
-          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
             {reviews.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
                 aria-label={`Go to review ${idx + 1}`}
                 style={{
-                  width: currentIndex === idx ? '22px' : '7px',
-                  height: '7px',
+                  width: currentIndex === idx ? '20px' : '6px',
+                  height: '6px',
                   borderRadius: '9999px',
                   background: currentIndex === idx ? '#2563eb' : '#cbd5e1',
                   border: 'none',
@@ -463,18 +463,18 @@ export const GoogleReviews: React.FC = () => {
             ))}
           </div>
 
-          <span style={{ fontSize: '0.72rem', color: '#94a3b8', letterSpacing: '0.02em' }}>
+          <span style={{ fontSize: '0.7rem', color: '#94a3b8', letterSpacing: '0.02em' }}>
             ‹ Swipe to see more verified reviews ›
           </span>
         </div>
 
         {/* Action Buttons: View All Reviews, Write a Review, Get Directions */}
         <div style={{
-          marginTop: '14px',
+          marginTop: '8px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '10px',
+          gap: '8px',
           flexWrap: 'wrap'
         }}>
           {/* View All Google Reviews */}

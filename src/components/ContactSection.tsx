@@ -60,17 +60,17 @@ export const ContactSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="section-padding" style={{ position: 'relative' }}>
+    <section id="contact" style={{ position: 'relative', padding: '6px 0 14px 0' }}>
       <div className="container">
         {/* Section Header */}
-        <div className="section-header" style={{ marginBottom: '18px' }}>
-          <div className="section-badge">
-            <MapPin size={14} /> Visit Us or Get in Touch
+        <div className="section-header" style={{ marginBottom: '8px' }}>
+          <div className="section-badge" style={{ marginBottom: '4px' }}>
+            <MapPin size={13} /> Visit Us or Get in Touch
           </div>
-          <h2 className="section-title">
+          <h2 className="section-title" style={{ marginBottom: '2px' }}>
             Visit Our Shop or <span className="text-gradient">Contact Us</span>
           </h2>
-          <p className="section-subtitle" style={{ fontSize: '0.9rem', maxWidth: '600px', margin: '0 auto' }}>
+          <p className="section-subtitle" style={{ fontSize: '0.85rem', maxWidth: '600px', margin: '0 auto' }}>
             We are open all 7 days for CCTV sales, on-site security surveys, and technical support service calls.
           </p>
         </div>
