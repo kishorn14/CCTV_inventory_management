@@ -74,7 +74,7 @@ export const GoogleReviews: React.FC = () => {
     <section 
       id="reviews" 
       style={{
-        padding: '6px 16px 8px',
+        padding: '26px 16px 10px',
         background: 'linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%)',
         position: 'relative',
         overflow: 'hidden'
