@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, MessageCircle, Instagram, Mail, MapPin, Lock } from 'lucide-react';
+import { Phone, MessageCircle, Instagram, Mail, MapPin } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { createWhatsAppLink } from '../utils/whatsapp';
 import { CategoryType } from '../types';
@@ -10,7 +10,7 @@ interface FooterProps {
   onGoToAdmin?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking, onGoToAdmin }) => {
+export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking }) => {
   const { shopInfo } = useShop();
 
   return (
@@ -178,9 +178,6 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
                 <Mail size={18} color="#f59e0b" style={{ flexShrink: 0 }} />
                 <span>{shopInfo.email}</span>
               </div>
-              <div style={{ fontSize: '0.85rem', color: '#a7f3d0', marginTop: '4px' }}>
-                🕒 {shopInfo.workingHours} ({shopInfo.workingDays})
-              </div>
             </div>
           </div>
         </div>
@@ -201,29 +198,6 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <span>Genuine Authorized Brands • 100% Doorstep Satisfaction</span>
-            {onGoToAdmin && (
-              <button
-                onClick={onGoToAdmin}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#6b7280',
-                  fontSize: '0.78rem',
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  padding: '2px 6px',
-                  borderRadius: '4px',
-                  transition: 'color 0.2s'
-                }}
-                onMouseEnter={e => e.currentTarget.style.color = '#93c5fd'}
-                onMouseLeave={e => e.currentTarget.style.color = '#6b7280'}
-                title="Shop Owner Admin Portal"
-              >
-                <Lock size={12} /> Admin Portal
-              </button>
-            )}
           </div>
         </div>
       </div>

@@ -70,9 +70,6 @@ export const ContactSection: React.FC = () => {
           <h2 className="section-title" style={{ marginBottom: '2px' }}>
             Visit Our Shop or <span className="text-gradient">Contact Us</span>
           </h2>
-          <p className="section-subtitle" style={{ fontSize: '0.85rem', maxWidth: '600px', margin: '0 auto' }}>
-            We are open all 7 days for CCTV sales, on-site security surveys, and technical support service calls.
-          </p>
         </div>
 
         <div style={{
