@@ -178,9 +178,6 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
                 <Mail size={18} color="#f59e0b" style={{ flexShrink: 0 }} />
                 <span>{shopInfo.email}</span>
               </div>
-              <div style={{ fontSize: '0.85rem', color: '#a7f3d0', marginTop: '4px' }}>
-                🕒 {shopInfo.workingHours} ({shopInfo.workingDays})
-              </div>
             </div>
           </div>
         </div>
