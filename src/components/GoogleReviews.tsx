@@ -92,7 +92,7 @@ export const GoogleReviews: React.FC = () => {
           background: '#ffffff',
           border: '1.5px solid #e2e8f0',
           boxShadow: '0 2px 8px rgba(15, 23, 42, 0.06)',
-          marginBottom: '4px'
+          marginBottom: '8px'
         }}>
           <GoogleGIcon size={16} />
           <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0f172a' }}>
@@ -107,28 +107,6 @@ export const GoogleReviews: React.FC = () => {
             (82 Verified Reviews)
           </span>
         </div>
-
-        {/* Section Heading */}
-        <h2 style={{
-          fontSize: 'clamp(1.35rem, 3.6vw, 1.9rem)',
-          fontWeight: 800,
-          color: '#0f172a',
-          lineHeight: 1.25,
-          marginBottom: '3px'
-        }}>
-          Real Reviews from Davangere Customers
-        </h2>
-
-        {/* Section Subtitle */}
-        <p style={{
-          fontSize: 'clamp(0.82rem, 1.9vw, 0.88rem)',
-          color: '#64748b',
-          lineHeight: 1.45,
-          maxWidth: '620px',
-          margin: '0 auto 10px'
-        }}>
-          Directly from our verified <strong>Google Business Profile</strong> — see genuine customer feedback, farm installations, and home CCTV setups across Davangere &amp; Karnataka.
-        </p>
 
 
 
