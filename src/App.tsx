@@ -117,12 +117,12 @@ function MainApp() {
           <h1 style={{
             fontSize: 'clamp(1.4rem, 3.8vw, 2rem)',
             fontWeight: 900,
-            color: '#0f172a',
+            color: '#000000',
             lineHeight: 1.2,
             marginBottom: '10px',
             letterSpacing: '-0.02em'
           }}>
-            CCTV Security Cameras &amp; Accessories in <span style={{ color: '#2563eb' }}>Davanagere</span>
+            CCTV Security Cameras &amp; Accessories in Davanagere
           </h1>
 
           {/* Direct CTA Buttons */}
