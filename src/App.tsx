@@ -12,7 +12,7 @@ import { CameraFootageModal } from './components/CameraFootageModal';
 import { CctvCostEstimator } from './components/CctvCostEstimator';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { CategoryType, Product } from './types';
-import { Phone, MessageCircle, ShieldCheck, Calculator } from 'lucide-react';
+import { Phone, MessageCircle, Calculator } from 'lucide-react';
 
 function MainApp() {
   const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => {
@@ -98,22 +98,6 @@ function MainApp() {
         padding: '14px 0 10px 0'
       }}>
         <div className="container" style={{ textAlign: 'center' }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            background: '#eff6ff',
-            border: '1px solid #bfdbfe',
-            color: '#1d4ed8',
-            padding: '4px 12px',
-            borderRadius: '9999px',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            marginBottom: '6px'
-          }}>
-            <ShieldCheck size={14} /> Authorized Dealer · Wholesale &amp; Retail Store
-          </div>
-
           <h1 style={{
             fontSize: 'clamp(1.4rem, 3.8vw, 2rem)',
             fontWeight: 900,
