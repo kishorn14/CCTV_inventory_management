@@ -94,10 +94,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts, o
                 fontSize: '1.25rem',
                 fontWeight: 900,
                 letterSpacing: '-0.02em',
-                color: '#0f172a',
+                color: '#2563eb',
                 lineHeight: 1.15
               }}>
-                MEKSHA <span style={{ color: '#2563eb' }}>CCTV SOLUTIONS</span>
+                MEKSHA CCTV SOLUTIONS
               </div>
               <div style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 600 }}>
                 Authorized CCTV Cameras &amp; Security Systems Store

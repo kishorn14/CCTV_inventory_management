@@ -44,8 +44,8 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking,
                   border: '1px solid rgba(255, 255, 255, 0.15)'
                 }}
               />
-              <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.25rem', fontWeight: 800, color: '#ffffff' }}>
-                {shopInfo.shopName.split(' ')[0]} <span className="text-gradient">{shopInfo.shopName.split(' ').slice(1).join(' ') || 'SOLUTIONS'}</span>
+              <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.25rem', fontWeight: 800, color: '#3b82f6' }}>
+                {shopInfo.shopName || 'MEKSHA CCTV SOLUTIONS'}
               </div>
             </div>
             <p style={{ lineHeight: 1.6, marginBottom: '20px', color: '#9ca3af' }}>
