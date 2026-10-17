@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Plus, Edit2, Trash2, RotateCcw, Check, X, Award, Image as ImageIcon, Sparkles } from 'lucide-react';
+import { Plus, Edit2, Trash2, RotateCcw, Check, X, Award } from 'lucide-react';
 import { useShop } from '../../context/ShopContext';
 import { BrandPartner } from '../../types';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
+import { ImageUploadField } from './ImageUploadField';
 
 
 // Preset sample images for quick 1-click selection
@@ -336,85 +337,18 @@ export const AdminBrands: React.FC = () => {
                 />
               </div>
 
-              {/* Image URL with live preview */}
-              <div className="form-group" style={{ marginBottom: '14px' }}>
-                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <ImageIcon size={14} color="#1d4ed8" /> Image URL *
-                </label>
-                <input
-                  type="url"
-                  className="form-input"
-                  placeholder="https://..."
-                  value={formData.image}
-                  onChange={e => setFormData({ ...formData, image: e.target.value })}
-                  required
-                />
-              </div>
-
-              {/* Preset Image Selector */}
-              <div style={{ marginBottom: '18px' }}>
-                <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '8px' }}>
-                  <Sparkles size={12} color="#d97706" /> Or Pick a High-Resolution CCTV Preset Image:
-                </label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '8px' }}>
-                  {PRESET_BRAND_IMAGES.map((preset, idx) => (
-                    <button
-                      type="button"
-                      key={idx}
-                      onClick={() => setFormData({ ...formData, image: preset.url })}
-                      style={{
-                        padding: '6px 8px',
-                        borderRadius: '6px',
-                        border: formData.image === preset.url ? '1.5px solid #1d4ed8' : '1px solid #e2e8f0',
-                        background: formData.image === preset.url ? '#eff6ff' : '#f8fafc',
-                        color: formData.image === preset.url ? '#1d4ed8' : '#475569',
-                        fontSize: '0.72rem',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        overflow: 'hidden',
-                        whiteSpace: 'nowrap',
-                        textOverflow: 'ellipsis'
-                      }}
-                    >
-                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#3b82f6', flexShrink: 0 }} />
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{preset.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Live Preview Box */}
-              {formData.image && (
-                <div style={{
-                  padding: '12px',
-                  borderRadius: '10px',
-                  background: '#f8fafc',
-                  border: '1px solid #e2e8f0',
-                  marginBottom: '18px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px'
-                }}>
-                  <img
-                    src={formData.image}
-                    alt="Preview"
-                    style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0 }}
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                  <div>
-                    <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>IMAGE PREVIEW</div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a' }}>
-                      {formData.name || 'Brand Name'}
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* Brand Logo & Device Upload */}
+              <ImageUploadField
+                label="Brand Logo / Photo"
+                value={formData.image}
+                onChange={img => setFormData({ ...formData, image: img })}
+                required
+                placeholder="Paste logo link or choose image from your device"
+                helpText="Tap 'Choose Photo from Device' to select a logo from your phone or PC, or click one of the presets below."
+                presets={PRESET_BRAND_IMAGES}
+                maxWidth={1000}
+                maxHeight={1000}
+              />
 
               {/* Submit Buttons */}
               <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>

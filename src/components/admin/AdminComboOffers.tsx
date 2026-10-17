@@ -15,6 +15,7 @@ import {
 import { useShop } from '../../context/ShopContext';
 import { ComboOffer, Product } from '../../types';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
+import { ImageUploadField } from './ImageUploadField';
 
 const PRESET_COMBO_IMAGES = [
   { label: 'Trueview HD Analog Banner', url: '/combos/analog_combo_banner.png' },
@@ -1146,66 +1147,18 @@ export const AdminComboOffers: React.FC = () => {
                 </div>
               </div>
 
-              {/* Image URL & Quick Presets */}
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#334155', marginBottom: '6px' }}>
-                  Product Showcase Image URL
-                </label>
-                <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
-                  <input
-                    type="text"
-                    required
-                    value={formData.image}
-                    onChange={e => setFormData({ ...formData, image: e.target.value })}
-                    placeholder="https://... or /products/..."
-                    style={{
-                      flex: 1,
-                      padding: '10px 12px',
-                      borderRadius: '8px',
-                      border: '1px solid #cbd5e1',
-                      fontSize: '0.85rem'
-                    }}
-                  />
-                  {formData.image && (
-                    <img
-                      src={formData.image}
-                      alt="Preview"
-                      style={{
-                        width: '42px',
-                        height: '42px',
-                        objectFit: 'contain',
-                        borderRadius: '6px',
-                        border: '1px solid #e2e8f0',
-                        background: '#f8fafc'
-                      }}
-                      onError={e => (e.currentTarget.src = '/logo.jpg')}
-                    />
-                  )}
-                </div>
-
-                {/* Quick Presets */}
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                  {PRESET_COMBO_IMAGES.map((preset, idx) => (
-                    <button
-                      type="button"
-                      key={idx}
-                      onClick={() => setFormData({ ...formData, image: preset.url })}
-                      style={{
-                        background: formData.image === preset.url ? '#eff6ff' : '#f1f5f9',
-                        border: formData.image === preset.url ? '1px solid #2563eb' : '1px solid #e2e8f0',
-                        color: formData.image === preset.url ? '#1d4ed8' : '#475569',
-                        padding: '4px 10px',
-                        borderRadius: '6px',
-                        fontSize: '0.72rem',
-                        fontWeight: 700,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {preset.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              {/* Product Showcase Image & Device Upload */}
+              <ImageUploadField
+                label="Product Showcase Image / Banner Photo"
+                value={formData.image}
+                onChange={img => setFormData({ ...formData, image: img })}
+                required
+                placeholder="Paste web link or upload from your device / phone"
+                helpText="Tap 'Choose Photo from Device' to select a photo from your phone gallery or PC, drag and drop an image file, or click one of the presets below."
+                presets={PRESET_COMBO_IMAGES}
+                maxWidth={1400}
+                maxHeight={1400}
+              />
 
               {/* Theme & Active Switch */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '20px' }}>

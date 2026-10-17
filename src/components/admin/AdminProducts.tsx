@@ -15,6 +15,7 @@ import {
 import { useShop } from '../../context/ShopContext';
 import { Product, CategoryType } from '../../types';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
+import { ImageUploadField } from './ImageUploadField';
 
 const PRESET_IMAGES: Record<CategoryType, string[]> = {
   all: [],
@@ -851,105 +852,23 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                     onChange={e => setFormData({ ...formData, badge: e.target.value })}
                   />
                 </div>
-
-                <div className="form-group">
-                  <label className="form-label">Product Image Source</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="Paste image web link (https://...)"
-                    value={formData.image}
-                    onChange={e => setFormData({ ...formData, image: e.target.value })}
-                    required
-                  />
-                </div>
               </div>
 
-              {/* Photo Upload & Presets Section */}
-              <div style={{
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
-                borderRadius: '10px',
-                padding: '14px',
-                marginBottom: '16px'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '10px' }}>
-                  <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#1d4ed8' }}>
-                    Option 1: Upload from Phone / PC
-                  </span>
-                  <label style={{
-                    background: '#eff6ff',
-                    border: '1px solid #bfdbfe',
-                    color: '#1d4ed8',
-                    padding: '6px 14px',
-                    borderRadius: '8px',
-                    fontSize: '0.8rem',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px'
-                  }}>
-                    📁 Choose Photo File / Camera
-                    <input
-                      type="file"
-                      accept="image/*"
-                      style={{ display: 'none' }}
-                      onChange={e => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => {
-                            if (typeof reader.result === 'string') {
-                              setFormData({ ...formData, image: reader.result });
-                            }
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
-                    />
-                  </label>
-                </div>
-
-                {/* Preset Options */}
-                {PRESET_IMAGES[formData.category] && (
-                  <div>
-                    <span style={{ fontSize: '0.78rem', color: '#64748b', display: 'block', marginBottom: '8px' }}>
-                      Option 2: Or select a ready-made category photo:
-                    </span>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', overflowX: 'auto', paddingBottom: '4px' }}>
-                      {PRESET_IMAGES[formData.category].map((imgUrl, i) => (
-                        <img
-                          key={i}
-                          src={imgUrl}
-                          alt="preset"
-                          onClick={() => setFormData({ ...formData, image: imgUrl })}
-                          style={{
-                            width: '58px',
-                            height: '46px',
-                            borderRadius: '6px',
-                            objectFit: 'cover',
-                            cursor: 'pointer',
-                            border: formData.image === imgUrl ? '2px solid #1d4ed8' : '1px solid #cbd5e1',
-                            boxShadow: formData.image === imgUrl ? '0 0 10px rgba(29, 78, 216, 0.3)' : 'none'
-                          }}
-                        />
-                      ))}
-                      {/* Live Image Preview */}
-                      {formData.image && (
-                        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                          <span style={{ fontSize: '0.75rem', color: '#059669', fontWeight: 700 }}>Active Preview:</span>
-                          <img
-                            src={formData.image}
-                            alt="preview"
-                            style={{ width: '46px', height: '46px', borderRadius: '6px', objectFit: 'cover', border: '1px solid #10b981' }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
+              {/* Product Image Source & Device Upload */}
+              <ImageUploadField
+                label="Product Image Source"
+                value={formData.image}
+                onChange={img => setFormData({ ...formData, image: img })}
+                required
+                placeholder="Paste image web link (https://...) or choose photo from device"
+                helpText="Upload a photo from your phone or PC (automatically compressed), or pick one of the presets below."
+                presets={PRESET_IMAGES[formData.category]?.map((url, i) => ({
+                  label: `Preset ${i + 1}`,
+                  url
+                }))}
+                maxWidth={1200}
+                maxHeight={1200}
+              />
 
               {/* Camera Sample Footage & 360 Rotation Controls */}
               <div style={{
@@ -1031,38 +950,73 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                     </button>
                   </div>
 
-                  <label style={{
-                    background: '#ffffff',
-                    border: '1px solid #86efac',
-                    color: '#15803d',
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    fontSize: '0.74rem',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}>
-                    📁 Upload MP4 from Device
-                    <input
-                      type="file"
-                      accept="video/mp4,video/webm"
-                      style={{ display: 'none' }}
-                      onChange={e => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => {
-                            if (typeof reader.result === 'string') {
-                              setFormData({ ...formData, sampleVideoUrl: reader.result });
-                            }
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
-                    />
-                  </label>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <label style={{
+                      background: '#ffffff',
+                      border: '1px solid #86efac',
+                      color: '#15803d',
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      fontSize: '0.74rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}>
+                      📁 Upload Day Video (MP4)
+                      <input
+                        type="file"
+                        accept="video/mp4,video/webm"
+                        style={{ display: 'none' }}
+                        onChange={e => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              if (typeof reader.result === 'string') {
+                                setFormData({ ...formData, sampleVideoUrl: reader.result });
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </label>
+
+                    <label style={{
+                      background: '#ffffff',
+                      border: '1px solid #cbd5e1',
+                      color: '#334155',
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      fontSize: '0.74rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}>
+                      🌙 Upload Night Video (MP4)
+                      <input
+                        type="file"
+                        accept="video/mp4,video/webm"
+                        style={{ display: 'none' }}
+                        onChange={e => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              if (typeof reader.result === 'string') {
+                                setFormData({ ...formData, nightVideoUrl: reader.result });
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
                 </div>
 
                 {/* 360 Pan-Tilt Camera Toggle */}

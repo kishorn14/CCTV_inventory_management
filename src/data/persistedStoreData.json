@@ -319,8 +319,8 @@
       ],
       "description": "SecureMax 6MP 4G Linkage Triple Lens PT Camera with multi-angle surveillance, ideal for large areas without broadband.",
       "popular": true,
-      "categoryNumber": 2,
-      "categoryId": "cat-2"
+      "categoryNumber": 1,
+      "categoryId": "cat-1"
     },
     {
       "id": "prod-13",
@@ -1454,7 +1454,7 @@
   "comboOffers": [
     {
       "id": "combo-ip",
-      "title": "4-Camera 4MP PoE IP Network Camera Complete Combo",
+      "title": "4 camera set of ip camera",
       "badge": "🔥 24% OFF - BEST SELLER",
       "regularPrice": 25000,
       "offerPrice": 19000,
@@ -1465,14 +1465,29 @@
         "1x High-Speed Cat6 Pure Copper Cable Roll (50m) & RJ45",
         "Free Mobile App Live View Setup & Professional Doorstep Fitting"
       ],
-      "image": "/combos/ip_combo_banner.jpg",
+      "image": "https://cpplusworld.com/prodassets/product/small/3a918c3a-eb66-4b2b-b067-f2c2c84a8b34.png",
       "gradientTheme": "blue",
       "active": true,
       "orderNumber": 1
     },
     {
+      "id": "combo-solar",
+      "title": "Solar camera combo with solar panel",
+      "badge": "☀️ ZERO WIRES - 4G SIM READY",
+      "regularPrice": 18500,
+      "offerPrice": 16500,
+      "items": [
+        "1x CP PLUS SOLAR PANEL WITH BATTERY KIT - CP-SL06K YI86VjM0JDVUUNDr",
+        "1x SecureMax 6MP 4G Linkage PT Camera Triple Lens 4+4+12mm - SM1005-A 7843308399"
+      ],
+      "image": "https://cpplusworld.com/prodassets/product/small/55926f8d-03c0-4c9a-8efc-8d29a64024d2.png",
+      "gradientTheme": "emerald",
+      "active": true,
+      "orderNumber": 1
+    },
+    {
       "id": "combo-analog",
-      "title": "4-Camera 1080P Full HD Dual-Light Night Vision Combo",
+      "title": "4 camera analog cameras",
       "badge": "⚡ VALUE PACK - SAVE ₹5,000",
       "regularPrice": 17500,
       "offerPrice": 12500,
@@ -1483,25 +1498,10 @@
         "1x 4-Channel Heavy Duty SMPS Power Supply & BNC Connectors",
         "Full Cable Wiring, Clamping & Complete Setup in Davanagere"
       ],
-      "image": "/combos/analog_combo_banner.png",
+      "image": "https://i0.wp.com/ncaps.in/wp-content/uploads/2026/01/Elite-CCTV-11.png?fit=500%2C500&ssl=1",
       "gradientTheme": "purple",
       "active": true,
       "orderNumber": 2
-    },
-    {
-      "id": "combo-solar",
-      "title": "100% Wire-Free 4G Solar PTZ Farm & Remote Plot Combo",
-      "badge": "☀️ ZERO WIRES - 4G SIM READY",
-      "regularPrice": 18500,
-      "offerPrice": 16500,
-      "items": [
-        "1x CP PLUS SOLAR PANEL WITH BATTERY KIT - CP-SL06K YI86VjM0JDVUUNDr",
-        "1x SecureMax 6MP 4G Linkage PT Camera Triple Lens 4+4+12mm - SM1005-A 7843308399"
-      ],
-      "image": "/combos/solar_combo_banner.jpg",
-      "gradientTheme": "emerald",
-      "active": true,
-      "orderNumber": 3
     }
   ]
 }
