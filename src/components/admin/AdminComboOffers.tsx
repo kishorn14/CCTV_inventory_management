@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Sparkles, 
   Plus, 
@@ -7,10 +7,13 @@ import {
   Check, 
   X, 
   Eye, 
-  EyeOff 
+  EyeOff,
+  Search,
+  Package,
+  Minus
 } from 'lucide-react';
 import { useShop } from '../../context/ShopContext';
-import { ComboOffer } from '../../types';
+import { ComboOffer, Product } from '../../types';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
 
 const PRESET_COMBO_IMAGES = [
@@ -21,7 +24,13 @@ const PRESET_COMBO_IMAGES = [
 ];
 
 export const AdminComboOffers: React.FC = () => {
-  const { comboOffers, addComboOffer, updateComboOffer, deleteComboOffer } = useShop();
+  const { comboOffers, addComboOffer, updateComboOffer, deleteComboOffer, products } = useShop();
+
+  const [productSearch, setProductSearch] = useState('');
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
+  const [productQuantities, setProductQuantities] = useState<Record<string, number>>({});
+  const [customItemInput, setCustomItemInput] = useState('');
+  const [itemsViewMode, setItemsViewMode] = useState<'picker' | 'text'>('picker');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCombo, setEditingCombo] = useState<ComboOffer | null>(null);
@@ -49,8 +58,126 @@ export const AdminComboOffers: React.FC = () => {
     orderNumber: 1
   });
 
+  // Current items as array
+  const currentItemsList = useMemo(() => {
+    return formData.itemsText
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0);
+  }, [formData.itemsText]);
+
+  // Filter products by category and search query
+  const filteredProducts = useMemo(() => {
+    let list = products;
+    if (selectedCategoryFilter !== 'all') {
+      if (selectedCategoryFilter === 'cameras') {
+        list = list.filter(p => 
+          p.category === 'ip_cameras' || 
+          p.category === 'hd_analog' || 
+          p.category === 'wifi_4g' || 
+          p.category === 'solar'
+        );
+      } else {
+        list = list.filter(p => p.category === selectedCategoryFilter || p.categoryId === selectedCategoryFilter);
+      }
+    }
+    if (productSearch.trim()) {
+      const q = productSearch.toLowerCase();
+      list = list.filter(p => 
+        p.name.toLowerCase().includes(q) || 
+        (p.brand && p.brand.toLowerCase().includes(q)) ||
+        (p.badge && p.badge.toLowerCase().includes(q))
+      );
+    }
+    return list;
+  }, [products, selectedCategoryFilter, productSearch]);
+
+  // Calculate total catalog value from selected products
+  const estimatedCatalogValue = useMemo(() => {
+    let total = 0;
+    const lines = formData.itemsText
+      .split('\n')
+      .map(l => l.trim())
+      .filter(l => l.length > 0);
+
+    lines.forEach(line => {
+      const matched = products.find(p => line.includes(p.name));
+      if (matched && matched.price) {
+        const match = line.match(/^(\d+)x\s/i);
+        const qty = match ? parseInt(match[1]) : 1;
+        total += matched.price * qty;
+      }
+    });
+    return total;
+  }, [formData.itemsText, products]);
+
+  // Add a product from catalog to combo items
+  const handleAddProductToCombo = (product: Product) => {
+    const qty = productQuantities[product.id] || 1;
+    const itemString = `${qty > 1 ? `${qty}x ` : '1x '}${product.name}`;
+    
+    const lines = formData.itemsText
+      .split('\n')
+      .map(l => l.trim())
+      .filter(l => l.length > 0);
+
+    const existingIndex = lines.findIndex(l => l.includes(product.name));
+    if (existingIndex >= 0) {
+      lines[existingIndex] = itemString;
+    } else {
+      lines.push(itemString);
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      itemsText: lines.join('\n')
+    }));
+  };
+
+  // Remove an item by index
+  const handleRemoveItem = (indexToRemove: number) => {
+    const lines = formData.itemsText
+      .split('\n')
+      .map(l => l.trim())
+      .filter(l => l.length > 0);
+
+    lines.splice(indexToRemove, 1);
+    setFormData(prev => ({
+      ...prev,
+      itemsText: lines.join('\n')
+    }));
+  };
+
+  // Add custom perk (e.g. Free installation or cabling)
+  const handleAddCustomItem = () => {
+    if (!customItemInput.trim()) return;
+    const lines = formData.itemsText
+      .split('\n')
+      .map(l => l.trim())
+      .filter(l => l.length > 0);
+
+    lines.push(customItemInput.trim());
+    setFormData(prev => ({
+      ...prev,
+      itemsText: lines.join('\n')
+    }));
+    setCustomItemInput('');
+  };
+
+  // Set quantity for a product in picker
+  const setPickerQty = (productId: string, qty: number) => {
+    setProductQuantities(prev => ({
+      ...prev,
+      [productId]: Math.max(1, Math.min(32, qty))
+    }));
+  };
+
   const openAddModal = () => {
     setEditingCombo(null);
+    setProductSearch('');
+    setSelectedCategoryFilter('all');
+    setCustomItemInput('');
+    setItemsViewMode('picker');
     setFormData({
       title: '',
       badge: '🔥 SPECIAL DEAL',
@@ -67,6 +194,10 @@ export const AdminComboOffers: React.FC = () => {
 
   const openEditModal = (combo: ComboOffer) => {
     setEditingCombo(combo);
+    setProductSearch('');
+    setSelectedCategoryFilter('all');
+    setCustomItemInput('');
+    setItemsViewMode('picker');
     setFormData({
       title: combo.title,
       badge: combo.badge || '',
@@ -617,35 +748,402 @@ export const AdminComboOffers: React.FC = () => {
                 </div>
               </div>
 
-              {/* Included Products List (One per line) */}
-              <div style={{ marginBottom: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>
-                    Included Products in this Combo (One per line) *
-                  </label>
-                  <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                    {formData.itemsText.split('\n').filter(s => s.trim()).length} item(s) detected
-                  </span>
+              {/* Product Catalog Picker & Included Products Manager */}
+              <div style={{
+                background: '#ffffff',
+                border: '1.5px solid #bfdbfe',
+                borderRadius: '12px',
+                padding: '14px',
+                marginBottom: '16px',
+                boxShadow: '0 2px 8px rgba(37, 99, 235, 0.05)'
+              }}>
+                {/* Header with Switcher */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
+                  <div>
+                    <label style={{ fontSize: '0.88rem', fontWeight: 800, color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Package size={17} color="#2563eb" />
+                      <span>Select Products Included in this Combo *</span>
+                    </label>
+                    <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                      Select which products from your store catalog will be given in this package
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setItemsViewMode(itemsViewMode === 'picker' ? 'text' : 'picker')}
+                    style={{
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      border: '1px solid #cbd5e1',
+                      background: '#f8fafc',
+                      color: '#475569',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    {itemsViewMode === 'picker' ? '✏️ Edit as Text' : '📦 Select from Catalog'}
+                  </button>
                 </div>
-                <textarea
-                  rows={5}
-                  required
-                  value={formData.itemsText}
-                  onChange={e => setFormData({ ...formData, itemsText: e.target.value })}
-                  placeholder={`4x CP PLUS 4MP High-Definition IP Cameras (Audio with Mic)\n1x CP PLUS 4-Channel 4K Ultra PoE NVR Recorder\n1x 1TB Seagate SkyHawk 24/7 Surveillance Hard Disk\n1x High-Speed Cat6 Pure Copper Cable Roll (50m) & RJ45\nFree Mobile App Live View Setup & Professional Fitting`}
-                  style={{
-                    width: '100%',
-                    padding: '10px 12px',
-                    borderRadius: '8px',
-                    border: '1px solid #cbd5e1',
-                    fontSize: '0.85rem',
-                    fontFamily: 'inherit',
-                    lineHeight: 1.4
-                  }}
-                />
-                <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                  Press Enter to start a new product line. Each line will show as an individual bullet on the storefront banner.
-                </span>
+
+                {itemsViewMode === 'picker' ? (
+                  <>
+                    {/* Search & Category Filter Pills */}
+                    <div style={{ display: 'flex', gap: '8px', marginBottom: '10px', flexWrap: 'wrap' }}>
+                      <div style={{ position: 'relative', flex: '1 1 200px' }}>
+                        <Search size={14} color="#94a3b8" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+                        <input
+                          type="text"
+                          placeholder="Search your products by model, brand, or type..."
+                          value={productSearch}
+                          onChange={e => setProductSearch(e.target.value)}
+                          style={{
+                            width: '100%',
+                            padding: '7px 10px 7px 30px',
+                            borderRadius: '8px',
+                            border: '1px solid #cbd5e1',
+                            fontSize: '0.8rem'
+                          }}
+                        />
+                        {productSearch && (
+                          <button
+                            type="button"
+                            onClick={() => setProductSearch('')}
+                            style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', border: 'none', background: 'transparent', cursor: 'pointer', color: '#94a3b8' }}
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Category Pills */}
+                      <div style={{ display: 'flex', gap: '4px', overflowX: 'auto', paddingBottom: '2px' }}>
+                        {[
+                          { id: 'all', label: 'All Products' },
+                          { id: 'cameras', label: 'Cameras' },
+                          { id: 'dvr_nvr', label: 'DVR & NVR' },
+                          { id: 'storage', label: 'Hard Disks' },
+                          { id: 'networking', label: 'PoE Switches' },
+                          { id: 'cables_power', label: 'Cables & Power' },
+                          { id: 'racks_accessories', label: 'Racks' },
+                        ].map(cat => (
+                          <button
+                            type="button"
+                            key={cat.id}
+                            onClick={() => setSelectedCategoryFilter(cat.id)}
+                            style={{
+                              padding: '4px 10px',
+                              borderRadius: '9999px',
+                              border: selectedCategoryFilter === cat.id ? '1.5px solid #2563eb' : '1px solid #e2e8f0',
+                              background: selectedCategoryFilter === cat.id ? '#eff6ff' : '#f8fafc',
+                              color: selectedCategoryFilter === cat.id ? '#1d4ed8' : '#64748b',
+                              fontSize: '0.72rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              whiteSpace: 'nowrap'
+                            }}
+                          >
+                            {cat.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Catalog Products List */}
+                    <div style={{
+                      maxHeight: '190px',
+                      overflowY: 'auto',
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      background: '#f8fafc',
+                      padding: '6px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '6px',
+                      marginBottom: '12px'
+                    }}>
+                      {filteredProducts.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '16px', color: '#94a3b8', fontSize: '0.8rem' }}>
+                          No products found matching "{productSearch}"
+                        </div>
+                      ) : (
+                        filteredProducts.map(p => {
+                          const isAlreadyAdded = currentItemsList.some(item => item.includes(p.name));
+                          const currentQty = productQuantities[p.id] || 1;
+
+                          return (
+                            <div
+                              key={p.id}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                padding: '6px 10px',
+                                borderRadius: '6px',
+                                background: isAlreadyAdded ? '#f0fdf4' : '#ffffff',
+                                border: isAlreadyAdded ? '1.5px solid #86efac' : '1px solid #e2e8f0',
+                                gap: '10px'
+                              }}
+                            >
+                              {/* Left: Thumbnail & Name */}
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
+                                <img
+                                  src={p.image}
+                                  alt={p.name}
+                                  style={{
+                                    width: '32px',
+                                    height: '32px',
+                                    borderRadius: '4px',
+                                    objectFit: 'contain',
+                                    background: '#ffffff',
+                                    border: '1px solid #e2e8f0',
+                                    flexShrink: 0
+                                  }}
+                                  onError={e => (e.currentTarget.src = '/logo.jpg')}
+                                />
+                                <div style={{ minWidth: 0 }}>
+                                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {p.name}
+                                  </div>
+                                  <div style={{ fontSize: '0.7rem', color: '#64748b', display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                    <span style={{ fontWeight: 800, color: '#16a34a' }}>₹{(p.price || 0).toLocaleString('en-IN')}</span>
+                                    {p.brand && <span style={{ color: '#475569' }}>• {p.brand}</span>}
+                                    {p.badge && <span style={{ background: '#f1f5f9', padding: '0 4px', borderRadius: '3px' }}>{p.badge}</span>}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Right: Quantity & Add Button */}
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                                <button
+                                  type="button"
+                                  title="Use this product picture as the Combo Banner photo"
+                                  onClick={() => setFormData(prev => ({ ...prev, image: p.image }))}
+                                  style={{
+                                    padding: '4px 6px',
+                                    borderRadius: '4px',
+                                    border: '1px solid #cbd5e1',
+                                    background: '#ffffff',
+                                    color: '#475569',
+                                    fontSize: '0.68rem',
+                                    cursor: 'pointer'
+                                  }}
+                                >
+                                  📸 Use Photo
+                                </button>
+
+                                <div style={{ display: 'inline-flex', alignItems: 'center', border: '1px solid #cbd5e1', borderRadius: '6px', overflow: 'hidden', background: '#fff' }}>
+                                  <button
+                                    type="button"
+                                    onClick={() => setPickerQty(p.id, currentQty - 1)}
+                                    style={{ border: 'none', background: 'transparent', padding: '3px 6px', cursor: 'pointer', color: '#475569' }}
+                                  >
+                                    <Minus size={11} />
+                                  </button>
+                                  <span style={{ fontSize: '0.75rem', fontWeight: 800, padding: '0 4px', minWidth: '18px', textAlign: 'center' }}>
+                                    {currentQty}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => setPickerQty(p.id, currentQty + 1)}
+                                    style={{ border: 'none', background: 'transparent', padding: '3px 6px', cursor: 'pointer', color: '#475569' }}
+                                  >
+                                    <Plus size={11} />
+                                  </button>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleAddProductToCombo(p)}
+                                  style={{
+                                    padding: '5px 10px',
+                                    borderRadius: '6px',
+                                    border: 'none',
+                                    background: isAlreadyAdded ? '#15803d' : '#2563eb',
+                                    color: '#ffffff',
+                                    fontSize: '0.72rem',
+                                    fontWeight: 800,
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px'
+                                  }}
+                                >
+                                  {isAlreadyAdded ? <Check size={12} /> : <Plus size={12} />}
+                                  <span>{isAlreadyAdded ? 'Update' : '+ Add to Combo'}</span>
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  /* Raw Textarea Mode */
+                  <div style={{ marginBottom: '10px' }}>
+                    <textarea
+                      rows={6}
+                      required
+                      value={formData.itemsText}
+                      onChange={e => setFormData({ ...formData, itemsText: e.target.value })}
+                      placeholder={`4x CP PLUS 4MP High-Definition IP Cameras (Audio with Mic)\n1x CP PLUS 4-Channel 4K Ultra PoE NVR Recorder\n1x 1TB Seagate SkyHawk 24/7 Surveillance Hard Disk\n1x High-Speed Cat6 Pure Copper Cable Roll (50m) & RJ45\nFree Mobile App Live View Setup & Professional Fitting`}
+                      style={{
+                        width: '100%',
+                        padding: '10px 12px',
+                        borderRadius: '8px',
+                        border: '1px solid #cbd5e1',
+                        fontSize: '0.85rem',
+                        fontFamily: 'inherit',
+                        lineHeight: 1.4
+                      }}
+                    />
+                    <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                      Each line will show as an individual bullet on the storefront banner and details popup.
+                    </span>
+                  </div>
+                )}
+
+                {/* Included Items in Combo Preview / Manager */}
+                <div style={{
+                  borderTop: '1px solid #e2e8f0',
+                  paddingTop: '10px',
+                  marginTop: '6px'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '6px' }}>
+                    <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#334155' }}>
+                      Included in this Combo ({currentItemsList.length} items):
+                    </span>
+                    {estimatedCatalogValue > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, regularPrice: estimatedCatalogValue }))}
+                        style={{
+                          padding: '3px 8px',
+                          borderRadius: '4px',
+                          border: '1px solid #bbf7d0',
+                          background: '#f0fdf4',
+                          color: '#15803d',
+                          fontSize: '0.7rem',
+                          fontWeight: 800,
+                          cursor: 'pointer'
+                        }}
+                        title="Click to auto-fill Regular Price with the sum of selected products"
+                      >
+                        ⚡ Set Regular Price: ₹{estimatedCatalogValue.toLocaleString('en-IN')}
+                      </button>
+                    )}
+                  </div>
+
+                  {currentItemsList.length === 0 ? (
+                    <div style={{ fontSize: '0.78rem', color: '#dc2626', fontStyle: 'italic', padding: '6px 0' }}>
+                      No products added yet. Click "+ Add to Combo" on any product above or type custom perks below.
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginBottom: '10px' }}>
+                      {currentItemsList.map((item, idx) => (
+                        <div
+                          key={idx}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '6px 10px',
+                            borderRadius: '6px',
+                            background: '#f8fafc',
+                            border: '1px solid #e2e8f0',
+                            fontSize: '0.8rem',
+                            color: '#1e293b'
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
+                            <span style={{
+                              width: '18px',
+                              height: '18px',
+                              borderRadius: '50%',
+                              background: '#eff6ff',
+                              color: '#2563eb',
+                              fontSize: '0.68rem',
+                              fontWeight: 800,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexShrink: 0
+                            }}>
+                              {idx + 1}
+                            </span>
+                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', lineHeight: 1.25 }}>
+                              {item}
+                            </span>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveItem(idx)}
+                            style={{
+                              border: 'none',
+                              background: 'transparent',
+                              color: '#ef4444',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              flexShrink: 0,
+                              fontSize: '0.85rem',
+                              fontWeight: 700
+                            }}
+                            title="Remove this item from combo"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Custom Line / Perk Input */}
+                  <div style={{ display: 'flex', gap: '6px', marginTop: '6px' }}>
+                    <input
+                      type="text"
+                      placeholder="Add custom perk (e.g. Free Doorstep Fitting & Setup, 3-Yr Warranty)..."
+                      value={customItemInput}
+                      onChange={e => setCustomItemInput(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleAddCustomItem();
+                        }
+                      }}
+                      style={{
+                        flex: 1,
+                        padding: '6px 10px',
+                        borderRadius: '6px',
+                        border: '1px solid #cbd5e1',
+                        fontSize: '0.78rem'
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddCustomItem}
+                      disabled={!customItemInput.trim()}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        border: 'none',
+                        background: customItemInput.trim() ? '#2563eb' : '#94a3b8',
+                        color: '#ffffff',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        cursor: customItemInput.trim() ? 'pointer' : 'not-allowed'
+                      }}
+                    >
+                      + Add Perk
+                    </button>
+                  </div>
+                </div>
               </div>
 
               {/* Image URL & Quick Presets */}
