@@ -10,6 +10,8 @@ import {
   Video, 
   X, 
   Lock, 
+  Eye,
+  EyeOff,
   LogOut, 
   ArrowLeft, 
   ExternalLink,
@@ -57,6 +59,7 @@ export const SiteVisitApp: React.FC<SiteVisitAppProps> = ({ onGoToStore, onGoToA
            localStorage.getItem('meksha_site_visit_auth') === 'true';
   });
   const [passwordInput, setPasswordInput] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
 
   // Form State
@@ -95,16 +98,17 @@ export const SiteVisitApp: React.FC<SiteVisitAppProps> = ({ onGoToStore, onGoToA
   // Tab View for Technician: New Inspection vs Recent Visits
   const [activeTab, setActiveTab] = useState<'form' | 'history'>('form');
 
-  // Handle Login
+  // Handle Login - Case-insensitive and trimmed to handle mobile keyboard autocorrect
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput.trim() === 'admin@2026') {
+    const cleaned = passwordInput.trim().toLowerCase();
+    if (cleaned === 'admin@2026') {
       sessionStorage.setItem('meksha_site_visit_auth', 'true');
       localStorage.setItem('meksha_site_visit_auth', 'true');
       setIsAuthenticated(true);
       setLoginError('');
     } else {
-      setLoginError('Incorrect password. Please enter admin@2026.');
+      setLoginError('Incorrect password. Please verify and try again.');
     }
   };
 
@@ -112,6 +116,7 @@ export const SiteVisitApp: React.FC<SiteVisitAppProps> = ({ onGoToStore, onGoToA
     sessionStorage.removeItem('meksha_site_visit_auth');
     localStorage.removeItem('meksha_site_visit_auth');
     setIsAuthenticated(false);
+    setPasswordInput('');
   };
 
   // Fetch GPS Coordinates from Mobile Device
@@ -357,22 +362,48 @@ ${visit.enquiryNotes || 'No special notes recorded.'}
             <div style={{ position: 'relative' }}>
               <Lock size={16} color="#64748b" style={{ position: 'absolute', left: '12px', top: '13px' }} />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 required
                 autoFocus
-                placeholder="Enter password (admin@2026)"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                placeholder="Enter password"
                 value={passwordInput}
-                onChange={e => setPasswordInput(e.target.value)}
+                onChange={e => {
+                  setPasswordInput(e.target.value);
+                  if (loginError) setLoginError('');
+                }}
                 style={{
                   width: '100%',
                   boxSizing: 'border-box',
-                  padding: '11px 12px 11px 36px',
+                  padding: '11px 40px 11px 36px',
                   borderRadius: '10px',
                   border: loginError ? '1.5px solid #ef4444' : '1px solid #cbd5e1',
                   fontSize: '0.92rem',
                   outline: 'none'
                 }}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '10px',
+                  background: 'none',
+                  border: 'none',
+                  color: '#64748b',
+                  cursor: 'pointer',
+                  padding: '3px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
 
             {loginError && (
