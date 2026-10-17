@@ -173,60 +173,34 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
               style={{
                 flex: '0 0 100%',
                 scrollSnapAlign: 'center',
-                background: theme.background,
+                background: `linear-gradient(90deg, rgba(8, 14, 28, 0.94) 0%, rgba(8, 14, 28, 0.84) 42%, rgba(8, 14, 28, 0.38) 75%, rgba(8, 14, 28, 0.1) 100%), url(${combo.image}) right center / cover no-repeat`,
                 borderRadius: '12px',
-                padding: '8px 12px',
+                padding: '10px 14px',
                 color: '#ffffff',
-                boxShadow: '0 4px 16px rgba(15, 23, 42, 0.1)',
+                boxShadow: '0 4px 16px rgba(15, 23, 42, 0.14)',
                 position: 'relative',
                 overflow: 'hidden',
-                border: '1px solid rgba(255, 255, 255, 0.14)',
+                border: '1px solid rgba(255, 255, 255, 0.16)',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: '12px',
-                minHeight: '82px',
-                maxHeight: '110px',
+                minHeight: '88px',
+                maxHeight: '115px',
                 transition: 'transform 0.15s ease'
               }}
               title="Click to view full combo details and package specifications"
             >
-              {/* Left Side: Thumbnail Preview */}
-              <div style={{
-                width: '68px',
-                height: '68px',
-                borderRadius: '8px',
-                background: 'rgba(255, 255, 255, 0.08)',
-                border: '1px solid rgba(255, 255, 255, 0.16)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '4px',
-                flexShrink: 0
-              }}>
-                <img
-                  src={combo.image}
-                  alt={combo.title}
-                  style={{
-                    maxHeight: '100%',
-                    maxWidth: '100%',
-                    objectFit: 'contain',
-                    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
-                  }}
-                  onError={(e) => { e.currentTarget.src = '/logo.jpg'; }}
-                />
-              </div>
-
-              {/* Middle: Title, Badge & Pricing */}
-              <div style={{ flex: 1, minWidth: 0 }}>
-                {/* Top Row: Badge + Slide number */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px', flexWrap: 'wrap' }}>
+              {/* Content: Title, Badge & Pricing */}
+              <div style={{ flex: 1, minWidth: 0, zIndex: 2, maxWidth: '78%' }}>
+                {/* Top Row: Badge */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', flexWrap: 'wrap' }}>
                   <span style={{
                     background: theme.badgeBg,
                     border: `1px solid ${theme.badgeBorder}`,
                     color: '#ffffff',
-                    padding: '1px 7px',
+                    padding: '2px 8px',
                     borderRadius: '9999px',
                     fontSize: '0.65rem',
                     fontWeight: 800,
@@ -234,7 +208,8 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
                     letterSpacing: '0.02em',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '4px'
+                    gap: '4px',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
                   }}>
                     <Sparkles size={10} color={theme.accent} />
                     <span>{combo.badge || 'SPECIAL DEAL'}</span>
@@ -243,11 +218,12 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
 
                 {/* Title */}
                 <h3 style={{
-                  fontSize: 'clamp(0.85rem, 2.2vw, 0.98rem)',
+                  fontSize: 'clamp(0.85rem, 2.2vw, 1rem)',
                   fontWeight: 800,
                   lineHeight: 1.25,
-                  margin: '0 0 4px 0',
+                  margin: '0 0 5px 0',
                   color: '#ffffff',
+                  textShadow: '0 2px 4px rgba(0,0,0,0.85)',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis'
@@ -258,9 +234,10 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
                 {/* Pricing & Savings */}
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', flexWrap: 'wrap' }}>
                   <span style={{
-                    fontSize: 'clamp(1rem, 2.8vw, 1.2rem)',
+                    fontSize: 'clamp(1.05rem, 3vw, 1.25rem)',
                     fontWeight: 900,
                     color: '#ffffff',
+                    textShadow: '0 2px 4px rgba(0,0,0,0.85)',
                     lineHeight: 1
                   }}>
                     ₹{combo.offerPrice.toLocaleString('en-IN')}
@@ -269,7 +246,7 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
                   <del style={{
                     fontSize: '0.78rem',
                     fontWeight: 600,
-                    color: 'rgba(255, 255, 255, 0.55)',
+                    color: 'rgba(255, 255, 255, 0.65)',
                     textDecoration: 'line-through'
                   }}>
                     ₹{combo.regularPrice.toLocaleString('en-IN')}
@@ -277,13 +254,14 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
 
                   {savings > 0 && (
                     <span style={{
-                      background: 'rgba(16, 185, 129, 0.22)',
-                      border: '1px solid rgba(52, 211, 153, 0.4)',
-                      color: '#6ee7b7',
-                      padding: '1px 6px',
+                      background: 'rgba(16, 185, 129, 0.28)',
+                      border: '1px solid rgba(52, 211, 153, 0.45)',
+                      color: '#a7f3d0',
+                      padding: '2px 6px',
                       borderRadius: '4px',
                       fontSize: '0.65rem',
-                      fontWeight: 800
+                      fontWeight: 800,
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.3)'
                     }}>
                       Save ₹{savings.toLocaleString('en-IN')} ({discountPercent}%)
                     </span>

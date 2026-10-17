@@ -25,7 +25,7 @@ export const DEFAULT_COMBO_OFFERS: ComboOffer[] = [
       '1x High-Speed Cat6 Pure Copper Cable Roll (50m) & RJ45',
       'Free Mobile App Live View Setup & Professional Doorstep Fitting'
     ],
-    image: 'https://cpplusworld.com/prodassets/product/small/3a918c3a-eb66-4b2b-b067-f2c2c84a8b34.png',
+    image: '/combos/ip_combo_banner.jpg',
     gradientTheme: 'blue',
     active: true,
     orderNumber: 1
@@ -43,7 +43,7 @@ export const DEFAULT_COMBO_OFFERS: ComboOffer[] = [
       '1x 4-Channel Heavy Duty SMPS Power Supply & BNC Connectors',
       'Full Cable Wiring, Clamping & Complete Setup in Davanagere'
     ],
-    image: 'https://i0.wp.com/ncaps.in/wp-content/uploads/2026/01/Elite-CCTV-11.png?fit=500%2C500&ssl=1',
+    image: '/combos/analog_combo_banner.png',
     gradientTheme: 'purple',
     active: true,
     orderNumber: 2
@@ -55,13 +55,13 @@ export const DEFAULT_COMBO_OFFERS: ComboOffer[] = [
     regularPrice: 18500,
     offerPrice: 13500,
     items: [
-      '1x 360° Motorized Pan & Tilt Solar 4G Outdoor Camera',
-      '1x CP PLUS High-Efficiency Monocrystalline Solar Panel',
-      '1x High-Capacity Rechargeable Lithium Battery Kit',
+      '1x EYEQUBE 4G SIM Dual-Lens Outdoor Solar PTZ Camera',
+      '1x High-Efficiency Monocrystalline Solar Panel + Mounting Kit',
+      '1x Built-in High Capacity Rechargeable Lithium Battery',
       'Zero Electricity & Zero Wi-Fi Needed (Jio/Airtel 4G SIM Slot)',
-      'Mobile Siren, 2-Way Voice Intercom & All-Weather Mounting Bracket'
+      'Mobile App Live View, 2-Way Talk, Motion Siren & Color Night Vision'
     ],
-    image: '/products/eyeqube_solar_camera.jpg',
+    image: '/combos/solar_combo_banner.jpg',
     gradientTheme: 'emerald',
     active: true,
     orderNumber: 3

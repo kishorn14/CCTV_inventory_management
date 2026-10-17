@@ -17,9 +17,9 @@ import { ComboOffer, Product } from '../../types';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
 
 const PRESET_COMBO_IMAGES = [
-  { label: 'CP PLUS IP Camera Kit', url: 'https://cpplusworld.com/prodassets/product/small/3a918c3a-eb66-4b2b-b067-f2c2c84a8b34.png' },
-  { label: 'HD Analog DVR Kit', url: 'https://i0.wp.com/ncaps.in/wp-content/uploads/2026/01/Elite-CCTV-11.png?fit=500%2C500&ssl=1' },
-  { label: '4G Solar PTZ Camera', url: '/products/eyeqube_solar_camera.jpg' },
+  { label: 'Trueview HD Analog Banner', url: '/combos/analog_combo_banner.png' },
+  { label: 'CP PLUS IP Camera Banner', url: '/combos/ip_combo_banner.jpg' },
+  { label: 'EYEQUBE 4G Solar PTZ Banner', url: '/combos/solar_combo_banner.jpg' },
   { label: 'Wi-Fi Smart 360° Cam', url: '/products/cpplus_e34a.jpg' }
 ];
 
