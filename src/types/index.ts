@@ -26,6 +26,7 @@ export interface Product {
   id: string;
   name: string;
   category: CategoryType;
+  categoryId?: string;     // Unique ID of the ProductCategory (e.g. 'cat-1', 'cat-2')
   categoryNumber?: number; // Category Order Number (e.g. 1, 2, 3...) assigned by admin
   brand: string;
   image: string;
@@ -149,7 +150,7 @@ export interface CctvPricingConfig {
   // Installation & Fitting charges
   installationPerCamera: number;    // Wired camera mounting, wiring & setup
   wifiFittingPerCamera: number;     // WiFi camera wall mounting & phone pairing
-  solarFittingPerCamera: number;    // Solar panel mounting & pole alignment
+  solarFittingPerCamera?: number;   // Deprecated: Solar cameras do not include pole mounting
 }
 
 export const DEFAULT_CCTV_PRICING: CctvPricingConfig = {
@@ -194,7 +195,7 @@ export const DEFAULT_CCTV_PRICING: CctvPricingConfig = {
 
   installationPerCamera: 450,
   wifiFittingPerCamera: 350,
-  solarFittingPerCamera: 650
+  solarFittingPerCamera: 0
 };
 
 export interface BrandPartner {

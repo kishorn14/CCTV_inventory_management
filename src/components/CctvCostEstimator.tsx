@@ -9,7 +9,6 @@ import {
   Minus, 
   MessageSquare, 
   Phone, 
-  ChevronRight,
   RefreshCw,
   CheckCircle2,
   Server,
@@ -84,11 +83,8 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   }, [products]);
 
   // Step 1: Camera Quantities Map (cameraId -> quantity)
-  // Allows selecting individual quantities beside each camera model
-  const [cameraQuantities, setCameraQuantities] = useState<Record<string, number>>(() => {
-    const firstCam = cameraProducts[0]?.id;
-    return firstCam ? { [firstCam]: 4 } : {};
-  });
+  // Starts empty so no camera is pre-selected by default
+  const [cameraQuantities, setCameraQuantities] = useState<Record<string, number>>({});
 
   const [cameraFilter, setCameraFilter] = useState<'all' | 'ip' | 'analog' | 'wifi' | 'solar'>('all');
 
@@ -116,11 +112,9 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
 
   // Active step guide (1 to 5)
   const [activeStep, setActiveStep] = useState<number>(1);
-  const [notificationMsg, setNotificationMsg] = useState<string | null>(null);
 
-  const advanceToStep = (step: number, message: string) => {
+  const advanceToStep = (step: number, _message?: string) => {
     setActiveStep(step);
-    setNotificationMsg(message);
     const stepEl = document.getElementById(`estimator-step-${step}`);
     if (stepEl) {
       stepEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -253,24 +247,23 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     return selectedCamerasList.reduce((sum, item) => sum + (item.product.price || 0) * item.quantity, 0);
   }, [selectedCamerasList]);
 
-  const hddTotal = resolvedHdd?.price || 0;
-  const recorderTotal = resolvedRecorder?.price || 0;
-  const rackTotal = resolvedRack?.price || 0;
-  const powerTotal = resolvedPower?.price || 0;
+  const hddTotal = totalCameraCount > 0 ? (resolvedHdd?.price || 0) : 0;
+  const recorderTotal = totalCameraCount > 0 ? (resolvedRecorder?.price || 0) : 0;
+  const rackTotal = totalCameraCount > 0 ? (resolvedRack?.price || 0) : 0;
+  const powerTotal = totalCameraCount > 0 ? (resolvedPower?.price || 0) : 0;
   
   const cableTotal = useMemo(() => {
-    if (!resolvedCable) return 0;
+    if (totalCameraCount === 0 || !resolvedCable) return 0;
     if (resolvedCable.name.includes('305M')) return resolvedCable.price || 0;
     const meters = Math.max(totalCameraCount * 20, 40);
     return (resolvedCable.price || 47) * meters;
   }, [resolvedCable, totalCameraCount]);
 
-  const grandTotal = cameraTotal + hddTotal + recorderTotal + rackTotal + powerTotal + cableTotal + connectorsTotalCost + installationTotalCost;
+  const grandTotal = totalCameraCount === 0 ? 0 : (cameraTotal + hddTotal + recorderTotal + rackTotal + powerTotal + cableTotal + connectorsTotalCost + installationTotalCost);
 
   // Reset function
   const handleReset = () => {
-    const firstCam = cameraProducts[0]?.id;
-    setCameraQuantities(firstCam ? { [firstCam]: 4 } : {});
+    setCameraQuantities({});
     setSelectedHddId('auto');
     setSelectedRecorderId('auto');
     setSelectedRackId('none');
@@ -279,11 +272,13 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     setIncludeConnectors(true);
     setIncludeInstallation(true);
     setActiveStep(1);
-    setNotificationMsg(null);
   };
 
   // WhatsApp Quotation Message (Lists each individual camera model and count)
   const waEstimateText = useMemo(() => {
+    if (totalCameraCount === 0) {
+      return `Hello Meksha CCTV Solutions, I would like to inquire about CCTV package estimation.`;
+    }
     let msg = `*MEKSHA CCTV SOLUTIONS - ESTIMATED PACKAGE QUOTATION*\n`;
     msg += `-------------------------------------------\n`;
     msg += `📷 *Selected Cameras (${totalCameraCount} Total):*\n`;
@@ -467,50 +462,17 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
         </div>
 
         {/* Scrollable Modal Content */}
-        <div style={{
-          overflowY: 'auto',
-          padding: '24px 20px 36px',
-          flex: 1,
-          overscrollBehavior: 'contain',
-          background: '#f8fafc'
-        }}>
+        <div className="estimator-body">
           <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
             
             {/* Estimator Header Banner Inside Modal */}
-            <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                background: '#eff6ff',
-                border: '1px solid #bfdbfe',
-                color: '#1d4ed8',
-                padding: '5px 14px',
-                borderRadius: '9999px',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                marginBottom: '10px'
-              }}>
-                <Calculator size={15} /> Instant CCTV Package Cost Estimator
-              </div>
-              <h2 style={{ fontSize: 'clamp(1.3rem, 3vw, 1.85rem)', fontWeight: 800, margin: '0 0 8px', color: '#0f172a' }}>
+            <div style={{ textAlign: 'center', marginBottom: '18px' }}>
+              <h2 style={{ fontSize: 'clamp(1.25rem, 2.8vw, 1.75rem)', fontWeight: 800, margin: '0 0 14px', color: '#0f172a' }}>
                 Customize &amp; Estimate Your CCTV System In Seconds
               </h2>
-              <p style={{ color: '#64748b', fontSize: '0.9rem', maxWidth: '680px', margin: '0 auto' }}>
-                Select individual quantities beside each camera model (mix &amp; match bullets, domes, and Wi-Fi cams). The estimator automatically guides you through matching storage (HDD), recording unit (DVR/NVR), racks, cables, and setup.
-              </p>
 
               {/* Stepper Navigation Strip */}
-              <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: '8px',
-                marginTop: '20px',
-                flexWrap: 'wrap'
-              }}>
+              <div className="estimator-stepper-strip">
                 {[
                   { num: 1, label: `1. Cameras (${totalCameraCount})`, icon: Camera },
                   { num: 2, label: '2. HDD Storage', icon: HardDrive },
@@ -528,10 +490,10 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '6px',
-                        padding: '7px 14px',
+                        gap: '5px',
+                        padding: '6px 12px',
                         borderRadius: '9999px',
-                        fontSize: '0.82rem',
+                        fontSize: '0.78rem',
                         fontWeight: 700,
                         cursor: 'pointer',
                         transition: 'all 0.18s ease',
@@ -542,10 +504,11 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                           ? '#2563eb' 
                           : (isPast ? '#ecfdf5' : '#ffffff'),
                         color: isActive ? '#ffffff' : (isPast ? '#059669' : '#475569'),
-                        boxShadow: isActive ? '0 2px 8px rgba(37, 99, 235, 0.25)' : 'none'
+                        boxShadow: isActive ? '0 2px 8px rgba(37, 99, 235, 0.25)' : 'none',
+                        flexShrink: 0
                       }}
                     >
-                      {isPast ? <CheckCircle2 size={14} color="#059669" /> : <Icon size={14} />}
+                      {isPast ? <CheckCircle2 size={13} color="#059669" /> : <Icon size={13} />}
                       <span>{step.label}</span>
                     </button>
                   );
@@ -557,49 +520,22 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '5px',
-                    padding: '7px 12px',
+                    gap: '4px',
+                    padding: '6px 12px',
                     borderRadius: '9999px',
-                    fontSize: '0.78rem',
+                    fontSize: '0.76rem',
                     fontWeight: 700,
                     cursor: 'pointer',
                     background: '#fef2f2',
                     border: '1px solid #fecaca',
-                    color: '#dc2626'
+                    color: '#dc2626',
+                    flexShrink: 0
                   }}
                 >
-                  <RefreshCw size={13} /> Reset
+                  <RefreshCw size={12} /> Reset
                 </button>
               </div>
             </div>
-
-            {/* Guided Banner Notification Prompt */}
-            {notificationMsg && (
-              <div style={{
-                maxWidth: '800px',
-                margin: '0 auto 18px auto',
-                background: '#eff6ff',
-                border: '1px solid #bfdbfe',
-                borderRadius: '10px',
-                padding: '10px 16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                fontSize: '0.86rem',
-                color: '#1e40af'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <ChevronRight size={16} color="#2563eb" />
-                  <span style={{ fontWeight: 600 }}>{notificationMsg}</span>
-                </div>
-                <button
-                  onClick={() => setNotificationMsg(null)}
-                  style={{ background: 'none', border: 'none', color: '#2563eb', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 700 }}
-                >
-                  Dismiss
-                </button>
-              </div>
-            )}
 
             {/* 2-Column Layout: Component Configurator (Left) + Live Total Bill Card (Right) */}
             <div style={{
@@ -615,23 +551,16 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                 {/* STEP 1: Select Cameras with Quantity Beside Each Camera */}
                 <div 
                   id="estimator-step-1"
-                  style={{
-                    background: '#ffffff',
-                    border: activeStep === 1 ? '2px solid #2563eb' : '1px solid #e2e8f0',
-                    borderRadius: '14px',
-                    padding: '18px 20px',
-                    boxShadow: activeStep === 1 ? '0 4px 20px rgba(37, 99, 235, 0.1)' : '0 2px 8px rgba(15, 23, 42, 0.04)',
-                    transition: 'border 0.2s ease, box-shadow 0.2s ease'
-                  }}
+                  className={`estimator-step-card ${activeStep === 1 ? 'active-step' : ''}`}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
                     <div 
                       onClick={() => setActiveStep(1)} 
-                      style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
                     >
                       <span style={{
-                        width: '30px',
-                        height: '30px',
+                        width: '28px',
+                        height: '28px',
                         borderRadius: '50%',
                         background: '#2563eb',
                         color: '#fff',
@@ -639,15 +568,15 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontWeight: 800,
-                        fontSize: '0.85rem'
+                        fontSize: '0.82rem'
                       }}>
                         1
                       </span>
                       <div>
-                        <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: '#0f172a' }}>
+                        <h3 style={{ margin: 0, fontSize: '0.96rem', fontWeight: 800, color: '#0f172a' }}>
                           Step 1: Select Cameras &amp; Quantities
                         </h3>
-                        <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                        <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
                           Total Selected: <strong style={{ color: '#2563eb' }}>{totalCameraCount} Camera{totalCameraCount !== 1 ? 's' : ''}</strong> ({selectedCamerasList.length} model{selectedCamerasList.length !== 1 ? 's' : ''})
                         </span>
                       </div>
@@ -659,26 +588,26 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '5px',
+                        gap: '4px',
                         background: totalCameraCount > 0 ? '#2563eb' : '#f1f5f9',
                         color: totalCameraCount > 0 ? '#ffffff' : '#94a3b8',
                         border: 'none',
-                        padding: '6px 14px',
-                        borderRadius: '8px',
-                        fontSize: '0.8rem',
+                        padding: '5px 12px',
+                        borderRadius: '6px',
+                        fontSize: '0.76rem',
                         fontWeight: 700,
                         cursor: totalCameraCount > 0 ? 'pointer' : 'default',
                         transition: 'all 0.15s ease'
                       }}
                       disabled={totalCameraCount === 0}
                     >
-                      <span>Next: Storage (HDD)</span>
-                      <ArrowRight size={14} />
+                      <span>Next: Storage</span>
+                      <ArrowRight size={13} />
                     </button>
                   </div>
 
                   {/* Camera Filter Tabs */}
-                  <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '10px', marginBottom: '10px' }}>
+                  <div className="estimator-filter-tabs">
                     {[
                       { id: 'all', label: `All Cameras (${cameraProducts.length})` },
                       { id: 'ip', label: 'CP PLUS IP' },
@@ -689,156 +618,77 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                       <button
                         key={tab.id}
                         onClick={() => setCameraFilter(tab.id as any)}
-                        style={{
-                          padding: '5px 12px',
-                          borderRadius: '6px',
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          border: cameraFilter === tab.id ? '1px solid #2563eb' : '1px solid #e2e8f0',
-                          background: cameraFilter === tab.id ? '#2563eb' : '#f8fafc',
-                          color: cameraFilter === tab.id ? '#ffffff' : '#64748b',
-                          whiteSpace: 'nowrap'
-                        }}
+                        className={`estimator-filter-tab ${cameraFilter === tab.id ? 'active' : ''}`}
                       >
                         {tab.label}
                       </button>
                     ))}
                   </div>
 
-                  {/* Camera Grid with Quantity Controller Right Beside Each Camera */}
-                  <div style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(290px, 1fr))', 
-                    gap: '10px', 
-                    maxHeight: '340px', 
-                    overflowY: 'auto',
-                    paddingRight: '4px'
-                  }}>
+                  {/* Camera List - Clean, simplified product rows */}
+                  <div className="estimator-camera-list">
                     {filteredCameras.map(cam => {
                       const qty = cameraQuantities[cam.id] || 0;
                       const isSelected = qty > 0;
                       return (
                         <div
                           key={cam.id}
-                          style={{
-                            padding: '10px 12px',
-                            borderRadius: '10px',
-                            background: isSelected ? '#eff6ff' : '#ffffff',
-                            border: isSelected ? '2px solid #2563eb' : '1px solid #e2e8f0',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            gap: '10px',
-                            boxShadow: isSelected ? '0 2px 8px rgba(37, 99, 235, 0.12)' : '0 1px 3px rgba(0,0,0,0.02)',
-                            transition: 'all 0.18s ease'
-                          }}
+                          className={`estimator-camera-row ${isSelected ? 'selected' : ''}`}
                         >
                           {/* Left: Thumbnail + Camera Info */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, minWidth: 0 }}>
+                          <div className="estimator-camera-info">
                             <img 
                               src={cam.image} 
                               alt={cam.name} 
-                              style={{ width: '42px', height: '42px', borderRadius: '6px', objectFit: 'contain', background: '#f8fafc', padding: '2px', border: '1px solid #e2e8f0', flexShrink: 0 }} 
+                              className="estimator-camera-img"
+                              loading="lazy"
                             />
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                              <div style={{
-                                fontSize: '0.8rem',
-                                fontWeight: 700,
-                                color: '#0f172a',
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis'
-                              }} title={cam.name}>
+                            <div className="estimator-camera-text">
+                              <div className="estimator-camera-title" title={cam.name}>
                                 {cam.name}
                               </div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
-                                <span style={{ fontSize: '0.7rem', color: '#64748b' }}>{cam.brand}</span>
-                                <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#059669' }}>
+                              <div className="estimator-camera-meta">
+                                <span className="estimator-camera-brand">{cam.brand}</span>
+                                <span className="estimator-camera-price">
                                   ₹{(cam.price || 0).toLocaleString('en-IN')}
                                 </span>
+                                {isSelected && (
+                                  <span className="estimator-camera-subtotal">
+                                    Subtotal: ₹{((cam.price || 0) * qty).toLocaleString('en-IN')}
+                                  </span>
+                                )}
                               </div>
-                              {isSelected && (
-                                <div style={{ fontSize: '0.7rem', color: '#1d4ed8', fontWeight: 700, marginTop: '2px' }}>
-                                  Subtotal: ₹{((cam.price || 0) * qty).toLocaleString('en-IN')}
-                                </div>
-                              )}
                             </div>
                           </div>
 
-                          {/* Right: Quantity Controller Just Beside Camera */}
-                          <div style={{ flexShrink: 0 }}>
+                          {/* Right: Quantity Controller */}
+                          <div className="estimator-camera-actions">
                             {qty === 0 ? (
                               <button
-                                onClick={() => {
-                                  updateCameraQty(cam.id, 1);
-                                  setNotificationMsg(`Added ${cam.name} (1 unit) to package.`);
-                                }}
-                                style={{
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '4px',
-                                  background: '#eff6ff',
-                                  border: '1px solid #bfdbfe',
-                                  color: '#1d4ed8',
-                                  padding: '5px 12px',
-                                  borderRadius: '8px',
-                                  fontSize: '0.78rem',
-                                  fontWeight: 700,
-                                  cursor: 'pointer',
-                                  transition: 'all 0.15s ease'
-                                }}
-                                title="Add this camera model"
+                                type="button"
+                                onClick={() => updateCameraQty(cam.id, 1)}
+                                className="estimator-add-btn"
+                                title="Add camera"
                               >
                                 <Plus size={13} /> Add
                               </button>
                             ) : (
-                              <div style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '2px',
-                                background: '#ffffff',
-                                borderRadius: '8px',
-                                padding: '2px 4px',
-                                border: '1.5px solid #2563eb'
-                              }}>
+                              <div className="estimator-qty-pill">
                                 <button
+                                  type="button"
                                   onClick={() => updateCameraQty(cam.id, qty - 1)}
-                                  style={{
-                                    background: '#eff6ff',
-                                    border: 'none',
-                                    color: '#1d4ed8',
-                                    cursor: 'pointer',
-                                    padding: '3px 6px',
-                                    borderRadius: '4px',
-                                    display: 'flex',
-                                    alignItems: 'center'
-                                  }}
+                                  className="estimator-qty-btn"
                                   title="Decrease quantity"
                                 >
                                   <Minus size={13} />
                                 </button>
-                                <span style={{
-                                  minWidth: '22px',
-                                  textAlign: 'center',
-                                  fontWeight: 800,
-                                  fontSize: '0.86rem',
-                                  color: '#0f172a'
-                                }}>
+                                <span className="estimator-qty-count">
                                   {qty}
                                 </span>
                                 <button
+                                  type="button"
                                   onClick={() => updateCameraQty(cam.id, qty + 1)}
-                                  style={{
-                                    background: '#eff6ff',
-                                    border: 'none',
-                                    color: '#1d4ed8',
-                                    cursor: 'pointer',
-                                    padding: '3px 6px',
-                                    borderRadius: '4px',
-                                    display: 'flex',
-                                    alignItems: 'center'
-                                  }}
+                                  className="estimator-qty-btn"
                                   title="Increase quantity"
                                 >
                                   <Plus size={13} />
@@ -852,7 +702,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                   </div>
 
                   {totalCameraCount === 0 && (
-                    <div style={{ textAlign: 'center', color: '#dc2626', fontSize: '0.82rem', marginTop: '10px', fontWeight: 600 }}>
+                    <div style={{ textAlign: 'center', color: '#dc2626', fontSize: '0.8rem', marginTop: '10px', fontWeight: 600 }}>
                       ⚠️ Please select quantity for at least 1 camera model above to configure your package.
                     </div>
                   )}
@@ -861,14 +711,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                 {/* STEP 2: Automatic HDD Storage Selection */}
                 <div 
                   id="estimator-step-2"
-                  style={{
-                    background: '#ffffff',
-                    border: activeStep === 2 ? '2px solid #2563eb' : '1px solid #e2e8f0',
-                    borderRadius: '14px',
-                    padding: '18px 20px',
-                    boxShadow: activeStep === 2 ? '0 4px 20px rgba(37, 99, 235, 0.1)' : '0 2px 8px rgba(15, 23, 42, 0.04)',
-                    transition: 'border 0.2s ease, box-shadow 0.2s ease'
-                  }}
+                  className={`estimator-step-card ${activeStep === 2 ? 'active-step' : ''}`}
                 >
                   <div 
                     onClick={() => setActiveStep(2)}
@@ -898,7 +741,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 120px), 1fr))', gap: '8px' }}>
                     {/* Auto Recommend Option */}
                     <div
                       onClick={() => { 
@@ -982,14 +825,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                 {/* STEP 3: Automatic DVR / NVR Unit Selection */}
                 <div 
                   id="estimator-step-3"
-                  style={{
-                    background: '#ffffff',
-                    border: activeStep === 3 ? '2px solid #2563eb' : '1px solid #e2e8f0',
-                    borderRadius: '14px',
-                    padding: '18px 20px',
-                    boxShadow: activeStep === 3 ? '0 4px 20px rgba(37, 99, 235, 0.1)' : '0 2px 8px rgba(15, 23, 42, 0.04)',
-                    transition: 'border 0.2s ease, box-shadow 0.2s ease'
-                  }}
+                  className={`estimator-step-card ${activeStep === 3 ? 'active-step' : ''}`}
                 >
                   <div 
                     onClick={() => setActiveStep(3)}
@@ -1022,7 +858,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '8px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 130px), 1fr))', gap: '8px' }}>
                     {/* Auto Recommend Option */}
                     <div
                       onClick={() => { 
@@ -1106,14 +942,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                 {/* STEP 4: CCTV Rack Enclosure Selection */}
                 <div 
                   id="estimator-step-4"
-                  style={{
-                    background: '#ffffff',
-                    border: activeStep === 4 ? '2px solid #2563eb' : '1px solid #e2e8f0',
-                    borderRadius: '14px',
-                    padding: '18px 20px',
-                    boxShadow: activeStep === 4 ? '0 4px 20px rgba(37, 99, 235, 0.1)' : '0 2px 8px rgba(15, 23, 42, 0.04)',
-                    transition: 'border 0.2s ease, box-shadow 0.2s ease'
-                  }}
+                  className={`estimator-step-card ${activeStep === 4 ? 'active-step' : ''}`}
                 >
                   <div 
                     onClick={() => setActiveStep(4)}
@@ -1143,7 +972,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '8px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 120px), 1fr))', gap: '8px' }}>
                     <div
                       onClick={() => { 
                         setSelectedRackId('none'); 
@@ -1196,14 +1025,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                 {/* STEP 5: Cables, Power, Connectors & Installation Options */}
                 <div 
                   id="estimator-step-5"
-                  style={{
-                    background: '#ffffff',
-                    border: activeStep === 5 ? '2px solid #2563eb' : '1px solid #e2e8f0',
-                    borderRadius: '14px',
-                    padding: '18px 20px',
-                    boxShadow: activeStep === 5 ? '0 4px 20px rgba(37, 99, 235, 0.1)' : '0 2px 8px rgba(15, 23, 42, 0.04)',
-                    transition: 'border 0.2s ease, box-shadow 0.2s ease'
-                  }}
+                  className={`estimator-step-card ${activeStep === 5 ? 'active-step' : ''}`}
                 >
                   <div 
                     onClick={() => setActiveStep(5)}
@@ -1233,7 +1055,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 160px), 1fr))', gap: '8px' }}>
                     {/* Power Supply Toggle */}
                     <div 
                       onClick={() => setIncludePowerSupply(!includePowerSupply)}
@@ -1405,7 +1227,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                   )}
 
                   {/* HDD */}
-                  {resolvedHdd && (
+                  {totalCameraCount > 0 && resolvedHdd && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#334155', borderBottom: '1px dashed #f1f5f9', paddingBottom: '6px' }}>
                       <div>
                         <div style={{ fontWeight: 700, color: '#0f172a' }}>
@@ -1422,7 +1244,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                   )}
 
                   {/* Recorder */}
-                  {resolvedRecorder && (
+                  {totalCameraCount > 0 && resolvedRecorder && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#334155', borderBottom: '1px dashed #f1f5f9', paddingBottom: '6px' }}>
                       <div>
                         <div style={{ fontWeight: 700, color: '#0f172a' }}>
@@ -1439,7 +1261,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                   )}
 
                   {/* Rack */}
-                  {resolvedRack && (
+                  {totalCameraCount > 0 && resolvedRack && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#334155', borderBottom: '1px dashed #f1f5f9', paddingBottom: '6px' }}>
                       <div>
                         <div style={{ fontWeight: 700, color: '#0f172a' }}>
@@ -1453,7 +1275,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                   )}
 
                   {/* Power */}
-                  {resolvedPower && (
+                  {totalCameraCount > 0 && resolvedPower && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#334155', borderBottom: '1px dashed #f1f5f9', paddingBottom: '6px' }}>
                       <div>
                         <div style={{ fontWeight: 700, color: '#0f172a' }}>
@@ -1467,7 +1289,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                   )}
 
                   {/* Cabling */}
-                  {resolvedCable && (
+                  {totalCameraCount > 0 && resolvedCable && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#334155', borderBottom: '1px dashed #f1f5f9', paddingBottom: '6px' }}>
                       <div>
                         <div style={{ fontWeight: 700, color: '#0f172a' }}>
@@ -1559,7 +1381,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     }}
                   >
                     <MessageSquare size={18} />
-                    <span>Get This Quotation on WhatsApp</span>
+                    <span>{totalCameraCount === 0 ? 'Inquire on WhatsApp' : 'Get This Quotation on WhatsApp'}</span>
                   </a>
 
                   <a

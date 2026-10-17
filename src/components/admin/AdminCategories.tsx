@@ -20,7 +20,7 @@ interface AdminCategoriesProps {
 }
 
 export const AdminCategories: React.FC<AdminCategoriesProps> = ({ onGoToProducts }) => {
-  const { categories, addCategory, updateCategory, deleteCategory, products } = useShop();
+  const { categories, addCategory, updateCategory, deleteCategory, swapCategoryOrder, products } = useShop();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<ProductCategory | null>(null);
@@ -84,10 +84,7 @@ export const AdminCategories: React.FC<AdminCategoriesProps> = ({ onGoToProducts
     if (targetIndex < 0 || targetIndex >= sortedCategories.length) return;
 
     const targetCat = sortedCategories[targetIndex];
-    // Swap order numbers
-    const tempOrder = cat.orderNumber;
-    updateCategory(cat.id, { orderNumber: targetCat.orderNumber });
-    updateCategory(targetCat.id, { orderNumber: tempOrder });
+    swapCategoryOrder(cat.id, targetCat.id);
   };
 
   const confirmDelete = () => {
@@ -167,7 +164,7 @@ export const AdminCategories: React.FC<AdminCategoriesProps> = ({ onGoToProducts
               </tr>
             ) : (
               sortedCategories.map((cat, idx) => {
-                const assignedCount = products.filter(p => p.categoryNumber === cat.orderNumber).length;
+                const assignedCount = products.filter(p => p.categoryId === cat.id || (p.categoryNumber !== undefined && p.categoryNumber === cat.orderNumber)).length;
                 const isFirst = idx === 0;
                 const isLast = idx === sortedCategories.length - 1;
 
@@ -203,21 +200,28 @@ export const AdminCategories: React.FC<AdminCategoriesProps> = ({ onGoToProducts
                     </td>
 
                     <td style={{ padding: '14px 20px' }}>
-                      <span style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '4px 10px',
-                        borderRadius: '9999px',
-                        fontSize: '0.8rem',
-                        fontWeight: 700,
-                        background: assignedCount > 0 ? '#ecfdf5' : '#f1f5f9',
-                        color: assignedCount > 0 ? '#059669' : '#64748b',
-                        border: assignedCount > 0 ? '1px solid #a7f3d0' : '1px solid #e2e8f0'
-                      }}>
+                      <button
+                        type="button"
+                        onClick={onGoToProducts}
+                        title="Click to view &amp; assign products in this category"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '4px 10px',
+                          borderRadius: '9999px',
+                          fontSize: '0.8rem',
+                          fontWeight: 700,
+                          background: assignedCount > 0 ? '#ecfdf5' : '#f1f5f9',
+                          color: assignedCount > 0 ? '#059669' : '#64748b',
+                          border: assignedCount > 0 ? '1px solid #a7f3d0' : '1px solid #e2e8f0',
+                          cursor: onGoToProducts ? 'pointer' : 'default',
+                          transition: 'all 0.15s ease'
+                        }}
+                      >
                         <Package size={13} />
                         {assignedCount} Product{assignedCount === 1 ? '' : 's'}
-                      </span>
+                      </button>
                     </td>
 
                     <td style={{ padding: '14px 20px', textAlign: 'center' }}>

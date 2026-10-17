@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Search, 
   Sparkles,
   Eye,
   FileText,
@@ -36,42 +35,27 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     shopInfo 
   } = useShop();
 
-  const [searchQuery, setSearchQuery] = useState('');
   const [activeCategoryPill, setActiveCategoryPill] = useState<string>('all');
 
   // Sort categories strictly by orderNumber (1 comes first, 2 below 1, etc.)
   const sortedCategories = [...categories].sort((a, b) => a.orderNumber - b.orderNumber);
 
-  // Search filter helper
-  const searchFilter = (product: Product) => {
-    const q = searchQuery.toLowerCase().trim();
-    if (!q) return true;
-    return (
-      (product.name || '').toLowerCase().includes(q) ||
-      (product.brand || '').toLowerCase().includes(q) ||
-      (product.description || '').toLowerCase().includes(q) ||
-      (Array.isArray(product.features) ? product.features.some(f => (f || '').toLowerCase().includes(q)) : false)
-    );
-  };
-
-  // Group products by category orderNumber
+  // Group products by category (matching either by explicit categoryId or categoryNumber)
   const categorizedGroups = sortedCategories.map(cat => {
     const catProducts = products
-      .filter(p => p.categoryNumber === cat.orderNumber)
-      .filter(searchFilter);
+      .filter(p => p.categoryId === cat.id || (p.categoryNumber !== undefined && p.categoryNumber === cat.orderNumber));
     return {
       category: cat,
       products: catProducts
     };
   });
 
-  // Any uncategorized products (no categoryNumber or categoryNumber doesn't match any category)
+  // Any uncategorized products (no category match)
   const uncategorizedProducts = products
-    .filter(p => !sortedCategories.some(c => c.orderNumber === p.categoryNumber))
-    .filter(searchFilter);
+    .filter(p => !sortedCategories.some(c => c.id === p.categoryId || (p.categoryNumber !== undefined && c.orderNumber === p.categoryNumber)));
 
   // Calculate total matching products
-  const totalMatchingProducts = categorizedGroups.reduce((acc, g) => acc + g.products.length, 0) + uncategorizedProducts.length;
+  const totalMatchingProducts = products.length;
 
   // Cart summary calculations
   const cartEntries = Object.entries(cart)
@@ -147,67 +131,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   return (
     <section id="products" style={{ position: 'relative', scrollMarginTop: '80px', padding: '6px 0 0 0' }}>
       <div className="container">
-        
-        {/* Compact, Clean Search Bar */}
-        <div style={{ maxWidth: '640px', margin: '0 auto 8px auto', position: 'relative' }}>
-          <Search 
-            size={18} 
-            color="#64748b" 
-            style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} 
-          />
-          <input
-            type="text"
-            placeholder="Search cameras, DVR, NVR, cables, hard disks, accessories..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              background: '#ffffff',
-              border: '1.5px solid #cbd5e1',
-              borderRadius: '9999px',
-              padding: '13px 20px 13px 46px',
-              color: '#0f172a',
-              fontSize: '0.94rem',
-              fontWeight: 500,
-              outline: 'none',
-              boxShadow: '0 2px 10px rgba(15, 23, 42, 0.04)',
-              transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
-            }}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = '#2563eb';
-              e.currentTarget.style.boxShadow = '0 0 0 4px rgba(37, 99, 235, 0.12)';
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = '#cbd5e1';
-              e.currentTarget.style.boxShadow = '0 2px 10px rgba(15, 23, 42, 0.04)';
-            }}
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              style={{
-                position: 'absolute',
-                right: '16px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: '#f1f5f9',
-                border: 'none',
-                borderRadius: '50%',
-                width: '24px',
-                height: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#64748b',
-                cursor: 'pointer',
-                fontSize: '0.75rem',
-                fontWeight: 700
-              }}
-            >
-              ✕
-            </button>
-          )}
-        </div>
 
         {/* Dynamic Category Navigation Pills (Ordered by orderNumber 1, 2, 3...) */}
         <div 
@@ -254,7 +177,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           {/* Individual Category Pills in 1, 2, 3... Sequence */}
           {sortedCategories.map((cat) => {
             const isSelected = activeCategoryPill === cat.id;
-            const count = products.filter(p => p.categoryNumber === cat.orderNumber).length;
+            const count = products.filter(p => p.categoryId === cat.id || (p.categoryNumber !== undefined && p.categoryNumber === cat.orderNumber)).length;
 
             return (
               <button
@@ -298,7 +221,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         </div>
 
 
-        {/* Empty State if No Matching Products */}
+        {/* Empty State if No Products */}
         {totalMatchingProducts === 0 ? (
           <div style={{
             textAlign: 'center',
@@ -308,14 +231,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             border: '1px dashed #cbd5e1'
           }}>
             <p style={{ fontSize: '1.1rem', color: '#64748b', marginBottom: '14px' }}>
-              No items found matching "{searchQuery}".
+              No items available in the catalog yet.
             </p>
-            <button 
-              onClick={() => { setSearchQuery(''); scrollToCategorySection('all'); }}
-              className="btn btn-primary btn-sm"
-            >
-              Reset Search &amp; View All Products ({products.length})
-            </button>
           </div>
         ) : (
           /* Stacked Category Rows Ordered 1, 2, 3... */

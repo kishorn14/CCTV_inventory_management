@@ -12,7 +12,7 @@ import { CameraFootageModal } from './components/CameraFootageModal';
 import { CctvCostEstimator } from './components/CctvCostEstimator';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { CategoryType, Product } from './types';
-import { Phone, MessageCircle, Calculator } from 'lucide-react';
+import { Calculator, Wrench } from 'lucide-react';
 
 function MainApp() {
   const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => {
@@ -23,7 +23,7 @@ function MainApp() {
   });
 
   const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [bookingCategory, setBookingCategory] = useState<CategoryType>('all');
+  const [bookingServiceId, setBookingServiceId] = useState<string | undefined>(undefined);
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('all');
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
   const [footageProduct, setFootageProduct] = useState<Product | null>(null);
@@ -65,8 +65,8 @@ function MainApp() {
     window.scrollTo(0, 0);
   };
 
-  const handleOpenBooking = (category: CategoryType = 'all') => {
-    setBookingCategory(category);
+  const handleOpenBooking = (serviceId?: string) => {
+    setBookingServiceId(serviceId);
     setIsBookingOpen(true);
   };
 
@@ -86,7 +86,7 @@ function MainApp() {
     <div className="app-wrapper">
       {/* 1. Top Contact Bar & Main Navigation Header */}
       <Navbar 
-        onOpenBooking={() => handleOpenBooking('all')} 
+        onOpenBooking={() => handleOpenBooking()} 
         onOpenProducts={() => handleSelectCategory('all')}
         onOpenEstimator={handleOpenEstimator}
       />
@@ -109,57 +109,23 @@ function MainApp() {
             CCTV Security Cameras &amp; Accessories in Davanagere
           </h1>
 
-          {/* Direct CTA Buttons */}
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '10px',
-            flexWrap: 'wrap'
-          }}>
+          {/* Direct CTA Buttons (Strictly Side-by-side on all screens) */}
+          <div className="hero-cta-group">
             <button
               onClick={handleOpenEstimator}
-              className="btn btn-primary"
-              style={{
-                fontSize: '0.9rem',
-                padding: '8px 18px',
-                borderRadius: '8px',
-                gap: '6px',
-                cursor: 'pointer'
-              }}
+              className="hero-cta-btn primary"
             >
               <Calculator size={16} />
-              Instant Cost Estimator
+              <span>Instant Cost Estimator</span>
             </button>
 
-            <a
-              href="tel:6366406305"
-              className="btn btn-call"
-              style={{
-                fontSize: '0.9rem',
-                padding: '8px 18px',
-                borderRadius: '8px',
-                gap: '6px'
-              }}
+            <button
+              onClick={() => handleOpenBooking()}
+              className="hero-cta-btn outline"
             >
-              <Phone size={16} />
-              Call: +91 63664 06305
-            </a>
-
-            <a
-              href="https://wa.me/916366406305?text=Hello%20Meksha%20CCTV%20Solutions%2C%20I%20would%20like%20to%20get%20a%20quotation%20for%20cameras."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-whatsapp"
-              style={{
-                fontSize: '0.9rem',
-                padding: '8px 18px',
-                borderRadius: '8px',
-                gap: '6px'
-              }}
-            >
-              <MessageCircle size={16} />
-              Request Quote on WhatsApp
-            </a>
+              <Wrench size={16} />
+              <span>Request Service</span>
+            </button>
           </div>
         </div>
       </div>
@@ -183,12 +149,12 @@ function MainApp() {
       {/* 6. Footer */}
       <Footer
         onSelectCategory={handleSelectCategory}
-        onOpenBooking={() => handleOpenBooking('all')}
+        onOpenBooking={(srvId) => handleOpenBooking(srvId)}
         onGoToAdmin={navigateToAdmin}
       />
 
       {/* 7. Floating Sticky Bottom Bar for Mobile */}
-      <FloatingActions onOpenBooking={() => handleOpenBooking('all')} />
+      <FloatingActions onOpenBooking={() => handleOpenBooking()} />
 
       {/* 8. Modals & Overlays */}
       {isEstimatorOpen && (
@@ -197,8 +163,11 @@ function MainApp() {
 
       <ServiceBookingModal
         isOpen={isBookingOpen}
-        onClose={() => setIsBookingOpen(false)}
-        initialCategory={bookingCategory}
+        onClose={() => {
+          setIsBookingOpen(false);
+          setBookingServiceId(undefined);
+        }}
+        initialServiceId={bookingServiceId}
       />
 
       <ProductDetailModal

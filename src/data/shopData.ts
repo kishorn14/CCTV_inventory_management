@@ -1,33 +1,35 @@
 import { Product, ProductCategory, ServiceItem, Review } from '../types';
 
 export const DEFAULT_PRODUCT_CATEGORIES: ProductCategory[] = [
-  { id: 'cat-1', orderNumber: 1, name: 'Smart Wi-Fi 360° & 4G Solar Cameras' },
-  { id: 'cat-2', orderNumber: 2, name: 'CP PLUS IP Network Cameras' },
-  { id: 'cat-3', orderNumber: 3, name: 'HD & Analog Surveillance Cameras' },
-  { id: 'cat-4', orderNumber: 4, name: 'Surveillance Hard Disks & Memory Cards' },
-  { id: 'cat-5', orderNumber: 5, name: 'DVR & NVR Video Recorders' },
-  { id: 'cat-6', orderNumber: 6, name: 'PoE Switches & Networking' },
-  { id: 'cat-7', orderNumber: 7, name: 'CCTV Racks, Cables & Connectors' },
+  { id: 'cat-1', orderNumber: 1, name: 'Solar cameras', description: '360 degree with siren and motion detection' },
+  { id: 'cat-2', orderNumber: 2, name: 'Smart Wi-Fi 360° cameras' },
+  { id: 'cat-3', orderNumber: 3, name: 'CP PLUS IP Network Cameras' },
+  { id: 'cat-4', orderNumber: 4, name: 'HD & Analog Surveillance Cameras' },
+  { id: 'cat-5', orderNumber: 5, name: 'Surveillance Hard Disks & Memory Cards' },
+  { id: 'cat-6', orderNumber: 6, name: 'DVR & NVR Video Recorders' },
+  { id: 'cat-7', orderNumber: 7, name: 'PoE Switches & Networking' },
+  { id: 'cat-8', orderNumber: 8, name: 'CCTV Racks, Cables & Connectors' },
 ];
 
 export const getInitialCategoryNumber = (cat: string): number => {
   switch (cat) {
-    case 'wifi_4g':
     case 'solar':
       return 1;
-    case 'ip_cameras':
+    case 'wifi_4g':
       return 2;
-    case 'hd_analog':
+    case 'ip_cameras':
       return 3;
-    case 'storage':
+    case 'hd_analog':
       return 4;
-    case 'dvr_nvr':
+    case 'storage':
       return 5;
-    case 'networking':
+    case 'dvr_nvr':
       return 6;
+    case 'networking':
+      return 7;
     case 'cables_power':
     case 'racks_accessories':
-      return 7;
+      return 8;
     default:
       return 1;
   }
@@ -58,7 +60,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 4720,
     "mrp": 6350,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE IP Bullet Camera with Mic",
       "Long-Range Night Vision (up to 60m)",
@@ -80,7 +81,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 4661,
     "mrp": 6300,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE Smart IP Network Camera",
       "Built-in High Sensitivity Microphone",
@@ -102,7 +102,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 1829,
     "mrp": 2450,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE IP Bullet Camera with Mic",
       "Long-Range Night Vision (up to 60m)",
@@ -168,7 +167,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 0,
     "mrp": 20,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE Smart IP Network Camera",
       "Built-in High Sensitivity Microphone",
@@ -190,7 +188,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 7021,
     "mrp": 9500,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE IP Bullet Camera with Mic",
       "Long-Range Night Vision (up to 60m)",
@@ -212,7 +209,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 5428,
     "mrp": 7350,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE IP Bullet Camera with Mic",
       "Long-Range Night Vision (up to 60m)",
@@ -234,7 +230,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 5310,
     "mrp": 7150,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE Smart IP Network Camera",
       "Built-in High Sensitivity Microphone",
@@ -256,7 +251,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 1121,
     "mrp": 1500,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "2MP Full HD High Resolution",
       "Dual Light Outdoor Bullet",
@@ -278,7 +272,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 1086,
     "mrp": 1450,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "2MP 1080P Full HD Video",
       "Dual Light Smart Night Vision",
@@ -300,7 +293,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 7316,
     "mrp": 9900,
     "unit": "NOS",
-    "warranty": "1 Year Warranty",
     "is360Camera": true,
     "features": [
       "6MP Ultra HD Triple Lens (4+4+12mm)",
@@ -323,7 +315,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 4130,
     "mrp": 5600,
     "unit": "NOS",
-    "warranty": "1 Year Warranty",
     "is360Camera": true,
     "features": [
       "3MP Super HD Clarity",
@@ -346,7 +337,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 4484,
     "mrp": 6050,
     "unit": "NOS",
-    "warranty": "1 Year Warranty",
     "is360Camera": true,
     "features": [
       "3MP Super HD Clarity",
@@ -369,7 +359,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 3481,
     "mrp": 4700,
     "unit": "NOS",
-    "warranty": "1 Year Warranty",
     "features": [
       "3MP Full HD Resolution",
       "Wi-Fi Wireless Connectivity",
@@ -391,7 +380,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 11210,
     "mrp": 15150,
     "unit": "NOS",
-    "warranty": "1 Year Warranty",
     "is360Camera": true,
     "features": [
       "Continuous Solar Powered Operation",
@@ -414,7 +402,7 @@ const RAW_PRODUCTS: Product[] = [
     "price": 6090,
     "mrp": 8200,
     "unit": "NOS",
-    "warranty": "1 Year Warranty",
+    "warranty": "5 Year Warranty",
     "features": [
       "Continuous Solar Powered Operation",
       "High-Capacity Lithium Battery Kit",
@@ -1125,10 +1113,15 @@ const RAW_PRODUCTS: Product[] = [
   }
 ];
 
-export const PRODUCTS: Product[] = RAW_PRODUCTS.map(p => ({
-  ...p,
-  categoryNumber: p.categoryNumber !== undefined ? p.categoryNumber : getInitialCategoryNumber(p.category)
-}));
+export const PRODUCTS: Product[] = RAW_PRODUCTS.map(p => {
+  const catNum = p.categoryNumber !== undefined ? p.categoryNumber : getInitialCategoryNumber(p.category);
+  const matchedCat = DEFAULT_PRODUCT_CATEGORIES.find(c => c.orderNumber === catNum);
+  return {
+    ...p,
+    categoryId: p.categoryId || (matchedCat ? matchedCat.id : 'cat-1'),
+    categoryNumber: catNum
+  };
+});
 
 export const SERVICES: ServiceItem[] = [
   {

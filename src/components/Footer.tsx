@@ -6,7 +6,7 @@ import { CategoryType } from '../types';
 
 interface FooterProps {
   onSelectCategory: (cat: CategoryType) => void;
-  onOpenBooking: () => void;
+  onOpenBooking: (serviceId?: string) => void;
   onGoToAdmin?: () => void;
 }
 
@@ -126,22 +126,22 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenBooking 
             </h4>
             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <li>
-                <button onClick={onOpenBooking} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
+                <button onClick={() => onOpenBooking('installation')} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
                   • CCTV Camera Installation &amp; Wiring
                 </button>
               </li>
               <li>
-                <button onClick={onOpenBooking} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
+                <button onClick={() => onOpenBooking('mobile_view')} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
                   • Mobile App Remote Live View Setup
                 </button>
               </li>
               <li>
-                <button onClick={onOpenBooking} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
+                <button onClick={() => onOpenBooking('repair')} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
                   • Offline Camera &amp; DVR Hard Disk Repair
                 </button>
               </li>
               <li>
-                <button onClick={onOpenBooking} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
+                <button onClick={() => onOpenBooking('amc')} style={{ background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', padding: 0, font: 'inherit' }}>
                   • Annual Maintenance Contracts (AMC)
                 </button>
               </li>

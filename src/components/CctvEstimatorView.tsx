@@ -67,7 +67,6 @@ export const CctvEstimatorView: React.FC<CctvEstimatorViewProps> = ({ embedded =
   // 5. Solar 4G System States
   const [solarCameraCount, setSolarCameraCount] = useState<number>(1);
   const [solarSdCard, setSolarSdCard] = useState<SdCardCapacityType>('64gb');
-  const [includeSolarFitting, setIncludeSolarFitting] = useState<boolean>(true);
 
   // UI accordion for bill breakdown
   const [showBillDetails, setShowBillDetails] = useState<boolean>(true);
@@ -170,9 +169,8 @@ export const CctvEstimatorView: React.FC<CctvEstimatorViewProps> = ({ embedded =
   const solarSdCardCost = 
     solarSdCard === '64gb' ? solarCameraCount * (pricing.sdCard64GB || 550) :
     solarSdCard === '128gb' ? solarCameraCount * (pricing.sdCard128GB || 950) : 0;
-  const solarFittingCost = includeSolarFitting ? solarCameraCount * (pricing.solarFittingPerCamera || 650) : 0;
 
-  const solarGrandTotal = solarCameraCost + solarSdCardCost + solarFittingCost;
+  const solarGrandTotal = solarCameraCost + solarSdCardCost;
 
   // Active Total according to architecture
   const activeGrandTotal = 
@@ -267,7 +265,6 @@ export const CctvEstimatorView: React.FC<CctvEstimatorViewProps> = ({ embedded =
         `Premises Type: ${premisesType}`,
         `Solar 4G Cameras: ${solarCameraCount} Unit(s) @ ₹${pricing.solar4gCamera} = ₹${solarCameraCost.toLocaleString('en-IN')}`,
         `Storage: ${solarSdCard === 'none' ? 'No SD Card Selected' : `${solarSdCard.toUpperCase()} MicroSD (${solarCameraCount} card${solarCameraCount > 1 ? 's' : ''}) - ₹${solarSdCardCost.toLocaleString('en-IN')}`}`,
-        `Pole Mounting & Setup: ${includeSolarFitting ? `Professional Pole Fitting & Angle Setup (₹${solarFittingCost.toLocaleString('en-IN')})` : 'Self Installation'}`,
         `Estimated Setup Total: ₹${activeGrandTotal.toLocaleString('en-IN')}`,
         `Key Features: Solar Powered, 4G SIM Slot, Zero Electricity Needed, Continuous Battery Backup`
       ];
@@ -1478,50 +1475,6 @@ export const CctvEstimatorView: React.FC<CctvEstimatorViewProps> = ({ embedded =
                 })}
               </div>
             </div>
-
-            {/* Solar Pole Mounting & Angle Alignment */}
-            <div style={{
-              background: '#ffffff',
-              borderRadius: '14px',
-              padding: '16px',
-              border: '1px solid #e2e8f0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: '10px'
-            }}>
-              <div>
-                <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0f172a' }}>
-                  Heavy-Duty Pole Mounting &amp; Solar Alignment
-                </div>
-                <div style={{ fontSize: '0.76rem', color: '#64748b' }}>
-                  Pole clamps/brackets fitting, sunlight angle calibration &amp; 4G SIM mobile configuration (₹{pricing.solarFittingPerCamera || 650}/camera)
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '1rem', fontWeight: 800, color: '#04647a' }}>
-                  {includeSolarFitting ? `₹${solarFittingCost.toLocaleString('en-IN')}` : 'Self-Fit'}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setIncludeSolarFitting(!includeSolarFitting)}
-                  style={{
-                    padding: '6px 14px',
-                    borderRadius: '8px',
-                    border: includeSolarFitting ? '1px solid #16a34a' : '1px solid #cbd5e1',
-                    background: includeSolarFitting ? '#f0fdf4' : '#ffffff',
-                    color: includeSolarFitting ? '#16a34a' : '#64748b',
-                    fontSize: '0.8rem',
-                    fontWeight: 700,
-                    cursor: 'pointer'
-                  }}
-                >
-                  {includeSolarFitting ? 'Included ✓' : 'Add Fitting'}
-                </button>
-              </div>
-            </div>
           </div>
         )}
 
@@ -1654,10 +1607,6 @@ export const CctvEstimatorView: React.FC<CctvEstimatorViewProps> = ({ embedded =
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <span>• {solarSdCard === 'none' ? 'No SD Card' : `${solarSdCard.toUpperCase()} MicroSD Card (${solarCameraCount}x)`}</span>
                       <strong>₹{solarSdCardCost.toLocaleString('en-IN')}</strong>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span>• Heavy-Duty Pole Mounting &amp; Solar Setup</span>
-                      <strong>{includeSolarFitting ? `₹${solarFittingCost.toLocaleString('en-IN')}` : 'Hardware Only'}</strong>
                     </div>
                   </>
                 )}
