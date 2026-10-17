@@ -1204,6 +1204,53 @@
       "popular": false,
       "categoryNumber": 8,
       "categoryId": "cat-8"
+    },
+    {
+      "id": "prod-51",
+      "name": "CP PLUS 4CH Network Video Recorder (NVR) - CP-UNR-104F1",
+      "category": "dvr_nvr",
+      "brand": "CP PLUS",
+      "image": "https://cpplusworld.com/prodassets/product/small/1eb53499-144f-4fd6-9a08-0007adc7c771.jpg",
+      "badge": "4CH NVR",
+      "priceRange": "₹4,500",
+      "price": 4500,
+      "mrp": 6200,
+      "unit": "NOS",
+      "warranty": "2 Years Brand Warranty",
+      "features": [
+        "4-Channel IP Network Video Recorder (NVR)",
+        "Supports 4K / 4MP / 2MP Ultra HD IP Cameras",
+        "H.265+ High Efficiency Video Compression",
+        "Plug & Play Auto IP Detection",
+        "Instant Cloud Mobile App Remote Viewing"
+      ],
+      "description": "CP PLUS 4-Channel dedicated NVR recorder for crystal clear IP security camera monitoring and recording.",
+      "popular": true,
+      "categoryNumber": 6,
+      "categoryId": "cat-6"
+    },
+    {
+      "id": "prod-52",
+      "name": "FYBER 4+2 PORT 10/100 POE SWITCH (COMPACT)",
+      "category": "networking",
+      "brand": "FYBER",
+      "image": "/products/poe_switch_8port.jpg",
+      "badge": "4CH PoE Switch",
+      "priceRange": "₹1,650",
+      "price": 1650,
+      "mrp": 2350,
+      "unit": "NOS",
+      "warranty": "1 Year Warranty",
+      "features": [
+        "4 PoE Ports + 2 Uplink Ethernet Ports (10/100 Mbps)",
+        "Power over Ethernet for IP Cameras",
+        "Surge & Lightning Protection up to 4KV",
+        "Compact Metal Desktop / Wall Mount Housing"
+      ],
+      "description": "High performance 4-Port PoE Switch supplying power and high-speed data transmission for up to 4 IP cameras.",
+      "popular": true,
+      "categoryNumber": 7,
+      "categoryId": "cat-7"
     }
   ],
   "services": [
