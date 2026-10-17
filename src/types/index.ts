@@ -271,4 +271,32 @@ export const DEFAULT_BRANDS: BrandPartner[] = [
   }
 ];
 
+export type SiteVisitStatus = 'New' | 'Quotation Sent' | 'Follow Up' | 'Completed' | 'Cancelled';
+
+export interface SiteVisit {
+  id: string;              // unique id e.g. 'sv-1729145600000'
+  visitNumber: string;     // auto-generated sequential number e.g. 'SV-1001'
+  technicianName: string;  // Employee who conducted the site inspection
+  customerName: string;
+  customerPhone: string;
+  customerAddress: string;
+  landmark?: string;
+  city?: string;
+  gpsLocation?: {
+    lat: number;
+    lng: number;
+    accuracy?: number;
+    mapUrl: string;
+  };
+  manualMapUrl?: string;
+  propertyType?: string;   // e.g. 'Home / Villa', 'Shop / Commercial', 'Warehouse / Godown', 'Factory', 'Farm / Agriculture', 'Other'
+  enquiredSystem?: string; // e.g. 'PoE IP Cameras', 'HD Analog Cameras', '4G Solar Standalone', 'Wireless Wi-Fi', 'AMC / Repair'
+  cameraCount?: string;    // e.g. '4 Cameras', '8 Cameras', '12+ Cameras'
+  enquiryNotes: string;    // customer requirements & technician findings
+  photos: string[];        // site photo data URLs or links
+  timestamp: string;       // ISO timestamp
+  formattedDate: string;   // Human-readable date and time
+  status: SiteVisitStatus;
+}
+
 

@@ -11,16 +11,27 @@ import { ProductDetailModal } from './components/ProductDetailModal';
 import { CameraFootageModal } from './components/CameraFootageModal';
 import { CctvCostEstimator } from './components/CctvCostEstimator';
 import { AdminPortal } from './components/admin/AdminPortal';
+import { SiteVisitApp } from './components/site-visit/SiteVisitApp';
 import { CategoryType, Product } from './types';
 import { Calculator, Wrench } from 'lucide-react';
 
+type AppRoute = 'store' | 'admin' | 'site-visit';
+
 function MainApp() {
-  const [isAdminRoute, setIsAdminRoute] = useState<boolean>(() => {
+  const getInitialRoute = (): AppRoute => {
     const path = window.location.pathname.toLowerCase();
     const hash = window.location.hash.toLowerCase();
     const search = window.location.search.toLowerCase();
-    return path.includes('admin') || hash.includes('admin') || search.includes('admin');
-  });
+    if (path.includes('site-visit') || hash.includes('site-visit') || search.includes('site-visit')) {
+      return 'site-visit';
+    }
+    if (path.includes('admin') || hash.includes('admin') || search.includes('admin')) {
+      return 'admin';
+    }
+    return 'store';
+  };
+
+  const [currentRoute, setCurrentRoute] = useState<AppRoute>(getInitialRoute);
 
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [bookingServiceId, setBookingServiceId] = useState<string | undefined>(undefined);
@@ -42,7 +53,13 @@ function MainApp() {
       const path = window.location.pathname.toLowerCase();
       const hash = window.location.hash.toLowerCase();
       const search = window.location.search.toLowerCase();
-      setIsAdminRoute(path.includes('admin') || hash.includes('admin') || search.includes('admin'));
+      if (path.includes('site-visit') || hash.includes('site-visit') || search.includes('site-visit')) {
+        setCurrentRoute('site-visit');
+      } else if (path.includes('admin') || hash.includes('admin') || search.includes('admin')) {
+        setCurrentRoute('admin');
+      } else {
+        setCurrentRoute('store');
+      }
     };
 
     window.addEventListener('popstate', handleUrlChange);
@@ -55,13 +72,19 @@ function MainApp() {
 
   const navigateToAdmin = () => {
     window.history.pushState({}, '', '/admin');
-    setIsAdminRoute(true);
+    setCurrentRoute('admin');
+    window.scrollTo(0, 0);
+  };
+
+  const navigateToSiteVisit = () => {
+    window.history.pushState({}, '', '/site-visit');
+    setCurrentRoute('site-visit');
     window.scrollTo(0, 0);
   };
 
   const navigateToStore = () => {
     window.history.pushState({}, '', '/');
-    setIsAdminRoute(false);
+    setCurrentRoute('store');
     window.scrollTo(0, 0);
   };
 
@@ -78,8 +101,12 @@ function MainApp() {
     }
   };
 
-  if (isAdminRoute) {
-    return <AdminPortal onGoToStore={navigateToStore} />;
+  if (currentRoute === 'site-visit') {
+    return <SiteVisitApp onGoToStore={navigateToStore} onGoToAdmin={navigateToAdmin} />;
+  }
+
+  if (currentRoute === 'admin') {
+    return <AdminPortal onGoToStore={navigateToStore} onGoToSiteVisit={navigateToSiteVisit} />;
   }
 
   return (
