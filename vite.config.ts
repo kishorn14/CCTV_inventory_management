@@ -7,14 +7,14 @@ function adminPersistencePlugin(): Plugin {
   return {
     name: 'admin-persistence-plugin',
     configureServer(server) {
-      server.middlewares.use((req, res, next) => {
+      server.middlewares.use((req: any, res: any, next: any) => {
         if (req.url?.startsWith('/api/save-store-data') && req.method === 'POST') {
           let body = '';
-          req.on('data', chunk => { body += chunk; });
+          req.on('data', (chunk: any) => { body += chunk; });
           req.on('end', () => {
             try {
               const data = JSON.parse(body);
-              const dataPath = path.resolve(__dirname, 'src/data/persistedStoreData.json');
+              const dataPath = path.resolve(process.cwd(), 'src/data/persistedStoreData.json');
               let existing: Record<string, any> = {};
               if (fs.existsSync(dataPath)) {
                 try {
@@ -37,7 +37,7 @@ function adminPersistencePlugin(): Plugin {
         }
 
         if (req.url?.startsWith('/api/get-store-data') && req.method === 'GET') {
-          const dataPath = path.resolve(__dirname, 'src/data/persistedStoreData.json');
+          const dataPath = path.resolve(process.cwd(), 'src/data/persistedStoreData.json');
           res.setHeader('Content-Type', 'application/json');
           if (fs.existsSync(dataPath)) {
             const content = fs.readFileSync(dataPath, 'utf-8');
