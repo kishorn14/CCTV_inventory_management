@@ -10,12 +10,14 @@ import {
 import { Product, CategoryType } from '../types';
 import { useShop } from '../context/ShopContext';
 import { isCameraProduct } from '../data/cameraFootageData';
+import { ComboOffersBanner } from './ComboOffersBanner';
 
 interface ProductCatalogProps {
   selectedCategory: CategoryType;
   onSelectCategory: (cat: CategoryType) => void;
   onViewProduct: (product: Product) => void;
   onOpenFootageModal?: (product: Product) => void;
+  onOpenEstimator?: () => void;
   onClose?: () => void;
 }
 
@@ -23,7 +25,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   selectedCategory,
   onSelectCategory,
   onViewProduct,
-  onOpenFootageModal
+  onOpenFootageModal,
+  onOpenEstimator
 }) => {
   const { 
     products, 
@@ -131,6 +134,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   return (
     <section id="products" style={{ position: 'relative', scrollMarginTop: '80px', padding: '6px 0 0 0' }}>
       <div className="container">
+
+        {/* Dynamic Combo Offers Banner (Configured by admin, auto-rotating 3s) */}
+        <ComboOffersBanner onOpenEstimator={onOpenEstimator} />
 
         {/* Dynamic Category Navigation Pills (Ordered by orderNumber 1, 2, 3...) */}
         <div 

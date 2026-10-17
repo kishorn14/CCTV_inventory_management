@@ -138,6 +138,7 @@ function MainApp() {
         onSelectCategory={handleSelectCategory}
         onViewProduct={(prod) => setViewProduct(prod)}
         onOpenFootageModal={(prod) => setFootageProduct(prod)}
+        onOpenEstimator={handleOpenEstimator}
       />
 
       {/* 4. Google Reviews (From Davanagere Customers - Identical to reference site carousel) */}

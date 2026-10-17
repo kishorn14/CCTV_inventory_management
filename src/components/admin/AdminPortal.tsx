@@ -8,11 +8,13 @@ import {
   Store,
   LogOut,
   Video,
-  Award
+  Award,
+  Sparkles
 } from 'lucide-react';
 import { AdminLogin } from './AdminLogin';
 import { AdminProducts } from './AdminProducts';
 import { AdminCategories } from './AdminCategories';
+import { AdminComboOffers } from './AdminComboOffers';
 import { AdminBrands } from './AdminBrands';
 import { AdminServices } from './AdminServices';
 import { AdminCctvPricing } from './AdminCctvPricing';
@@ -25,12 +27,12 @@ interface AdminPortalProps {
 }
 
 export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
-  const { shopInfo, categories } = useShop();
+  const { shopInfo, categories, comboOffers } = useShop();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     return sessionStorage.getItem('mekha_admin_logged_in') === 'true';
   });
 
-  const [activeTab, setActiveTab] = useState<'products' | 'categories' | 'brands' | 'cctv_pricing' | 'services' | 'settings' | 'backup'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'categories' | 'combos' | 'brands' | 'cctv_pricing' | 'services' | 'settings' | 'backup'>('products');
 
   const handleLogout = () => {
     sessionStorage.removeItem('mekha_admin_logged_in');
@@ -44,6 +46,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
   const navTabs = [
     { id: 'products', label: 'Products & Pricing', icon: ShoppingBag },
     { id: 'categories', label: `Categories & Order (${categories.length})`, icon: Layers },
+    { id: 'combos', label: `Combo Banners (${comboOffers.length})`, icon: Sparkles },
     { id: 'cctv_pricing', label: 'Cost Estimator Products (33)', icon: Video },
     { id: 'brands', label: 'Brand Partners', icon: Award },
     { id: 'services', label: 'Services & AMC', icon: Wrench },
@@ -179,6 +182,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
         {activeTab === 'categories' && (
           <AdminCategories onGoToProducts={() => setActiveTab('products')} />
         )}
+        {activeTab === 'combos' && <AdminComboOffers />}
         {activeTab === 'brands' && <AdminBrands />}
         {activeTab === 'cctv_pricing' && <AdminCctvPricing />}
         {activeTab === 'services' && <AdminServices />}

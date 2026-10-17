@@ -22,6 +22,19 @@ export interface ProductCategory {
   description?: string;
 }
 
+export interface ComboOffer {
+  id: string;
+  title: string;
+  badge?: string;
+  regularPrice: number;
+  offerPrice: number;
+  items: string[];
+  image: string;
+  gradientTheme?: 'blue' | 'purple' | 'emerald' | 'amber';
+  active: boolean;
+  orderNumber?: number;
+}
+
 export interface Product {
   id: string;
   name: string;

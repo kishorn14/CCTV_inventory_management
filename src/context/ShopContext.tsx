@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
-import { Product, ProductCategory, ServiceItem, ShopContactInfo, CctvPricingConfig, DEFAULT_CCTV_PRICING, BrandPartner, DEFAULT_BRANDS } from '../types';
-import { PRODUCTS as DEFAULT_PRODUCTS, SERVICES as DEFAULT_SERVICES, DEFAULT_PRODUCT_CATEGORIES } from '../data/shopData';
+import { Product, ProductCategory, ServiceItem, ShopContactInfo, CctvPricingConfig, DEFAULT_CCTV_PRICING, BrandPartner, DEFAULT_BRANDS, ComboOffer } from '../types';
+import { PRODUCTS as DEFAULT_PRODUCTS, SERVICES as DEFAULT_SERVICES, DEFAULT_PRODUCT_CATEGORIES, DEFAULT_COMBO_OFFERS } from '../data/shopData';
 import { SHOP_INFO as DEFAULT_SHOP_INFO } from '../utils/whatsapp';
 
 interface ShopContextType {
@@ -8,6 +8,7 @@ interface ShopContextType {
   categories: ProductCategory[];
   services: ServiceItem[];
   brands: BrandPartner[];
+  comboOffers: ComboOffer[];
   shopInfo: ShopContactInfo;
   cctvPricing: CctvPricingConfig;
   adminPassword: string;
@@ -27,6 +28,9 @@ interface ShopContextType {
   updateBrand: (id: string, updated: Partial<BrandPartner>) => void;
   deleteBrand: (id: string) => void;
   resetBrands: () => void;
+  addComboOffer: (offer: Omit<ComboOffer, 'id'>) => void;
+  updateComboOffer: (id: string, updated: Partial<ComboOffer>) => void;
+  deleteComboOffer: (id: string) => void;
   updateShopInfo: (info: ShopContactInfo) => void;
   updateCctvPricing: (pricing: CctvPricingConfig) => void;
   resetCctvPricing: () => void;
@@ -48,6 +52,7 @@ const STORAGE_KEYS = {
   CATEGORIES: 'meksha_shop_categories_v5',
   SERVICES: 'meksha_shop_services_v11',
   BRANDS: 'meksha_shop_brands_v11',
+  COMBO_OFFERS: 'meksha_shop_combos_v1',
   SHOP_INFO: 'meksha_shop_info_v11',
   CCTV_PRICING: 'meksha_cctv_pricing_v11',
   ADMIN_PASS: 'meksha_shop_admin_pass_v4'
@@ -196,6 +201,20 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   });
 
+  // 7. Combo Offers state (Configured by admin, auto-rotating hero banner)
+  const [comboOffers, setComboOffers] = useState<ComboOffer[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.COMBO_OFFERS);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.sort((a: ComboOffer, b: ComboOffer) => (a.orderNumber ?? 0) - (b.orderNumber ?? 0));
+        }
+      }
+    } catch {}
+    return DEFAULT_COMBO_OFFERS;
+  });
+
   // 5. Admin Password state
   const [adminPassword, setAdminPassword] = useState<string>(() => {
     try {
@@ -288,6 +307,14 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     try {
+      localStorage.setItem(STORAGE_KEYS.COMBO_OFFERS, JSON.stringify(comboOffers));
+    } catch (e) {
+      console.error('Failed to save combo offers to localStorage', e);
+    }
+  }, [comboOffers]);
+
+  useEffect(() => {
+    try {
       localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(categories));
     } catch (e) {
       console.error('Failed to save categories to localStorage', e);
@@ -327,6 +354,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (Array.isArray(parsed)) {
             setBrands(parsed);
           }
+        } else if (e.key === STORAGE_KEYS.COMBO_OFFERS) {
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed)) {
+            setComboOffers(parsed);
+          }
         } else if (e.key === STORAGE_KEYS.SHOP_INFO) {
           const parsed = JSON.parse(e.newValue);
           if (parsed && typeof parsed === 'object') {
@@ -354,6 +386,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const productsRef = useRef(products);
   const servicesRef = useRef(services);
   const brandsRef = useRef(brands);
+  const comboOffersRef = useRef(comboOffers);
   const shopInfoRef = useRef(shopInfo);
   const cctvPricingRef = useRef(cctvPricing);
 
@@ -361,6 +394,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => { productsRef.current = products; }, [products]);
   useEffect(() => { servicesRef.current = services; }, [services]);
   useEffect(() => { brandsRef.current = brands; }, [brands]);
+  useEffect(() => { comboOffersRef.current = comboOffers; }, [comboOffers]);
   useEffect(() => { shopInfoRef.current = shopInfo; }, [shopInfo]);
   useEffect(() => { cctvPricingRef.current = cctvPricing; }, [cctvPricing]);
 
@@ -370,6 +404,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     products?: Product[];
     services?: ServiceItem[];
     brands?: BrandPartner[];
+    comboOffers?: ComboOffer[];
     shopInfo?: ShopContactInfo;
     cctvPricing?: CctvPricingConfig;
   }) => {
@@ -378,6 +413,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       products: override?.products || productsRef.current,
       services: override?.services || servicesRef.current,
       brands: override?.brands || brandsRef.current,
+      comboOffers: override?.comboOffers || comboOffersRef.current,
       shopInfo: override?.shopInfo || shopInfoRef.current,
       cctvPricing: override?.cctvPricing || cctvPricingRef.current
     };
@@ -400,6 +436,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           products: productsRef.current,
           services: servicesRef.current,
           brands: brandsRef.current,
+          comboOffers: comboOffersRef.current,
           shopInfo: shopInfoRef.current,
           cctvPricing: cctvPricingRef.current
         })
@@ -432,6 +469,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (Array.isArray(data.brands) && data.brands.length > 0) {
             setBrands(data.brands);
             try { localStorage.setItem(STORAGE_KEYS.BRANDS, JSON.stringify(data.brands)); } catch {}
+          }
+          if (Array.isArray(data.comboOffers) && data.comboOffers.length > 0) {
+            const sorted = data.comboOffers.sort((a: ComboOffer, b: ComboOffer) => (a.orderNumber ?? 0) - (b.orderNumber ?? 0));
+            setComboOffers(sorted);
+            try { localStorage.setItem(STORAGE_KEYS.COMBO_OFFERS, JSON.stringify(sorted)); } catch {}
           }
           if (data.shopInfo && typeof data.shopInfo === 'object') {
             setShopInfo(prev => {
@@ -645,6 +687,40 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setBrands(DEFAULT_BRANDS);
   };
 
+  // Combo Offer CRUD (Banners configured by admin)
+  const addComboOffer = (offerData: Omit<ComboOffer, 'id'>) => {
+    isReadyToSaveRef.current = true;
+    const id = `combo-${Date.now()}`;
+    setComboOffers(prev => {
+      const next = [...prev, { ...offerData, id, orderNumber: offerData.orderNumber ?? (prev.length + 1) }]
+        .sort((a, b) => (a.orderNumber ?? 0) - (b.orderNumber ?? 0));
+      try { localStorage.setItem(STORAGE_KEYS.COMBO_OFFERS, JSON.stringify(next)); } catch {}
+      saveDirectlyToDisk({ comboOffers: next });
+      return next;
+    });
+  };
+
+  const updateComboOffer = (id: string, updated: Partial<ComboOffer>) => {
+    isReadyToSaveRef.current = true;
+    setComboOffers(prev => {
+      const next = prev.map(o => o.id === id ? { ...o, ...updated } : o)
+        .sort((a, b) => (a.orderNumber ?? 0) - (b.orderNumber ?? 0));
+      try { localStorage.setItem(STORAGE_KEYS.COMBO_OFFERS, JSON.stringify(next)); } catch {}
+      saveDirectlyToDisk({ comboOffers: next });
+      return next;
+    });
+  };
+
+  const deleteComboOffer = (id: string) => {
+    isReadyToSaveRef.current = true;
+    setComboOffers(prev => {
+      const next = prev.filter(o => o.id !== id);
+      try { localStorage.setItem(STORAGE_KEYS.COMBO_OFFERS, JSON.stringify(next)); } catch {}
+      saveDirectlyToDisk({ comboOffers: next });
+      return next;
+    });
+  };
+
   // Shop Info, CCTV Pricing & Password
   const updateShopInfo = (newInfo: ShopContactInfo) => {
     isReadyToSaveRef.current = true;
@@ -671,6 +747,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCategories(DEFAULT_PRODUCT_CATEGORIES);
     setServices(DEFAULT_SERVICES);
     setBrands(DEFAULT_BRANDS);
+    setComboOffers(DEFAULT_COMBO_OFFERS);
     setCctvPricing(DEFAULT_CCTV_PRICING);
     setShopInfo({
       shopName: DEFAULT_SHOP_INFO.shopName,
@@ -697,6 +774,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       categories,
       services,
       brands,
+      comboOffers,
       shopInfo,
       cctvPricing,
       exportedAt: new Date().toISOString()
@@ -718,6 +796,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (parsed.brands && Array.isArray(parsed.brands)) {
         setBrands(parsed.brands);
       }
+      if (parsed.comboOffers && Array.isArray(parsed.comboOffers)) {
+        setComboOffers(parsed.comboOffers);
+      }
       if (parsed.shopInfo) {
         setShopInfo(parsed.shopInfo);
       }
@@ -736,6 +817,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       categories,
       services,
       brands,
+      comboOffers,
       shopInfo,
       cctvPricing,
       adminPassword,
@@ -755,6 +837,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateBrand,
       deleteBrand,
       resetBrands,
+      addComboOffer,
+      updateComboOffer,
+      deleteComboOffer,
       updateShopInfo,
       updateCctvPricing,
       resetCctvPricing,

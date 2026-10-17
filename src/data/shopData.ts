@@ -1,4 +1,4 @@
-import { Product, ProductCategory, ServiceItem, Review } from '../types';
+import { Product, ProductCategory, ServiceItem, Review, ComboOffer } from '../types';
 
 export const DEFAULT_PRODUCT_CATEGORIES: ProductCategory[] = [
   { id: 'cat-1', orderNumber: 1, name: 'Solar cameras', description: '360 degree with siren and motion detection' },
@@ -9,6 +9,63 @@ export const DEFAULT_PRODUCT_CATEGORIES: ProductCategory[] = [
   { id: 'cat-6', orderNumber: 6, name: 'DVR & NVR Video Recorders' },
   { id: 'cat-7', orderNumber: 7, name: 'PoE Switches & Networking' },
   { id: 'cat-8', orderNumber: 8, name: 'CCTV Racks, Cables & Connectors' },
+];
+
+export const DEFAULT_COMBO_OFFERS: ComboOffer[] = [
+  {
+    id: 'combo-ip',
+    title: '4-Camera 4MP PoE IP Network Camera Complete Combo',
+    badge: '🔥 24% OFF - BEST SELLER',
+    regularPrice: 25000,
+    offerPrice: 19000,
+    items: [
+      '4x CP PLUS 4MP High-Definition IP Cameras (Audio with Mic)',
+      '1x CP PLUS 4-Channel 4K Ultra PoE NVR Recorder',
+      '1x 1TB Seagate SkyHawk 24/7 Surveillance Hard Disk',
+      '1x High-Speed Cat6 Pure Copper Cable Roll (50m) & RJ45',
+      'Free Mobile App Live View Setup & Professional Doorstep Fitting'
+    ],
+    image: 'https://cpplusworld.com/prodassets/product/small/3a918c3a-eb66-4b2b-b067-f2c2c84a8b34.png',
+    gradientTheme: 'blue',
+    active: true,
+    orderNumber: 1
+  },
+  {
+    id: 'combo-analog',
+    title: '4-Camera 1080P Full HD Dual-Light Night Vision Combo',
+    badge: '⚡ VALUE PACK - SAVE ₹5,000',
+    regularPrice: 17500,
+    offerPrice: 12500,
+    items: [
+      '2x Trueview 2MP Indoor Dome + 2x Outdoor Bullet HD Cameras',
+      '1x Trueview 4-Channel Full HD Two-Way Audio DVR',
+      '1x 1TB Video Storage Surveillance HDD',
+      '1x 4-Channel Heavy Duty SMPS Power Supply & BNC Connectors',
+      'Full Cable Wiring, Clamping & Complete Setup in Davanagere'
+    ],
+    image: 'https://i0.wp.com/ncaps.in/wp-content/uploads/2026/01/Elite-CCTV-11.png?fit=500%2C500&ssl=1',
+    gradientTheme: 'purple',
+    active: true,
+    orderNumber: 2
+  },
+  {
+    id: 'combo-solar',
+    title: '100% Wire-Free 4G Solar PTZ Farm & Remote Plot Combo',
+    badge: '☀️ ZERO WIRES - 4G SIM READY',
+    regularPrice: 18500,
+    offerPrice: 13500,
+    items: [
+      '1x 360° Motorized Pan & Tilt Solar 4G Outdoor Camera',
+      '1x CP PLUS High-Efficiency Monocrystalline Solar Panel',
+      '1x High-Capacity Rechargeable Lithium Battery Kit',
+      'Zero Electricity & Zero Wi-Fi Needed (Jio/Airtel 4G SIM Slot)',
+      'Mobile Siren, 2-Way Voice Intercom & All-Weather Mounting Bracket'
+    ],
+    image: '/products/eyeqube_solar_camera.jpg',
+    gradientTheme: 'emerald',
+    active: true,
+    orderNumber: 3
+  }
 ];
 
 export const getInitialCategoryNumber = (cat: string): number => {
