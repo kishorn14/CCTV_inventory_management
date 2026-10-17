@@ -9,7 +9,8 @@ import {
   Lock,
   Video,
   Compass,
-  Layers
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import { useShop } from '../../context/ShopContext';
 import { Product, CategoryType } from '../../types';
@@ -70,10 +71,11 @@ const PRESET_IMAGES: Record<CategoryType, string[]> = {
 interface AdminProductsProps {
   onGoToEstimatorPricing?: () => void;
   onGoToCategories?: () => void;
+  onGoToCombos?: () => void;
 }
 
-export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPricing, onGoToCategories }) => {
-  const { products, addProduct, updateProduct, deleteProduct, categories, updateProductCategory, forceSyncToDisk } = useShop();
+export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPricing, onGoToCategories, onGoToCombos }) => {
+  const { products, addProduct, updateProduct, deleteProduct, categories, updateProductCategory, forceSyncToDisk, comboOffers } = useShop();
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'saved'>('idle');
@@ -271,6 +273,29 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
         </div>
 
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {onGoToCombos && (
+            <button
+              type="button"
+              onClick={onGoToCombos}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '8px',
+                border: '1.5px solid #fed7aa',
+                background: '#fff7ed',
+                color: '#c2410c',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <Sparkles size={15} />
+              <span>Modify Combo Banners ({comboOffers.length}) &rarr;</span>
+            </button>
+          )}
+
           {onGoToCategories && (
             <button
               type="button"
@@ -358,6 +383,28 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
           >
             {syncStatus === 'syncing' ? '⏳ Syncing to Live Store...' : syncStatus === 'saved' ? '✓ Synced to Live Store' : '💾 Force Sync to Live Store'}
           </button>
+          {onGoToCombos && (
+            <button
+              type="button"
+              onClick={onGoToCombos}
+              style={{
+                padding: '8px 14px',
+                borderRadius: '8px',
+                border: '1.5px solid #fed7aa',
+                background: '#fff7ed',
+                color: '#c2410c',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              title="Configure and edit storefront Combo Package Banners"
+            >
+              <Sparkles size={16} /> Combo Offers ({comboOffers.length})
+            </button>
+          )}
           <button onClick={openAddModal} className="btn btn-primary btn-sm">
             <Plus size={18} /> + Add New Product
           </button>

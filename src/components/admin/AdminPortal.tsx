@@ -45,8 +45,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
 
   const navTabs = [
     { id: 'products', label: 'Products & Pricing', icon: ShoppingBag },
-    { id: 'categories', label: `Categories & Order (${categories.length})`, icon: Layers },
     { id: 'combos', label: `Combo Banners (${comboOffers.length})`, icon: Sparkles },
+    { id: 'categories', label: `Categories & Order (${categories.length})`, icon: Layers },
     { id: 'cctv_pricing', label: 'Cost Estimator Products (33)', icon: Video },
     { id: 'brands', label: 'Brand Partners', icon: Award },
     { id: 'services', label: 'Services & AMC', icon: Wrench },
@@ -177,6 +177,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
           <AdminProducts 
             onGoToEstimatorPricing={() => setActiveTab('cctv_pricing')} 
             onGoToCategories={() => setActiveTab('categories')}
+            onGoToCombos={() => setActiveTab('combos')}
           />
         )}
         {activeTab === 'categories' && (
