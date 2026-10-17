@@ -14,31 +14,55 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [selectedComboForModal, setSelectedComboForModal] = useState<ComboOffer | null>(null);
+  const [isVisibleInViewport, setIsVisibleInViewport] = useState(true);
 
+  const bannerWrapperRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef<number>(0);
   const touchEndX = useRef<number>(0);
 
-  // Auto-slide every 3 seconds (pauses on hover or when modal is open)
+  // Pause sliding when banner is scrolled out of viewport (prevents unintended activity)
   useEffect(() => {
-    if (activeOffers.length <= 1 || isPaused || selectedComboForModal) return;
+    const el = bannerWrapperRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          setIsVisibleInViewport(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Auto-slide every 3 seconds (pauses on hover, when modal is open, or when banner is scrolled out of view)
+  useEffect(() => {
+    if (activeOffers.length <= 1 || isPaused || selectedComboForModal || !isVisibleInViewport) return;
 
     const timer = setInterval(() => {
       setCurrentIndex(prev => (prev + 1) % activeOffers.length);
     }, 3000);
 
     return () => clearInterval(timer);
-  }, [activeOffers.length, isPaused, selectedComboForModal]);
+  }, [activeOffers.length, isPaused, selectedComboForModal, isVisibleInViewport]);
 
-  // Sync scroll position when index changes
+  // Sync scroll position when index changes (ONLY scrolls the banner container horizontally, NEVER the browser window)
   useEffect(() => {
-    if (sliderRef.current && sliderRef.current.children[currentIndex]) {
-      const targetChild = sliderRef.current.children[currentIndex] as HTMLElement;
-      targetChild.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center'
-      });
+    const container = sliderRef.current;
+    if (container && container.children[currentIndex]) {
+      const targetChild = container.children[currentIndex] as HTMLElement;
+      const targetLeft = targetChild.offsetLeft;
+      const currentScroll = container.scrollLeft;
+      if (Math.abs(currentScroll - targetLeft) > 5) {
+        container.scrollTo({
+          left: targetLeft,
+          behavior: 'smooth'
+        });
+      }
     }
   }, [currentIndex]);
 
@@ -135,6 +159,7 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
 
   return (
     <div 
+      ref={bannerWrapperRef}
       style={{ 
         marginBottom: '8px', 
         marginTop: '2px',
@@ -156,7 +181,8 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           gap: '10px',
-          borderRadius: '12px'
+          borderRadius: '12px',
+          position: 'relative'
         }}
       >
         {activeOffers.map((combo) => {
