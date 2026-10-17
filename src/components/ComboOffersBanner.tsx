@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, CheckCircle2, ChevronLeft, ChevronRight, ShieldCheck, ArrowRight, X, ExternalLink } from 'lucide-react';
+import { Sparkles, CheckCircle2, ShieldCheck, ArrowRight, X, ExternalLink } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { ComboOffer } from '../types';
 
@@ -65,16 +65,6 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
   if (!activeOffers || activeOffers.length === 0) {
     return null;
   }
-
-  const handlePrev = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCurrentIndex(prev => (prev - 1 + activeOffers.length) % activeOffers.length);
-  };
-
-  const handleNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCurrentIndex(prev => (prev + 1) % activeOffers.length);
-  };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setIsPaused(true);
@@ -328,61 +318,6 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
           );
         })}
       </div>
-
-      {/* Prev / Next Controls */}
-      {activeOffers.length > 1 && (
-        <>
-          <button
-            onClick={handlePrev}
-            aria-label="Previous combo offer"
-            style={{
-              position: 'absolute',
-              left: '-6px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: '26px',
-              height: '26px',
-              borderRadius: '50%',
-              background: '#ffffff',
-              border: '1px solid #cbd5e1',
-              color: '#0f172a',
-              boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              zIndex: 10
-            }}
-          >
-            <ChevronLeft size={15} />
-          </button>
-
-          <button
-            onClick={handleNext}
-            aria-label="Next combo offer"
-            style={{
-              position: 'absolute',
-              right: '-6px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: '26px',
-              height: '26px',
-              borderRadius: '50%',
-              background: '#ffffff',
-              border: '1px solid #cbd5e1',
-              color: '#0f172a',
-              boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              zIndex: 10
-            }}
-          >
-            <ChevronRight size={15} />
-          </button>
-        </>
-      )}
 
       {/* Indicator Dots */}
       {activeOffers.length > 1 && (
