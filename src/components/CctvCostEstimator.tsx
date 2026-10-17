@@ -210,15 +210,21 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                recorderProducts[0];
       }
     } else {
-      // Analog DVR
+      // Analog DVR: 4CH for <= 4 cams, 8CH for 5 to 8 cams, 16CH for > 8 cams
       if (effectiveCameraCount <= 4) {
         return recorderProducts.find(p => p.name.includes('4CH') && p.name.includes('DVR')) ||
                recorderProducts.find(p => p.id === 'prod-26') ||
                recorderProducts[0];
       } else if (effectiveCameraCount <= 8) {
-        return recorderProducts.find(p => p.name.includes('8CH')) || recorderProducts[0];
+        return recorderProducts.find(p => p.name.includes('8CH') && p.name.includes('DVR')) ||
+               recorderProducts.find(p => p.id === 'prod-53') ||
+               recorderProducts.find(p => p.name.includes('8CH')) ||
+               recorderProducts[0];
       } else {
-        return recorderProducts.find(p => p.name.includes('16CH')) || recorderProducts[0];
+        return recorderProducts.find(p => p.name.includes('16CH') && p.name.includes('DVR')) ||
+               recorderProducts.find(p => p.id === 'prod-54') ||
+               recorderProducts.find(p => p.name.includes('16CH')) ||
+               recorderProducts[0];
       }
     }
   }, [effectiveCameraCount, hasIpCameras, isAllStandalone, recorderProducts]);
@@ -230,21 +236,42 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   }, [selectedRecorderId, recommendedRecorder, recorderProducts]);
 
   // Recommended HDD Storage (scaled to totalCameraCount)
-  // <= 4 cameras: 1TB Surveillance HDD
-  // 5 to 8 cameras: 2TB Surveillance HDD
-  // > 8 cameras: 4TB Surveillance HDD
+  // For Analog: 1-2 cams: 500GB, 3-4 cams: 1TB, 5-8 cams: 2TB, > 8 cams: 4TB
+  // For IP: <= 4 cams: 1TB, 5-8 cams: 2TB, > 8 cams: 4TB
   const recommendedHdd = useMemo(() => {
     if (isAllStandalone) {
       return hddProducts.find(p => p.name.includes('128 GB')) || hddProducts.find(p => p.name.includes('64 GB'));
     }
-    if (effectiveCameraCount <= 4) {
-      return hddProducts.find(p => p.name.includes('1TB')) || hddProducts.find(p => p.name.includes('500GB')) || hddProducts[0];
-    } else if (effectiveCameraCount <= 8) {
-      return hddProducts.find(p => p.name.includes('2TB')) || hddProducts.find(p => p.name.includes('1TB')) || hddProducts[0];
+    if (hasIpCameras) {
+      if (effectiveCameraCount <= 4) {
+        return hddProducts.find(p => p.name.includes('1TB')) || hddProducts.find(p => p.name.includes('500GB')) || hddProducts[0];
+      } else if (effectiveCameraCount <= 8) {
+        return hddProducts.find(p => p.name.includes('2TB')) || hddProducts.find(p => p.name.includes('1TB')) || hddProducts[0];
+      } else {
+        return hddProducts.find(p => p.name.includes('4TB')) || hddProducts.find(p => p.name.includes('2TB')) || hddProducts[0];
+      }
     } else {
-      return hddProducts.find(p => p.name.includes('4TB')) || hddProducts.find(p => p.name.includes('2TB')) || hddProducts[0];
+      // Analog system
+      if (effectiveCameraCount <= 2) {
+        return hddProducts.find(p => p.name.includes('500GB') || p.name.includes('500 GB')) ||
+               hddProducts.find(p => p.id === 'prod-17') ||
+               hddProducts.find(p => p.name.includes('1TB')) ||
+               hddProducts[0];
+      } else if (effectiveCameraCount <= 4) {
+        return hddProducts.find(p => p.name.includes('1TB')) ||
+               hddProducts.find(p => p.id === 'prod-18') ||
+               hddProducts[0];
+      } else if (effectiveCameraCount <= 8) {
+        return hddProducts.find(p => p.name.includes('2TB')) ||
+               hddProducts.find(p => p.id === 'prod-19') ||
+               hddProducts[0];
+      } else {
+        return hddProducts.find(p => p.name.includes('4TB')) ||
+               hddProducts.find(p => p.id === 'prod-20') ||
+               hddProducts[0];
+      }
     }
-  }, [effectiveCameraCount, isAllStandalone, hddProducts]);
+  }, [effectiveCameraCount, hasIpCameras, isAllStandalone, hddProducts]);
 
   const resolvedHdd = useMemo(() => {
     if (selectedHddId === 'none') return null;
@@ -266,8 +293,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   }, [selectedRackId, recommendedRack, rackProducts, totalCameraCount]);
 
   // Resolved Power (PoE switch for IP or SMPS for Analog)
-  // <= 4 cameras: 4-Channel PoE Switch / 4CH SMPS
-  // >= 5 cameras: 8-Channel PoE Switch / 8CH SMPS
+  // Analog: <= 4 cameras: 4CH SMPS; > 4 cameras: 8CH SMPS
   const resolvedPower = useMemo(() => {
     if (!includePowerSupply) return null;
     if (isAllStandalone) return null;
@@ -283,9 +309,13 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
       }
     } else {
       if (effectiveCameraCount <= 4) {
-        return powerProducts.find(p => p.name.includes('4CH') && p.name.includes('SMPS')) || powerProducts[0];
+        return powerProducts.find(p => p.name.includes('4CH') && p.name.includes('SMPS')) || 
+               powerProducts.find(p => p.id === 'prod-39') ||
+               powerProducts[0];
       } else {
-        return powerProducts.find(p => p.name.includes('8CH') && p.name.includes('SMPS')) || powerProducts[0];
+        return powerProducts.find(p => p.name.includes('8CH') && p.name.includes('SMPS')) || 
+               powerProducts.find(p => p.id === 'prod-40') ||
+               powerProducts[0];
       }
     }
   }, [includePowerSupply, hasIpCameras, isAllStandalone, effectiveCameraCount, powerProducts]);
@@ -301,10 +331,33 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     }
   }, [includeCables, hasIpCameras, isAllStandalone, cableProducts]);
 
-  // RJ45 Connectors Formula: (totalCameraCount * 2 + 2)
-  // For 4 cameras: 4 * 2 + 2 = 10 RJ45 connectors
-  // For 5 cameras: 5 * 2 + 2 = 12 RJ45 connectors
-  // No mention of buffer in labels
+  // Cable Length in Meters:
+  // For IP cameras: Math.max(totalCameraCount * 20, 40)m
+  // For Analog cameras: totalCameraCount * 25m (25m per 1 camera)
+  const cableMeters = useMemo(() => {
+    if (totalCameraCount === 0) return 0;
+    if (hasIpCameras) {
+      return Math.max(totalCameraCount * 20, 40);
+    } else {
+      return totalCameraCount * 25;
+    }
+  }, [totalCameraCount, hasIpCameras]);
+
+  const cableTotal = useMemo(() => {
+    if (totalCameraCount === 0 || !resolvedCable) return 0;
+    if (hasIpCameras) {
+      if (resolvedCable.name.includes('305M')) return resolvedCable.price || 0;
+      return (resolvedCable.price || 47) * cableMeters;
+    } else {
+      // 3+1 CCTV Cable per meter rate (from ₹1711/90m ≈ ₹19/m or ₹22/m)
+      const perMeterRate = resolvedCable.price && resolvedCable.price < 50
+        ? resolvedCable.price
+        : Math.round((resolvedCable.price || 1711) / 90);
+      return perMeterRate * cableMeters;
+    }
+  }, [resolvedCable, totalCameraCount, hasIpCameras, cableMeters]);
+
+  // RJ45 Connectors for IP Cameras: (totalCameraCount * 2 + 2)
   const rj45Count = totalCameraCount > 0 ? (totalCameraCount * 2 + 2) : 0;
   const rj45Product = useMemo(() => {
     return products.find(p => p.id === 'prod-45') || products.find(p => p.name.includes('RJ45')) || null;
@@ -312,7 +365,23 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   const rj45UnitPrice = rj45Product?.price || 9;
   const rj45TotalCost = hasIpCameras && includeConnectors ? rj45Count * rj45UnitPrice : 0;
 
-  // 4x4 Modular Box for Bullet Cameras (and any non-dome camera)
+  // BNC Connectors for Analog Cameras: 2 per camera + 2 additional
+  const bncCount = totalCameraCount > 0 ? (totalCameraCount * 2 + 2) : 0;
+  const bncProduct = useMemo(() => {
+    return products.find(p => p.id === 'prod-49') || products.find(p => p.name.includes('BNC')) || null;
+  }, [products]);
+  const bncUnitPrice = bncProduct?.price || 47;
+  const bncTotalCost = !hasIpCameras && includeConnectors && !isAllStandalone ? bncCount * bncUnitPrice : 0;
+
+  // DC Power Pins for Analog Cameras: 1 per camera + 1 additional
+  const dcPinCount = totalCameraCount > 0 ? (totalCameraCount * 1 + 1) : 0;
+  const dcPinProduct = useMemo(() => {
+    return products.find(p => p.id === 'prod-48') || products.find(p => p.name.includes('DC PINS') || p.name.includes('DC')) || null;
+  }, [products]);
+  const dcPinUnitPrice = dcPinProduct?.price || 12;
+  const dcPinTotalCost = !hasIpCameras && includeConnectors && !isAllStandalone ? dcPinCount * dcPinUnitPrice : 0;
+
+  // 4x4 Modular Box for Bullet Cameras: 1 per camera
   const box4x4Product = useMemo(() => {
     return products.find(p => p.id === 'prod-46') || products.find(p => p.name.includes('4X4')) || null;
   }, [products]);
@@ -320,7 +389,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   const box4x4Count = bulletCameraCount + otherCameraCount;
   const box4x4TotalCost = includeConnectors && !isAllStandalone ? box4x4Count * box4x4UnitPrice : 0;
 
-  // 5x5 Modular Box for Dome Cameras
+  // 5x5 Modular Box for Dome Cameras: 1 per camera
   const box5x5Product = useMemo(() => {
     return products.find(p => p.id === 'prod-47') || products.find(p => p.name.includes('5X5')) || null;
   }, [products]);
@@ -328,17 +397,12 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   const box5x5Count = domeCameraCount;
   const box5x5TotalCost = includeConnectors && !isAllStandalone ? box5x5Count * box5x5UnitPrice : 0;
 
-  // Analog BNC & DC Connectors
-  const bncTotalCost = !hasIpCameras && includeConnectors && !isAllStandalone 
-    ? (totalCameraCount * 2 * 47) + (totalCameraCount * 1 * 12) 
-    : 0;
-
   // Total Connectors & Accessories Cost
   const connectorsTotalCost = totalCameraCount === 0 || !includeConnectors || isAllStandalone 
     ? 0 
     : (hasIpCameras 
         ? (rj45TotalCost + box4x4TotalCost + box5x5TotalCost) 
-        : (bncTotalCost + box4x4TotalCost + box5x5TotalCost));
+        : (bncTotalCost + dcPinTotalCost + box4x4TotalCost + box5x5TotalCost));
 
   // Doorstep Installation labor rate
   const installationUnitCost = isAllStandalone ? 450 : (hasIpCameras ? 550 : 450);
@@ -353,13 +417,6 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   const recorderTotal = totalCameraCount > 0 ? (resolvedRecorder?.price || 0) : 0;
   const rackTotal = totalCameraCount > 0 ? (resolvedRack?.price || 0) : 0;
   const powerTotal = totalCameraCount > 0 ? (resolvedPower?.price || 0) : 0;
-  
-  const cableTotal = useMemo(() => {
-    if (totalCameraCount === 0 || !resolvedCable) return 0;
-    if (resolvedCable.name.includes('305M')) return resolvedCable.price || 0;
-    const meters = Math.max(totalCameraCount * 20, 40);
-    return (resolvedCable.price || 47) * meters;
-  }, [resolvedCable, totalCameraCount]);
 
   const grandTotal = totalCameraCount === 0 ? 0 : (cameraTotal + hddTotal + recorderTotal + rackTotal + powerTotal + cableTotal + connectorsTotalCost + installationTotalCost);
 
@@ -412,7 +469,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     }
 
     if (resolvedCable) {
-      msg += `🔌 *Cabling:* ${resolvedCable.name} (~${Math.max(totalCameraCount * 20, 40)}m)\n`;
+      msg += `🔌 *Cabling:* ${resolvedCable.name} (~${cableMeters}m${hasIpCameras ? '' : ' - 25m/cam'})\n`;
       msg += `   └ Est. Price: ₹${cableTotal.toLocaleString('en-IN')}\n\n`;
     }
 
@@ -421,19 +478,24 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
       msg += `   └ Price: ₹${rj45TotalCost.toLocaleString('en-IN')}\n\n`;
     }
 
-    if (includeConnectors && box4x4Count > 0) {
+    if (!hasIpCameras && includeConnectors && bncCount > 0 && !isAllStandalone) {
+      msg += `🔩 *BNC Connectors:* ${bncCount} Pcs\n`;
+      msg += `   └ Price: ₹${bncTotalCost.toLocaleString('en-IN')}\n\n`;
+    }
+
+    if (!hasIpCameras && includeConnectors && dcPinCount > 0 && !isAllStandalone) {
+      msg += `🔌 *DC Power Pins:* ${dcPinCount} Pcs\n`;
+      msg += `   └ Price: ₹${dcPinTotalCost.toLocaleString('en-IN')}\n\n`;
+    }
+
+    if (includeConnectors && box4x4Count > 0 && !isAllStandalone) {
       msg += `📦 *4x4 Modular Box (Bullet):* ${box4x4Count}x iFYBER 4x4 Modular Box\n`;
       msg += `   └ Price: ₹${box4x4TotalCost.toLocaleString('en-IN')}\n\n`;
     }
 
-    if (includeConnectors && box5x5Count > 0) {
+    if (includeConnectors && box5x5Count > 0 && !isAllStandalone) {
       msg += `📦 *5x5 Modular Box (Dome):* ${box5x5Count}x iFYBER 5x5 Modular Box\n`;
       msg += `   └ Price: ₹${box5x5TotalCost.toLocaleString('en-IN')}\n\n`;
-    }
-
-    if (!hasIpCameras && includeConnectors && totalCameraCount > 0 && !isAllStandalone) {
-      msg += `🔩 *BNC & DC Connectors:* ${totalCameraCount * 2} BNC + ${totalCameraCount} DC\n`;
-      msg += `   └ Price: ₹${bncTotalCost.toLocaleString('en-IN')}\n\n`;
     }
 
     if (includeInstallation) {
@@ -458,16 +520,20 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     resolvedPower, 
     powerTotal,
     resolvedCable, 
+    cableMeters,
     cableTotal, 
     hasIpCameras,
     includeConnectors,
     rj45Count,
     rj45TotalCost,
+    bncCount,
+    bncTotalCost,
+    dcPinCount,
+    dcPinTotalCost,
     box4x4Count,
     box4x4TotalCost,
     box5x5Count,
     box5x5TotalCost,
-    bncTotalCost,
     isAllStandalone,
     includeInstallation, 
     installationTotalCost, 
@@ -1255,7 +1321,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                           {hasIpCameras ? 'Pure Copper Cat6' : '3+1 CCTV Cable'}
                         </div>
                         <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                          ~{totalCameraCount * 20}m wiring run
+                          {hasIpCameras ? `~${cableMeters}m wiring run` : `${cableMeters}m wiring run (25m per camera)`}
                         </div>
                       </div>
                       <div style={{ fontSize: '0.85rem', fontWeight: 800, color: includeCables ? '#059669' : '#94a3b8' }}>
@@ -1284,7 +1350,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                         <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
                           {hasIpCameras 
                             ? `RJ45 (${rj45Count} pcs)${box4x4Count > 0 ? ` + 4x4 Box (${box4x4Count})` : ''}${box5x5Count > 0 ? ` + 5x5 Box (${box5x5Count})` : ''}`
-                            : (isAllStandalone ? 'Not required for wireless' : `BNC + DC + Modular Boxes (${totalCameraCount} pts)`)
+                            : (isAllStandalone ? 'Not required for wireless' : `BNC (${bncCount} pcs) + DC (${dcPinCount} pcs)${box4x4Count > 0 ? ` + 4x4 Box (${box4x4Count})` : ''}${box5x5Count > 0 ? ` + 5x5 Box (${box5x5Count})` : ''}`)
                           }
                         </div>
                       </div>
@@ -1449,7 +1515,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#334155', borderBottom: '1px dashed #f1f5f9', paddingBottom: '6px' }}>
                       <div>
                         <div style={{ fontWeight: 700, color: '#0f172a' }}>
-                          🔌 {resolvedCable.name.slice(0, 24)} (~{totalCameraCount * 20}m)
+                          🔌 {resolvedCable.name.slice(0, 24)} ({cableMeters}m{hasIpCameras ? '' : ' - 25m/cam'})
                         </div>
                       </div>
                       <div style={{ fontWeight: 800, color: '#0f172a' }}>
@@ -1471,6 +1537,40 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                       </div>
                       <div style={{ fontWeight: 800, color: '#0f172a' }}>
                         ₹{rj45TotalCost.toLocaleString('en-IN')}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* BNC Connectors for Analog Cameras */}
+                  {!hasIpCameras && includeConnectors && bncCount > 0 && !isAllStandalone && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#334155', borderBottom: '1px dashed #f1f5f9', paddingBottom: '6px' }}>
+                      <div>
+                        <div style={{ fontWeight: 700, color: '#0f172a' }}>
+                          🔩 MAXXION Wired BNC Connectors ({bncCount} Pcs)
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                          ₹{bncUnitPrice} each
+                        </div>
+                      </div>
+                      <div style={{ fontWeight: 800, color: '#0f172a' }}>
+                        ₹{bncTotalCost.toLocaleString('en-IN')}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* DC Power Pins for Analog Cameras */}
+                  {!hasIpCameras && includeConnectors && dcPinCount > 0 && !isAllStandalone && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#334155', borderBottom: '1px dashed #f1f5f9', paddingBottom: '6px' }}>
+                      <div>
+                        <div style={{ fontWeight: 700, color: '#0f172a' }}>
+                          🔌 MAXXION Wired DC Power Pins ({dcPinCount} Pcs)
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                          ₹{dcPinUnitPrice} each
+                        </div>
+                      </div>
+                      <div style={{ fontWeight: 800, color: '#0f172a' }}>
+                        ₹{dcPinTotalCost.toLocaleString('en-IN')}
                       </div>
                     </div>
                   )}
@@ -1505,20 +1605,6 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                       </div>
                       <div style={{ fontWeight: 800, color: '#0f172a' }}>
                         ₹{box5x5TotalCost.toLocaleString('en-IN')}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* BNC & DC Connectors for Analog */}
-                  {!hasIpCameras && includeConnectors && totalCameraCount > 0 && !isAllStandalone && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#334155', borderBottom: '1px dashed #f1f5f9', paddingBottom: '6px' }}>
-                      <div>
-                        <div style={{ fontWeight: 700, color: '#0f172a' }}>
-                          🔩 BNC &amp; DC Connectors ({totalCameraCount * 2} BNC + {totalCameraCount} DC)
-                        </div>
-                      </div>
-                      <div style={{ fontWeight: 800, color: '#0f172a' }}>
-                        ₹{bncTotalCost.toLocaleString('en-IN')}
                       </div>
                     </div>
                   )}

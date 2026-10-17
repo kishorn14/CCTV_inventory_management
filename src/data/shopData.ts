@@ -711,6 +711,54 @@ const RAW_PRODUCTS: Product[] = [
     "popular": true
   },
   {
+    "id": "prod-53",
+    "name": "CP PLUS 8CH HD DVR (Two-Way Audio) - CP-UVR-0801E1-V4",
+    "category": "dvr_nvr",
+    "brand": "CP PLUS",
+    "image": "https://cpplusworld.com/prodassets/product/small/1eb53499-144f-4fd6-9a08-0007adc7c771.jpg",
+    "badge": "8CH HD DVR",
+    "priceRange": "₹5,900",
+    "price": 5900,
+    "mrp": 7990,
+    "unit": "NOS",
+    "warranty": "2 Years Brand Warranty",
+    "features": [
+      "8-Channel HD DVR with Two-Way Audio Talk",
+      "Supports 8 HD Analog Cameras + 2 IP Channels",
+      "H.265+ High Efficiency Compression",
+      "HDMI & VGA Full HD Outputs",
+      "Mobile App Live View"
+    ],
+    "description": "CP PLUS 8-Channel Universal HD DVR with two-way audio support for residential & commercial security.",
+    "popular": true,
+    "categoryNumber": 6,
+    "categoryId": "cat-6"
+  },
+  {
+    "id": "prod-54",
+    "name": "CP PLUS 16CH HD DVR (Two-Way Audio) - CP-UVR-1601E1-V4",
+    "category": "dvr_nvr",
+    "brand": "CP PLUS",
+    "image": "https://cpplusworld.com/prodassets/product/small/1eb53499-144f-4fd6-9a08-0007adc7c771.jpg",
+    "badge": "16CH HD DVR",
+    "priceRange": "₹9,200",
+    "price": 9200,
+    "mrp": 12500,
+    "unit": "NOS",
+    "warranty": "2 Years Brand Warranty",
+    "features": [
+      "16-Channel HD DVR with Two-Way Audio Talk",
+      "Supports 16 HD Analog Cameras + IP Channels",
+      "H.265+ Compression & Up to 16TB Storage",
+      "Dual Display HDMI & VGA",
+      "Remote Monitoring on Phone"
+    ],
+    "description": "CP PLUS 16-Channel HD DVR recorder for large shops, schools, commercial complexes, and apartments.",
+    "popular": true,
+    "categoryNumber": 6,
+    "categoryId": "cat-6"
+  },
+  {
     "id": "prod-36",
     "name": "MINI CCTV RACK - WALLMOUNT",
     "category": "racks_accessories",
