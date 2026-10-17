@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sparkles, CheckCircle2, ShieldCheck, ArrowRight, X, ExternalLink } from 'lucide-react';
+import { Sparkles, CheckCircle2, ShieldCheck, X, ExternalLink } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { ComboOffer } from '../types';
 
@@ -159,7 +159,7 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
           borderRadius: '12px'
         }}
       >
-        {activeOffers.map((combo, index) => {
+        {activeOffers.map((combo) => {
           const theme = getGradientStyle(combo.gradientTheme);
           const savings = combo.regularPrice - combo.offerPrice;
           const discountPercent = combo.regularPrice > 0 
@@ -239,10 +239,6 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
                     <Sparkles size={10} color={theme.accent} />
                     <span>{combo.badge || 'SPECIAL DEAL'}</span>
                   </span>
-
-                  <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600 }}>
-                    #{index + 1} of {activeOffers.length}
-                  </span>
                 </div>
 
                 {/* Title */}
@@ -292,26 +288,6 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
                       Save ₹{savings.toLocaleString('en-IN')} ({discountPercent}%)
                     </span>
                   )}
-                </div>
-              </div>
-
-              {/* Right Side: View Details Button */}
-              <div style={{ flexShrink: 0 }}>
-                <div style={{
-                  background: theme.btnBg,
-                  color: '#ffffff',
-                  padding: '7px 12px',
-                  borderRadius: '9999px',
-                  fontSize: '0.75rem',
-                  fontWeight: 800,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  boxShadow: theme.btnShadow,
-                  whiteSpace: 'nowrap'
-                }}>
-                  <span>View Details</span>
-                  <ArrowRight size={13} />
                 </div>
               </div>
             </div>
