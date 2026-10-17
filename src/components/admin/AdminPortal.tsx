@@ -8,29 +8,35 @@ import {
   Store,
   LogOut,
   Video,
-  Award
+  Award,
+  Sparkles,
+  ClipboardCheck,
+  MapPin
 } from 'lucide-react';
 import { AdminLogin } from './AdminLogin';
 import { AdminProducts } from './AdminProducts';
 import { AdminCategories } from './AdminCategories';
+import { AdminComboOffers } from './AdminComboOffers';
 import { AdminBrands } from './AdminBrands';
 import { AdminServices } from './AdminServices';
 import { AdminCctvPricing } from './AdminCctvPricing';
+import { AdminSiteVisits } from './AdminSiteVisits';
 import { AdminSettings } from './AdminSettings';
 import { AdminBackup } from './AdminBackup';
 import { useShop } from '../../context/ShopContext';
 
 interface AdminPortalProps {
   onGoToStore: () => void;
+  onGoToSiteVisit?: () => void;
 }
 
-export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
-  const { shopInfo, categories } = useShop();
+export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore, onGoToSiteVisit }) => {
+  const { shopInfo, categories, comboOffers, siteVisits } = useShop();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
     return sessionStorage.getItem('mekha_admin_logged_in') === 'true';
   });
 
-  const [activeTab, setActiveTab] = useState<'products' | 'categories' | 'brands' | 'cctv_pricing' | 'services' | 'settings' | 'backup'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'combos' | 'site_visits' | 'categories' | 'brands' | 'cctv_pricing' | 'services' | 'settings' | 'backup'>('products');
 
   const handleLogout = () => {
     sessionStorage.removeItem('mekha_admin_logged_in');
@@ -43,6 +49,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
 
   const navTabs = [
     { id: 'products', label: 'Products & Pricing', icon: ShoppingBag },
+    { id: 'combos', label: `Combo Banners (${comboOffers.length})`, icon: Sparkles },
+    { id: 'site_visits', label: `Site Visits (${siteVisits.length})`, icon: ClipboardCheck },
     { id: 'categories', label: `Categories & Order (${categories.length})`, icon: Layers },
     { id: 'cctv_pricing', label: 'Cost Estimator Products (33)', icon: Video },
     { id: 'brands', label: 'Brand Partners', icon: Award },
@@ -96,7 +104,27 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
           </div>
 
           {/* Action Buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <button
+              onClick={onGoToSiteVisit || (() => { window.location.href = '/site-visit'; })}
+              style={{
+                background: '#eff6ff',
+                border: '1px solid #bfdbfe',
+                color: '#1d4ed8',
+                borderRadius: '8px',
+                padding: '7px 12px',
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              title="Open the Field Inspection Web App for employees (Password: admin@2026)"
+            >
+              <MapPin size={15} color="#2563eb" /> Field Site Visit App
+            </button>
+
             <button
               onClick={onGoToStore}
               className="btn btn-outline btn-sm"
@@ -174,11 +202,14 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore }) => {
           <AdminProducts 
             onGoToEstimatorPricing={() => setActiveTab('cctv_pricing')} 
             onGoToCategories={() => setActiveTab('categories')}
+            onGoToCombos={() => setActiveTab('combos')}
           />
         )}
         {activeTab === 'categories' && (
           <AdminCategories onGoToProducts={() => setActiveTab('products')} />
         )}
+        {activeTab === 'combos' && <AdminComboOffers />}
+        {activeTab === 'site_visits' && <AdminSiteVisits />}
         {activeTab === 'brands' && <AdminBrands />}
         {activeTab === 'cctv_pricing' && <AdminCctvPricing />}
         {activeTab === 'services' && <AdminServices />}

@@ -1,33 +1,92 @@
-import { Product, ProductCategory, ServiceItem, Review } from '../types';
+import { Product, ProductCategory, ServiceItem, Review, ComboOffer } from '../types';
 
 export const DEFAULT_PRODUCT_CATEGORIES: ProductCategory[] = [
-  { id: 'cat-1', orderNumber: 1, name: 'Smart Wi-Fi 360° & 4G Solar Cameras' },
-  { id: 'cat-2', orderNumber: 2, name: 'CP PLUS IP Network Cameras' },
-  { id: 'cat-3', orderNumber: 3, name: 'HD & Analog Surveillance Cameras' },
-  { id: 'cat-4', orderNumber: 4, name: 'Surveillance Hard Disks & Memory Cards' },
-  { id: 'cat-5', orderNumber: 5, name: 'DVR & NVR Video Recorders' },
-  { id: 'cat-6', orderNumber: 6, name: 'PoE Switches & Networking' },
-  { id: 'cat-7', orderNumber: 7, name: 'CCTV Racks, Cables & Connectors' },
+  { id: 'cat-1', orderNumber: 1, name: 'Solar cameras', description: '360 degree with siren and motion detection' },
+  { id: 'cat-2', orderNumber: 2, name: 'Smart Wi-Fi 360° cameras' },
+  { id: 'cat-3', orderNumber: 3, name: 'CP PLUS IP Network Cameras' },
+  { id: 'cat-4', orderNumber: 4, name: 'HD & Analog Surveillance Cameras' },
+  { id: 'cat-5', orderNumber: 5, name: 'Surveillance Hard Disks & Memory Cards' },
+  { id: 'cat-6', orderNumber: 6, name: 'DVR & NVR Video Recorders' },
+  { id: 'cat-7', orderNumber: 7, name: 'PoE Switches & Networking' },
+  { id: 'cat-8', orderNumber: 8, name: 'CCTV Racks, Cables & Connectors' },
+];
+
+export const DEFAULT_COMBO_OFFERS: ComboOffer[] = [
+  {
+    id: 'combo-ip',
+    title: '4-Camera 4MP PoE IP Network Camera Complete Combo',
+    badge: '🔥 24% OFF - BEST SELLER',
+    regularPrice: 25000,
+    offerPrice: 19000,
+    items: [
+      '4x CP PLUS 4MP High-Definition IP Cameras (Audio with Mic)',
+      '1x CP PLUS 4-Channel 4K Ultra PoE NVR Recorder',
+      '1x 1TB Seagate SkyHawk 24/7 Surveillance Hard Disk',
+      '1x High-Speed Cat6 Pure Copper Cable Roll (50m) & RJ45',
+      'Free Mobile App Live View Setup & Professional Doorstep Fitting'
+    ],
+    image: '/combos/ip_combo_banner.jpg',
+    gradientTheme: 'blue',
+    active: true,
+    orderNumber: 1
+  },
+  {
+    id: 'combo-analog',
+    title: '4-Camera 1080P Full HD Dual-Light Night Vision Combo',
+    badge: '⚡ VALUE PACK - SAVE ₹5,000',
+    regularPrice: 17500,
+    offerPrice: 12500,
+    items: [
+      '2x Trueview 2MP Indoor Dome + 2x Outdoor Bullet HD Cameras',
+      '1x Trueview 4-Channel Full HD Two-Way Audio DVR',
+      '1x 1TB Video Storage Surveillance HDD',
+      '1x 4-Channel Heavy Duty SMPS Power Supply & BNC Connectors',
+      'Full Cable Wiring, Clamping & Complete Setup in Davanagere'
+    ],
+    image: '/combos/analog_combo_banner.png',
+    gradientTheme: 'purple',
+    active: true,
+    orderNumber: 2
+  },
+  {
+    id: 'combo-solar',
+    title: '100% Wire-Free 4G Solar PTZ Farm & Remote Plot Combo',
+    badge: '☀️ ZERO WIRES - 4G SIM READY',
+    regularPrice: 18500,
+    offerPrice: 13500,
+    items: [
+      '1x EYEQUBE 4G SIM Dual-Lens Outdoor Solar PTZ Camera',
+      '1x High-Efficiency Monocrystalline Solar Panel + Mounting Kit',
+      '1x Built-in High Capacity Rechargeable Lithium Battery',
+      'Zero Electricity & Zero Wi-Fi Needed (Jio/Airtel 4G SIM Slot)',
+      'Mobile App Live View, 2-Way Talk, Motion Siren & Color Night Vision'
+    ],
+    image: '/combos/solar_combo_banner.jpg',
+    gradientTheme: 'emerald',
+    active: true,
+    orderNumber: 3
+  }
 ];
 
 export const getInitialCategoryNumber = (cat: string): number => {
   switch (cat) {
-    case 'wifi_4g':
     case 'solar':
       return 1;
-    case 'ip_cameras':
+    case 'wifi_4g':
       return 2;
-    case 'hd_analog':
+    case 'ip_cameras':
       return 3;
-    case 'storage':
+    case 'hd_analog':
       return 4;
-    case 'dvr_nvr':
+    case 'storage':
       return 5;
-    case 'networking':
+    case 'dvr_nvr':
       return 6;
+    case 'networking':
+      return 7;
     case 'cables_power':
     case 'racks_accessories':
-      return 7;
+      return 8;
     default:
       return 1;
   }
@@ -58,7 +117,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 4720,
     "mrp": 6350,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE IP Bullet Camera with Mic",
       "Long-Range Night Vision (up to 60m)",
@@ -80,7 +138,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 4661,
     "mrp": 6300,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE Smart IP Network Camera",
       "Built-in High Sensitivity Microphone",
@@ -102,7 +159,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 1829,
     "mrp": 2450,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE IP Bullet Camera with Mic",
       "Long-Range Night Vision (up to 60m)",
@@ -168,7 +224,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 0,
     "mrp": 20,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE Smart IP Network Camera",
       "Built-in High Sensitivity Microphone",
@@ -190,7 +245,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 7021,
     "mrp": 9500,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE IP Bullet Camera with Mic",
       "Long-Range Night Vision (up to 60m)",
@@ -212,7 +266,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 5428,
     "mrp": 7350,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE IP Bullet Camera with Mic",
       "Long-Range Night Vision (up to 60m)",
@@ -234,7 +287,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 5310,
     "mrp": 7150,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "PoE Smart IP Network Camera",
       "Built-in High Sensitivity Microphone",
@@ -256,7 +308,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 1121,
     "mrp": 1500,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "2MP Full HD High Resolution",
       "Dual Light Outdoor Bullet",
@@ -278,7 +329,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 1086,
     "mrp": 1450,
     "unit": "NOS",
-    "warranty": "2 Years Brand Warranty",
     "features": [
       "2MP 1080P Full HD Video",
       "Dual Light Smart Night Vision",
@@ -300,7 +350,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 7316,
     "mrp": 9900,
     "unit": "NOS",
-    "warranty": "1 Year Warranty",
     "is360Camera": true,
     "features": [
       "6MP Ultra HD Triple Lens (4+4+12mm)",
@@ -323,7 +372,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 4130,
     "mrp": 5600,
     "unit": "NOS",
-    "warranty": "1 Year Warranty",
     "is360Camera": true,
     "features": [
       "3MP Super HD Clarity",
@@ -346,7 +394,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 4484,
     "mrp": 6050,
     "unit": "NOS",
-    "warranty": "1 Year Warranty",
     "is360Camera": true,
     "features": [
       "3MP Super HD Clarity",
@@ -369,7 +416,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 3481,
     "mrp": 4700,
     "unit": "NOS",
-    "warranty": "1 Year Warranty",
     "features": [
       "3MP Full HD Resolution",
       "Wi-Fi Wireless Connectivity",
@@ -391,7 +437,6 @@ const RAW_PRODUCTS: Product[] = [
     "price": 11210,
     "mrp": 15150,
     "unit": "NOS",
-    "warranty": "1 Year Warranty",
     "is360Camera": true,
     "features": [
       "Continuous Solar Powered Operation",
@@ -414,7 +459,7 @@ const RAW_PRODUCTS: Product[] = [
     "price": 6090,
     "mrp": 8200,
     "unit": "NOS",
-    "warranty": "1 Year Warranty",
+    "warranty": "5 Year Warranty",
     "features": [
       "Continuous Solar Powered Operation",
       "High-Capacity Lithium Battery Kit",
@@ -576,6 +621,30 @@ const RAW_PRODUCTS: Product[] = [
     "popular": false
   },
   {
+    "id": "prod-51",
+    "name": "CP PLUS 4CH Network Video Recorder (NVR) - CP-UNR-104F1",
+    "category": "dvr_nvr",
+    "brand": "CP PLUS",
+    "image": "https://cpplusworld.com/prodassets/product/small/1eb53499-144f-4fd6-9a08-0007adc7c771.jpg",
+    "badge": "4CH NVR",
+    "priceRange": "₹4,500",
+    "price": 4500,
+    "mrp": 6200,
+    "unit": "NOS",
+    "warranty": "2 Years Brand Warranty",
+    "features": [
+      "4-Channel IP Network Video Recorder (NVR)",
+      "Supports 4K / 4MP / 2MP Ultra HD IP Cameras",
+      "H.265+ High Efficiency Video Compression",
+      "Plug & Play Auto IP Detection",
+      "Instant Cloud Mobile App Remote Viewing"
+    ],
+    "description": "CP PLUS 4-Channel dedicated NVR recorder for crystal clear IP security camera monitoring and recording.",
+    "popular": true,
+    "categoryNumber": 6,
+    "categoryId": "cat-6"
+  },
+  {
     "id": "prod-25",
     "name": "CP Plus 8CH NVR - CP-UNR-108F1",
     "category": "dvr_nvr",
@@ -640,6 +709,54 @@ const RAW_PRODUCTS: Product[] = [
     ],
     "description": "CP PLUS 32-Channel 4K Network Video Recorder for large commercial enterprises, apartments, and industrial facilities.",
     "popular": true
+  },
+  {
+    "id": "prod-53",
+    "name": "CP PLUS 8CH HD DVR (Two-Way Audio) - CP-UVR-0801E1-V4",
+    "category": "dvr_nvr",
+    "brand": "CP PLUS",
+    "image": "https://cpplusworld.com/prodassets/product/small/1eb53499-144f-4fd6-9a08-0007adc7c771.jpg",
+    "badge": "8CH HD DVR",
+    "priceRange": "₹5,900",
+    "price": 5900,
+    "mrp": 7990,
+    "unit": "NOS",
+    "warranty": "2 Years Brand Warranty",
+    "features": [
+      "8-Channel HD DVR with Two-Way Audio Talk",
+      "Supports 8 HD Analog Cameras + 2 IP Channels",
+      "H.265+ High Efficiency Compression",
+      "HDMI & VGA Full HD Outputs",
+      "Mobile App Live View"
+    ],
+    "description": "CP PLUS 8-Channel Universal HD DVR with two-way audio support for residential & commercial security.",
+    "popular": true,
+    "categoryNumber": 6,
+    "categoryId": "cat-6"
+  },
+  {
+    "id": "prod-54",
+    "name": "CP PLUS 16CH HD DVR (Two-Way Audio) - CP-UVR-1601E1-V4",
+    "category": "dvr_nvr",
+    "brand": "CP PLUS",
+    "image": "https://cpplusworld.com/prodassets/product/small/1eb53499-144f-4fd6-9a08-0007adc7c771.jpg",
+    "badge": "16CH HD DVR",
+    "priceRange": "₹9,200",
+    "price": 9200,
+    "mrp": 12500,
+    "unit": "NOS",
+    "warranty": "2 Years Brand Warranty",
+    "features": [
+      "16-Channel HD DVR with Two-Way Audio Talk",
+      "Supports 16 HD Analog Cameras + IP Channels",
+      "H.265+ Compression & Up to 16TB Storage",
+      "Dual Display HDMI & VGA",
+      "Remote Monitoring on Phone"
+    ],
+    "description": "CP PLUS 16-Channel HD DVR recorder for large shops, schools, commercial complexes, and apartments.",
+    "popular": true,
+    "categoryNumber": 6,
+    "categoryId": "cat-6"
   },
   {
     "id": "prod-36",
@@ -829,6 +946,29 @@ const RAW_PRODUCTS: Product[] = [
     ],
     "description": "Trueview 4G SIM wireless router providing instant internet connectivity for CCTV setups without broadband connection.",
     "popular": false
+  },
+  {
+    "id": "prod-52",
+    "name": "FYBER 4+2 PORT 10/100 POE SWITCH (COMPACT)",
+    "category": "networking",
+    "brand": "FYBER",
+    "image": "/products/poe_switch_8port.jpg",
+    "badge": "4CH PoE Switch",
+    "priceRange": "₹1,650",
+    "price": 1650,
+    "mrp": 2350,
+    "unit": "NOS",
+    "warranty": "1 Year Warranty",
+    "features": [
+      "4 PoE Ports + 2 Uplink Ethernet Ports (10/100 Mbps)",
+      "Power over Ethernet for IP Cameras",
+      "Surge & Lightning Protection up to 4KV",
+      "Compact Metal Desktop / Wall Mount Housing"
+    ],
+    "description": "High performance 4-Port PoE Switch supplying power and high-speed data transmission for up to 4 IP cameras.",
+    "popular": true,
+    "categoryNumber": 7,
+    "categoryId": "cat-7"
   },
   {
     "id": "prod-32",
@@ -1125,10 +1265,15 @@ const RAW_PRODUCTS: Product[] = [
   }
 ];
 
-export const PRODUCTS: Product[] = RAW_PRODUCTS.map(p => ({
-  ...p,
-  categoryNumber: p.categoryNumber !== undefined ? p.categoryNumber : getInitialCategoryNumber(p.category)
-}));
+export const PRODUCTS: Product[] = RAW_PRODUCTS.map(p => {
+  const catNum = p.categoryNumber !== undefined ? p.categoryNumber : getInitialCategoryNumber(p.category);
+  const matchedCat = DEFAULT_PRODUCT_CATEGORIES.find(c => c.orderNumber === catNum);
+  return {
+    ...p,
+    categoryId: p.categoryId || (matchedCat ? matchedCat.id : 'cat-1'),
+    categoryNumber: catNum
+  };
+});
 
 export const SERVICES: ServiceItem[] = [
   {

@@ -340,15 +340,6 @@ export const ESTIMATOR_CATALOG: EstimatorItemDef[] = [
     architecture: 'Wi-Fi 360°',
     unit: '₹ / camera',
     description: 'Wall mounting, electrical connection, Wi-Fi pairing & mobile app account setup.'
-  },
-  {
-    id: 'solarFittingPerCamera',
-    name: 'Solar 4G Pole Fitting, Solar Alignment & SIM Setup',
-    category: 'labor',
-    categoryLabel: 'Certified Labor & Setup',
-    architecture: 'Solar 4G',
-    unit: '₹ / camera',
-    description: 'Heavy-duty pole/bracket mounting, solar angle alignment, 4G SIM testing & phone viewing setup.'
   }
 ];
 
@@ -413,8 +404,8 @@ export const AdminCctvPricing: React.FC = () => {
   // 2. WiFi 1-Cam: 1 WiFi 360 Camera + 64GB MicroSD + WiFi Setup
   const sampleWifiTotal = formData.wifi360Camera + formData.sdCard64GB + formData.wifiFittingPerCamera;
 
-  // 3. Solar 4G 1-Cam: 1 Solar 4G Camera + 64GB MicroSD + Solar Pole Mounting
-  const sampleSolarTotal = formData.solar4gCamera + formData.sdCard64GB + formData.solarFittingPerCamera;
+  // 3. Solar 4G 1-Cam: 1 Solar 4G Camera + 64GB MicroSD (Hardware only, no pole mounting)
+  const sampleSolarTotal = formData.solar4gCamera + formData.sdCard64GB;
 
   // Filter products by category and search
   const filteredCatalog = useMemo(() => {
@@ -677,10 +668,10 @@ export const AdminCctvPricing: React.FC = () => {
             {previewTab === 'solar' && (
               <>
                 <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff' }}>
-                  Solar 4G Setup (1x Standalone Solar 4G Camera + 64GB MicroSD + Pole Mounting &amp; Angle Setup)
+                  Solar 4G Setup (1x Standalone Solar 4G Camera + 64GB MicroSD)
                 </div>
                 <div style={{ fontSize: '0.78rem', color: '#93c5fd', marginTop: '4px' }}>
-                  Solar 4G Unit: ₹{formData.solar4gCamera} • 64GB MicroSD: ₹{formData.sdCard64GB} • Pole Mounting: ₹{formData.solarFittingPerCamera}
+                  Solar 4G Unit: ₹{formData.solar4gCamera} • 64GB MicroSD: ₹{formData.sdCard64GB}
                 </div>
               </>
             )}

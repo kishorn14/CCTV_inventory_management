@@ -3,24 +3,24 @@ import {
   X, 
   MessageCircle, 
   Camera, 
-  Video,
-  Wifi,
-  Shield,
-  Sun,
+  Smartphone,
   Wrench, 
+  ShieldCheck,
   CheckCircle, 
   MapPin, 
   Calendar, 
   Phone, 
-  User,
-  ChevronDown,
-  Check,
-  Locate,
-  Loader2,
-  CheckCircle2,
-  AlertCircle,
-  Navigation,
-  ExternalLink
+  User, 
+  ChevronDown, 
+  ChevronRight,
+  ChevronLeft,
+  Check, 
+  Locate, 
+  Loader2, 
+  CheckCircle2, 
+  AlertCircle, 
+  Navigation, 
+  ExternalLink 
 } from 'lucide-react';
 import { CategoryType } from '../types';
 import { useShop } from '../context/ShopContext';
@@ -28,116 +28,112 @@ import { createWhatsAppLink } from '../utils/whatsapp';
 import { sendLeadToGoogleSheets } from '../utils/googleSheets';
 import { getPhoneValidationError } from '../utils/validation';
 
+export interface ServicePackage {
+  id: string;
+  title: string;
+  badge: string;
+  badgeBg: string;
+  badgeColor: string;
+  icon: React.ElementType;
+  iconBg: string;
+  iconColor: string;
+  shortDesc: string;
+  features: string[];
+}
+
+export const CORE_CCTV_SERVICES: ServicePackage[] = [
+  {
+    id: 'installation',
+    title: 'CCTV Camera Installation & Wiring',
+    badge: 'Most Popular',
+    badgeBg: '#eff6ff',
+    badgeColor: '#1d4ed8',
+    icon: Camera,
+    iconBg: '#dbeafe',
+    iconColor: '#1d4ed8',
+    shortDesc: 'New CCTV installation, concealed wiring, DVR/NVR setup & angle optimization for homes, villas & shops.',
+    features: [
+      'New CCTV System Installation (Home / Villa / Shop)',
+      'Commercial 4K IP Camera & Multi-Channel NVR Setup',
+      'Concealed Conduit Cabling & PVC Casing/Capping Fitting',
+      'Existing CCTV Camera Shifting & Re-Installation',
+      'Additional Camera Extension to Existing Setup'
+    ]
+  },
+  {
+    id: 'mobile_view',
+    title: 'Mobile App Remote Live View Setup',
+    badge: 'Instant Setup',
+    badgeBg: '#f0fdf4',
+    badgeColor: '#15803d',
+    icon: Smartphone,
+    iconBg: '#dcfce7',
+    iconColor: '#15803d',
+    shortDesc: 'Connect CCTV to your smartphone for instant live streaming, playback and security alerts from anywhere.',
+    features: [
+      'Hik-Connect / Hikvision App Remote Live Setup',
+      'CP PLUS (gCMOB / Easy4IP) Mobile Streaming Setup',
+      'Dahua (DMSS) Remote Live View & Playback Setup',
+      'Multi-User & Family Smartphone Sharing / Password Reset',
+      'Smart Motion Alerts & Notification Configuration'
+    ]
+  },
+  {
+    id: 'repair',
+    title: 'Offline Camera & DVR Hard Disk Repair',
+    badge: 'Same Day Fix',
+    badgeBg: '#fef2f2',
+    badgeColor: '#b91c1c',
+    icon: Wrench,
+    iconBg: '#fee2e2',
+    iconColor: '#b91c1c',
+    shortDesc: 'Fast doorstep troubleshooting for black screens, video loss, recording errors and power supply faults.',
+    features: [
+      'Camera Showing "No Video" / Blank Screen / Offline',
+      'DVR / NVR Hard Disk Error / Recording Stopped / Beeping',
+      'Power Supply (SMPS) & BNC/DC Connector Replacement',
+      'Night Vision / IR LED / Dual-Light Failure Repair',
+      'DVR / NVR Forgotten Password Reset & Firmware Update'
+    ]
+  },
+  {
+    id: 'amc',
+    title: 'Annual Maintenance Contracts (AMC)',
+    badge: 'Total Peace of Mind',
+    badgeBg: '#faf5ff',
+    badgeColor: '#7e22ce',
+    icon: ShieldCheck,
+    iconBg: '#f3e8ff',
+    iconColor: '#7e22ce',
+    shortDesc: 'Scheduled preventative servicing, quarterly lens cleaning, hard disk storage audits & priority visits.',
+    features: [
+      'Annual CCTV Maintenance Contract for Homes & Apartments',
+      'Commercial / Shop / Warehouse CCTV AMC Package',
+      'Quarterly Camera Lens Cleaning & Angle Alignment Visit',
+      'Storage & Hard Disk Recording Health Verification',
+      'Emergency Priority Technician Visit & Same-Day Troubleshooting'
+    ]
+  }
+];
+
 interface ServiceBookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialCategory?: CategoryType;
+  initialServiceId?: string;
 }
-
-const DEFAULT_SERVICE_OPTIONS: Record<CategoryType, string[]> = {
-  all: [
-    'New CCTV System Installation (Home / Villa / Shop)',
-    'Commercial 4K IP & Multi-Channel NVR Setup',
-    'Smart Wi-Fi 360° / 4G Solar Camera Installation',
-    'Camera Offline, Video Loss & Blank Screen Fix',
-    'DVR / NVR Hard Disk & Recording Repair',
-    'Mobile Live Viewing Configuration (Hik-Connect / DMSS / gCMOB)',
-    'Cable Fault & Power Supply (SMPS) Replacement',
-    'Camera Shifting / Re-Installation',
-    'Annual Maintenance Contract (AMC)'
-  ],
-  cctv: [
-    'New CCTV System Installation (Home / Villa / Shop)',
-    'Commercial 4K IP & Multi-Channel NVR Setup',
-    'Smart Wi-Fi 360° / 4G Solar Camera Installation',
-    'Camera Offline, Video Loss & Blank Screen Fix',
-    'DVR / NVR Hard Disk & Recording Repair',
-    'Mobile Live Viewing Configuration (Hik-Connect / DMSS / gCMOB)',
-    'Cable Fault & Power Supply (SMPS) Replacement',
-    'Camera Shifting / Re-Installation',
-    'Annual Maintenance Contract (AMC)'
-  ],
-  kits: [
-    '4-Camera / 8-Camera Complete HD Package Installation',
-    'DVR Setup with 1TB / 2TB Surveillance Hard Disk',
-    'Concealed Cabling & Wall Fitting',
-    'Existing Camera Kit Relocation / Shifting'
-  ],
-  wifi: [
-    'Smart 360° Wi-Fi Camera Setup & Mobile Pairing',
-    'Memory Card Setup & Cloud Recording Support',
-    'Two-Way Audio & Motion Tracking Configuration',
-    'Wi-Fi Range Extension / Signal Troubleshooting'
-  ],
-  ip_nvr: [
-    'Commercial 4K IP Camera System Design & PoE Setup',
-    'Multi-Channel NVR Configuration with Enterprise Storage',
-    'AI Facial & Vehicle Perimeter Detection Setup',
-    'Multi-Branch Central CMS Remote Viewing'
-  ],
-  solar_4g: [
-    'Outdoor 4G SIM Standalone Solar Camera Installation',
-    'Farm / Construction Site Perimeter Security Setup',
-    'SIM Card Activation & Mobile Live Monitoring Test',
-    'Solar Panel Battery Angle & Surge Protection Check'
-  ],
-  wifi_4g: [
-    'Smart 360° Wi-Fi Camera Setup & Mobile Pairing',
-    '4G SIM Standalone Camera Installation',
-    'Memory Card Setup & Cloud Recording Support',
-    'Two-Way Audio & Motion Tracking Configuration'
-  ],
-  ip_cameras: [
-    'CP PLUS IP Camera Installation & PoE Cabling',
-    'Audio / Built-in Mic Recording Setup',
-    'Full-Color / Dual Light Night Vision Testing',
-    'Mobile Viewing Configuration (gCMOB / InstaOn)'
-  ],
-  hd_analog: [
-    'HD Dome / Bullet Camera Fitting',
-    'Coaxial 3+1 Cabling & BNC Pin Crimping',
-    'Dual Light Night Vision Alignment'
-  ],
-  dvr_nvr: [
-    'DVR / NVR Recording Unit Setup & HDD Installation',
-    'Password Reset & Network Connection',
-    'Multi-Channel Screen Layout & Mobile App Sync'
-  ],
-  solar: [
-    'Solar Powered 4G Security Camera Setup',
-    'Solar Panel Mounting & Battery Charging Optimization',
-    'Remote Farmhouse Surveillance Configuration'
-  ],
-  storage: [
-    'Surveillance Hard Disk (Seagate SkyHawk) Installation',
-    'HDD Replacement & Video Recording Retention Audit',
-    'MicroSD Card High Endurance Setup'
-  ],
-  networking: [
-    'PoE Switch Installation & Port Distribution',
-    '4G Wi-Fi Router Setup for Remote CCTV',
-    'Gigabit Network Cabling & Testing'
-  ],
-  cables_power: [
-    'Cat6 Solid Pure Copper Cable Laying',
-    'Centralized SMPS Power Supply Installation',
-    'Short Circuit & Power Spike Protection'
-  ],
-  racks_accessories: [
-    'Wall Mount Server Rack (6U / 2U / Mini) Installation',
-    'CCTV Conduit Pipe & Junction Box Fitting',
-    'Neat Wire Dressing & Equipment Securing'
-  ]
-};
 
 export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
   isOpen,
   onClose,
-  initialCategory = 'cctv'
+  initialServiceId
 }) => {
   const { shopInfo } = useShop();
-  const [category, setCategory] = useState<CategoryType>(initialCategory);
-  const [serviceType, setServiceType] = useState<string>('');
+
+  // Active selected service ID (null = Step 1: 4 service cards; string = Step 2: specific features & booking form)
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
+  const [selectedFeature, setSelectedFeature] = useState<string>('');
+
   const [customerName, setCustomerName] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [phoneError, setPhoneError] = useState<string>('');
@@ -145,7 +141,6 @@ export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
   const [preferredTime, setPreferredTime] = useState<string>('⚡ As soon as possible / Urgent');
   const [notes, setNotes] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState<boolean>(false);
   const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState<boolean>(false);
 
   // GPS Location State
@@ -154,17 +149,22 @@ export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
   const [locationError, setLocationError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (initialCategory) {
-      setCategory(initialCategory);
-      setServiceType(DEFAULT_SERVICE_OPTIONS[initialCategory]?.[0] || 'General Service');
+    if (isOpen) {
+      if (initialServiceId) {
+        const found = CORE_CCTV_SERVICES.find(s => s.id === initialServiceId);
+        if (found) {
+          setSelectedServiceId(found.id);
+          setSelectedFeature(found.features[0]);
+          return;
+        }
+      }
+      setSelectedServiceId(null);
+      setSelectedFeature('');
     }
-  }, [initialCategory, isOpen]);
+  }, [isOpen, initialServiceId]);
 
-  useEffect(() => {
-    if (DEFAULT_SERVICE_OPTIONS[category]) {
-      setServiceType(DEFAULT_SERVICE_OPTIONS[category][0]);
-    }
-  }, [category]);
+  // Current active service package
+  const currentService = CORE_CCTV_SERVICES.find(s => s.id === selectedServiceId) || null;
 
   // Detect Live GPS Location
   const handleDetectLocation = (e: React.MouseEvent) => {
@@ -231,27 +231,19 @@ export const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({
       return;
     }
 
-    const categoryLabels: Record<string, string> = {
-      cctv: '📹 CCTV Camera System',
-      kits: '📦 HD CCTV Camera Kit',
-      wifi: '📶 Smart Wi-Fi / PTZ Camera',
-      ip_nvr: '🌐 4K IP & Commercial NVR',
-      solar_4g: '☀️ 4G SIM / Solar Camera',
-      all: '🛠️ General CCTV Inquiry'
-    };
-
-    const categoryName = categoryLabels[category] || category;
+    const serviceTitle = currentService?.title || 'CCTV Service Request';
+    const featureText = selectedFeature || currentService?.features[0] || 'General Inquiry';
     const mapsLink = gpsCoordinates ? `https://maps.google.com/?q=${gpsCoordinates.lat},${gpsCoordinates.lng}` : null;
 
-    const message = `🛠️ *NEW SERVICE / INSTALLATION BOOKING*
+    const message = `🛠️ *NEW CCTV SERVICE REQUEST*
 *Shop:* ${shopInfo.shopName}
 ---------------------------------
+🎯 *Service Category:* ${serviceTitle}
+🔧 *Specific Feature/Need:* ${featureText}
 👤 *Customer Name:* ${customerName}
 📞 *Phone Number:* ${phoneNumber}
-📍 *Service Address / Landmark:* ${address}
+📍 *Service Address:* ${address}
 ${mapsLink ? `🗺️ *Live GPS Map Link:* ${mapsLink}` : `📌 _(Tip: You can also tap 📎 > 'Location' in WhatsApp to send your live pin)_`}
-🏷️ *Service Category:* ${categoryName}
-🔧 *Service Type:* ${serviceType}
 ⏰ *Preferred Date / Time:* ${preferredTime || 'As soon as possible'}
 ${notes ? `📝 *Special Notes:* ${notes}` : ''}
 ---------------------------------
@@ -264,8 +256,8 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
       customerName,
       phoneNumber,
       address: mapsLink ? `${address} [GPS: ${mapsLink}]` : address,
-      category: categoryName,
-      serviceType,
+      category: serviceTitle,
+      serviceType: featureText,
       preferredTime: preferredTime || 'As soon as possible',
       notes: notes ? (mapsLink ? `${notes} (GPS: ${mapsLink})` : notes) : (mapsLink ? `GPS: ${mapsLink}` : undefined),
       source: 'Doorstep Service Booking Form',
@@ -279,6 +271,8 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
 
   const resetForm = () => {
     setSubmitted(false);
+    setSelectedServiceId(null);
+    setSelectedFeature('');
     onClose();
   };
 
@@ -288,21 +282,29 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
         className="modal-content" 
         onClick={(e) => {
           e.stopPropagation();
-          setIsServiceDropdownOpen(false);
           setIsTimeDropdownOpen(false);
         }}
-        style={{ background: '#ffffff', color: '#0f172a' }}
+        style={{ 
+          background: '#ffffff', 
+          color: '#0f172a',
+          maxWidth: selectedServiceId ? '540px' : '620px',
+          width: '94%',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          borderRadius: '16px',
+          padding: '20px'
+        }}
       >
         <div className="modal-drag-handle" />
 
-        {/* Header */}
+        {/* Modal Header */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          marginBottom: '18px',
+          marginBottom: '14px',
           borderBottom: '1px solid #e2e8f0',
-          paddingBottom: '14px'
+          paddingBottom: '12px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{
@@ -319,11 +321,15 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
               <Wrench size={20} />
             </div>
             <div>
-              <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.2 }}>
-                Book Doorstep Service
+              <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.2, margin: 0 }}>
+                {submitted ? 'Booking Confirmation' : selectedServiceId ? 'Book Doorstep Service' : 'Request CCTV Service'}
               </h2>
-              <p style={{ fontSize: '0.78rem', color: '#64748b' }}>
-                Fast technician dispatch & verified service
+              <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '2px 0 0 0' }}>
+                {submitted 
+                  ? 'Request generated successfully' 
+                  : selectedServiceId 
+                    ? 'Step 2: Choose specific feature & enter details' 
+                    : 'Step 1: Choose from our 4 specialized service options'}
               </p>
             </div>
           </div>
@@ -349,6 +355,7 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
         </div>
 
         {submitted ? (
+          /* Confirmation Screen */
           <div style={{ textAlign: 'center', padding: '30px 10px' }}>
             <div style={{
               width: '64px',
@@ -363,175 +370,247 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
             }}>
               <CheckCircle size={36} />
             </div>
-            <h3 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>
+            <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>
               WhatsApp Opened!
             </h3>
-            <p style={{ color: '#64748b', fontSize: '0.95rem', marginBottom: '24px', lineHeight: 1.5 }}>
-              Your booking details have been generated. Click send on WhatsApp and our team will immediately confirm your service slot.
+            <p style={{ color: '#64748b', fontSize: '0.92rem', marginBottom: '24px', lineHeight: 1.5 }}>
+              Your service request details have been prepared. Please click <strong>Send</strong> on WhatsApp to connect with our technician team immediately.
             </p>
             <button onClick={resetForm} className="btn btn-primary btn-block">
-              Done & Close
+              Done &amp; Close
             </button>
           </div>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            {/* Category Selector Tabs */}
-            <div className="form-group">
-              <label className="form-label">Select CCTV Service Category *</label>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
-                gap: '8px',
-                marginTop: '6px'
-              }}>
-                {[
-                  { id: 'cctv' as CategoryType, label: 'All CCTV Setup', icon: Camera },
-                  { id: 'kits' as CategoryType, label: 'HD Kits & DVR', icon: Video },
-                  { id: 'wifi' as CategoryType, label: 'Smart Wi-Fi', icon: Wifi },
-                  { id: 'ip_nvr' as CategoryType, label: '4K IP & NVR', icon: Shield },
-                  { id: 'solar_4g' as CategoryType, label: '4G Solar', icon: Sun },
-                ].map((item) => {
-                  const Icon = item.icon;
-                  const isSelected = category === item.id;
-                  return (
-                    <button
-                      type="button"
-                      key={item.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setCategory(item.id);
-                        setIsServiceDropdownOpen(false);
-                        setIsTimeDropdownOpen(false);
-                      }}
-                      style={{
-                        padding: '10px 6px',
-                        borderRadius: '8px',
-                        border: isSelected ? '1.5px solid #1d4ed8' : '1px solid #e2e8f0',
-                        background: isSelected ? '#eff6ff' : '#ffffff',
-                        color: isSelected ? '#1d4ed8' : '#475569',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '6px',
-                        cursor: 'pointer',
-                        fontSize: '0.74rem',
-                        fontWeight: 700,
-                        transition: 'all 0.2s ease',
-                        boxShadow: isSelected ? '0 2px 8px rgba(29, 78, 216, 0.12)' : 'none'
-                      }}
-                    >
-                      <Icon size={18} color={isSelected ? '#1d4ed8' : '#64748b'} />
-                      {item.label}
-                    </button>
-                  );
-                })}
-              </div>
+        ) : !selectedServiceId ? (
+          /* Step 1: 4 Core Service Options Grid */
+          <div>
+            <div style={{
+              background: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              borderRadius: '10px',
+              padding: '10px 14px',
+              marginBottom: '14px',
+              fontSize: '0.82rem',
+              color: '#475569',
+              lineHeight: 1.4
+            }}>
+              <strong>Which service do you need?</strong> Tap on any of our 4 specialized options below to see included features and schedule a technician.
             </div>
 
-            {/* Custom Service Type Dropdown - 100% Contained inside modal */}
-            <div className="form-group" style={{ position: 'relative' }}>
-              <label className="form-label">Specific Service Needed *</label>
-              
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsServiceDropdownOpen(!isServiceDropdownOpen);
-                  setIsTimeDropdownOpen(false);
-                }}
-                className="form-input"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  background: '#ffffff',
-                  border: isServiceDropdownOpen ? '1.5px solid #1d4ed8' : '1px solid #cbd5e1',
-                  boxShadow: isServiceDropdownOpen ? '0 0 0 3px rgba(37, 99, 235, 0.15)' : 'none',
-                  padding: '11px 14px',
-                  fontWeight: 600,
-                  fontSize: '0.88rem',
-                  color: '#0f172a',
-                  width: '100%',
-                  boxSizing: 'border-box'
-                }}
-              >
-                <span style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', paddingRight: '8px' }}>
-                  {serviceType || 'Select a service'}
-                </span>
-                <ChevronDown 
-                  size={18} 
-                  color={isServiceDropdownOpen ? '#1d4ed8' : '#64748b'} 
-                  style={{
-                    transform: isServiceDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                    transition: 'transform 0.2s ease',
-                    flexShrink: 0
-                  }}
-                />
-              </button>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: '12px'
+            }}>
+              {CORE_CCTV_SERVICES.map((srv) => {
+                const IconComponent = srv.icon;
+                return (
+                  <div
+                    key={srv.id}
+                    onClick={() => {
+                      setSelectedServiceId(srv.id);
+                      setSelectedFeature(srv.features[0]);
+                    }}
+                    style={{
+                      border: '1.5px solid #e2e8f0',
+                      borderRadius: '12px',
+                      padding: '14px',
+                      background: '#ffffff',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.04)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = '#2563eb';
+                      e.currentTarget.style.boxShadow = '0 6px 16px rgba(37, 99, 235, 0.12)';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = '#e2e8f0';
+                      e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                        <div style={{
+                          width: '38px',
+                          height: '38px',
+                          borderRadius: '10px',
+                          background: srv.iconBg,
+                          color: srv.iconColor,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}>
+                          <IconComponent size={20} />
+                        </div>
+                        <span style={{
+                          fontSize: '0.68rem',
+                          fontWeight: 700,
+                          padding: '3px 8px',
+                          borderRadius: '10px',
+                          background: srv.badgeBg,
+                          color: srv.badgeColor
+                        }}>
+                          {srv.badge}
+                        </span>
+                      </div>
 
-              {/* Contained Dropdown Popup */}
-              {isServiceDropdownOpen && (
-                <div style={{
-                  position: 'absolute',
-                  top: 'calc(100% + 4px)',
-                  left: 0,
-                  right: 0,
-                  width: '100%',
-                  boxSizing: 'border-box',
-                  zIndex: 100,
-                  background: '#ffffff',
-                  border: '1px solid #cbd5e1',
-                  borderRadius: '10px',
-                  boxShadow: '0 10px 25px -4px rgba(15, 23, 42, 0.16), 0 4px 10px -2px rgba(15, 23, 42, 0.06)',
-                  maxHeight: '220px',
-                  overflowY: 'auto',
-                  padding: '4px 0'
-                }}>
-                  {(DEFAULT_SERVICE_OPTIONS[category] || DEFAULT_SERVICE_OPTIONS.all).map((opt, i) => {
-                    const isSelected = serviceType === opt;
+                      <h3 style={{ fontSize: '0.96rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px', lineHeight: 1.3 }}>
+                        {srv.title}
+                      </h3>
+                      <p style={{ fontSize: '0.78rem', color: '#64748b', lineHeight: 1.4, margin: '0 0 10px 0' }}>
+                        {srv.shortDesc}
+                      </p>
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      paddingTop: '8px',
+                      borderTop: '1px solid #f1f5f9',
+                      fontSize: '0.78rem',
+                      fontWeight: 700,
+                      color: '#2563eb'
+                    }}>
+                      <span>Select &amp; View {srv.features.length} Features</span>
+                      <ChevronRight size={15} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          /* Step 2: Feature Selection & Booking Form */
+          <form onSubmit={handleSubmit}>
+            {/* Back Button */}
+            <button
+              type="button"
+              onClick={() => setSelectedServiceId(null)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#2563eb',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '0 0 8px 0',
+                marginBottom: '4px'
+              }}
+            >
+              <ChevronLeft size={16} />
+              <span>&larr; Back to All 4 Services</span>
+            </button>
+
+            {/* Selected Service Card Header */}
+            {currentService && (
+              <div style={{
+                background: currentService.iconBg,
+                border: `1.5px solid ${currentService.badgeColor}33`,
+                borderRadius: '10px',
+                padding: '10px 12px',
+                marginBottom: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <currentService.icon size={20} color={currentService.iconColor} />
+                  <div>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 700, color: currentService.badgeColor, textTransform: 'uppercase' }}>
+                      Selected Service
+                    </span>
+                    <h3 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0f172a', margin: 0, lineHeight: 1.2 }}>
+                      {currentService.title}
+                    </h3>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedServiceId(null)}
+                  style={{
+                    background: '#ffffff',
+                    border: '1px solid #cbd5e1',
+                    color: '#1e293b',
+                    padding: '3px 8px',
+                    borderRadius: '6px',
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Change
+                </button>
+              </div>
+            )}
+
+            {/* Which feature / task do you need? */}
+            {currentService && (
+              <div className="form-group" style={{ marginBottom: '14px' }}>
+                <label className="form-label" style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.86rem', marginBottom: '8px' }}>
+                  Which feature comes in your requirement? *
+                </label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {currentService.features.map((feature, idx) => {
+                    const isSelected = selectedFeature === feature;
                     return (
                       <div
-                        key={i}
-                        onClick={() => {
-                          setServiceType(opt);
-                          setIsServiceDropdownOpen(false);
-                        }}
+                        key={idx}
+                        onClick={() => setSelectedFeature(feature)}
                         style={{
-                          padding: '10px 14px',
+                          padding: '9px 12px',
+                          borderRadius: '8px',
+                          border: isSelected ? '1.5px solid #2563eb' : '1px solid #e2e8f0',
+                          background: isSelected ? '#eff6ff' : '#ffffff',
+                          cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
-                          cursor: 'pointer',
-                          fontSize: '0.85rem',
-                          fontWeight: isSelected ? 700 : 500,
-                          color: isSelected ? '#1d4ed8' : '#1e293b',
-                          background: isSelected ? '#eff6ff' : 'transparent',
-                          transition: 'background 0.15s ease',
-                          borderBottom: i === (DEFAULT_SERVICE_OPTIONS[category] || []).length - 1 ? 'none' : '1px solid #f1f5f9'
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isSelected) e.currentTarget.style.background = '#f8fafc';
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isSelected) e.currentTarget.style.background = 'transparent';
+                          gap: '8px',
+                          transition: 'all 0.15s ease'
                         }}
                       >
-                        <span style={{ lineHeight: 1.35 }}>{opt}</span>
-                        {isSelected && <Check size={16} color="#1d4ed8" style={{ flexShrink: 0, marginLeft: '8px' }} />}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{
+                            width: '16px',
+                            height: '16px',
+                            borderRadius: '50%',
+                            border: isSelected ? '4px solid #2563eb' : '1.5px solid #cbd5e1',
+                            background: '#ffffff',
+                            flexShrink: 0
+                          }} />
+                          <span style={{
+                            fontSize: '0.82rem',
+                            fontWeight: isSelected ? 700 : 500,
+                            color: isSelected ? '#1e3a8a' : '#334155',
+                            lineHeight: 1.3
+                          }}>
+                            {feature}
+                          </span>
+                        </div>
+                        {isSelected && (
+                          <CheckCircle2 size={16} color="#2563eb" style={{ flexShrink: 0 }} />
+                        )}
                       </div>
                     );
                   })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            {/* Name & Phone */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '12px' }}>
+            {/* Customer Details Form */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '10px' }}>
               <div className="form-group">
                 <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <User size={14} color="#1d4ed8" /> Your Name *
+                  <User size={13} color="#1d4ed8" /> Your Name *
                 </label>
                 <input
                   type="text"
@@ -546,9 +625,9 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
               <div className="form-group">
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
                   <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: 0 }}>
-                    <Phone size={14} color="#059669" /> Phone / Mobile *
+                    <Phone size={13} color="#059669" /> Mobile Number *
                   </label>
-                  <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 500 }}>Min 10 digits</span>
+                  <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 500 }}>Min 10 digits</span>
                 </div>
                 <input
                   type="tel"
@@ -576,18 +655,18 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
                   required
                 />
                 {phoneError && (
-                  <div style={{ color: '#ef4444', fontSize: '0.74rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 500 }}>
+                  <div style={{ color: '#ef4444', fontSize: '0.72rem', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 500 }}>
                     <span>⚠️</span> {phoneError}
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Address & Landmark with Live GPS Auto-Detect */}
+            {/* Address with Live GPS Auto-Detect */}
             <div className="form-group">
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
                 <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: 0 }}>
-                  <MapPin size={14} color="#d97706" /> Service Address / Area Landmark *
+                  <MapPin size={13} color="#d97706" /> Service Address / Area Landmark *
                 </label>
 
                 {/* GPS Auto-Detect Button */}
@@ -599,18 +678,17 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
                     background: gpsCoordinates ? '#ecfdf5' : '#eff6ff',
                     border: gpsCoordinates ? '1px solid #a7f3d0' : '1px solid #bfdbfe',
                     color: gpsCoordinates ? '#059669' : '#1d4ed8',
-                    padding: '4px 10px',
+                    padding: '3px 8px',
                     borderRadius: '6px',
-                    fontSize: '0.74rem',
+                    fontSize: '0.72rem',
                     fontWeight: 700,
                     cursor: isDetectingLocation ? 'wait' : 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '5px',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.03)'
+                    gap: '4px',
+                    transition: 'all 0.2s ease'
                   }}
-                  title="Detect and attach your current GPS coordinates to the WhatsApp message"
+                  title="Detect and attach current GPS coordinates to WhatsApp message"
                 >
                   {isDetectingLocation ? (
                     <>
@@ -634,7 +712,7 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
               <input
                 type="text"
                 className="form-input"
-                placeholder="e.g. #45, 2nd Main, Near Post Office (or click 'Use Live GPS')"
+                placeholder="e.g. #45, 2nd Main, MCC B Block, Davanagere"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 required
@@ -644,20 +722,20 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
               {gpsCoordinates && (
                 <div style={{
                   marginTop: '6px',
-                  padding: '7px 12px',
-                  borderRadius: '8px',
+                  padding: '6px 10px',
+                  borderRadius: '6px',
                   background: '#ecfdf5',
                   border: '1px solid #a7f3d0',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  fontSize: '0.76rem',
+                  fontSize: '0.74rem',
                   color: '#065f46'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Navigation size={13} color="#059669" />
+                    <Navigation size={12} color="#059669" />
                     <span>
-                      <strong>GPS Location Attached:</strong> ({gpsCoordinates.lat.toFixed(4)}, {gpsCoordinates.lng.toFixed(4)})
+                      <strong>GPS Location:</strong> ({gpsCoordinates.lat.toFixed(4)}, {gpsCoordinates.lng.toFixed(4)})
                     </span>
                   </div>
                   <a 
@@ -672,12 +750,12 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
                       alignItems: 'center',
                       gap: '3px',
                       background: '#d1fae5',
-                      padding: '2px 8px',
+                      padding: '2px 6px',
                       borderRadius: '4px'
                     }}
                   >
-                    <span>Test Map Pin</span>
-                    <ExternalLink size={10} />
+                    <span>Test Map</span>
+                    <ExternalLink size={9} />
                   </a>
                 </div>
               )}
@@ -686,26 +764,26 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
               {locationError && (
                 <div style={{
                   marginTop: '6px',
-                  padding: '6px 10px',
+                  padding: '5px 8px',
                   borderRadius: '6px',
                   background: '#fef2f2',
                   border: '1px solid #fecaca',
-                  fontSize: '0.74rem',
+                  fontSize: '0.72rem',
                   color: '#991b1b',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px'
                 }}>
-                  <AlertCircle size={14} color="#dc2626" style={{ flexShrink: 0 }} />
+                  <AlertCircle size={13} color="#dc2626" style={{ flexShrink: 0 }} />
                   <span>{locationError}</span>
                 </div>
               )}
             </div>
 
-            {/* Preferred Time Custom Dropdown - 100% Contained */}
+            {/* Preferred Time Dropdown */}
             <div className="form-group" style={{ position: 'relative' }}>
               <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Calendar size={14} color="#0284c7" /> Preferred Date / Time Slot
+                <Calendar size={13} color="#0284c7" /> Preferred Date / Time Slot
               </label>
 
               <button
@@ -713,7 +791,6 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsTimeDropdownOpen(!isTimeDropdownOpen);
-                  setIsServiceDropdownOpen(false);
                 }}
                 className="form-input"
                 style={{
@@ -725,9 +802,9 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
                   background: '#ffffff',
                   border: isTimeDropdownOpen ? '1.5px solid #1d4ed8' : '1px solid #cbd5e1',
                   boxShadow: isTimeDropdownOpen ? '0 0 0 3px rgba(37, 99, 235, 0.15)' : 'none',
-                  padding: '11px 14px',
+                  padding: '9px 12px',
                   fontWeight: 600,
-                  fontSize: '0.88rem',
+                  fontSize: '0.84rem',
                   color: '#0f172a',
                   width: '100%',
                   boxSizing: 'border-box'
@@ -737,7 +814,7 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
                   {preferredTime}
                 </span>
                 <ChevronDown 
-                  size={18} 
+                  size={16} 
                   color={isTimeDropdownOpen ? '#1d4ed8' : '#64748b'} 
                   style={{
                     transform: isTimeDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -759,8 +836,8 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
                   background: '#ffffff',
                   border: '1px solid #cbd5e1',
                   borderRadius: '10px',
-                  boxShadow: '0 10px 25px -4px rgba(15, 23, 42, 0.16), 0 4px 10px -2px rgba(15, 23, 42, 0.06)',
-                  maxHeight: '200px',
+                  boxShadow: '0 10px 25px -4px rgba(15, 23, 42, 0.16)',
+                  maxHeight: '180px',
                   overflowY: 'auto',
                   padding: '4px 0'
                 }}>
@@ -768,7 +845,7 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
                     '⚡ As soon as possible / Urgent',
                     'Today Morning (9:00 AM - 1:00 PM)',
                     'Today Afternoon (1:00 PM - 5:00 PM)',
-                    'Today Evening (5:00 PM - 9:00 PM)',
+                    'Today Evening (5:00 PM - 8:00 PM)',
                     'Tomorrow (Anytime)',
                     'Weekend Appointment (Sat / Sun)'
                   ].map((timeOpt, i) => {
@@ -781,12 +858,12 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
                           setIsTimeDropdownOpen(false);
                         }}
                         style={{
-                          padding: '10px 14px',
+                          padding: '8px 12px',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           cursor: 'pointer',
-                          fontSize: '0.85rem',
+                          fontSize: '0.82rem',
                           fontWeight: isSelected ? 700 : 500,
                           color: isSelected ? '#1d4ed8' : '#1e293b',
                           background: isSelected ? '#eff6ff' : 'transparent',
@@ -800,7 +877,7 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
                         }}
                       >
                         <span>{timeOpt}</span>
-                        {isSelected && <Check size={16} color="#1d4ed8" style={{ flexShrink: 0, marginLeft: '8px' }} />}
+                        {isSelected && <Check size={15} color="#1d4ed8" style={{ flexShrink: 0, marginLeft: '8px' }} />}
                       </div>
                     );
                   })}
@@ -814,7 +891,7 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
               <textarea
                 className="form-textarea"
                 rows={2}
-                placeholder="e.g. Need 4/8 camera installation quotation or offline camera repair..."
+                placeholder="e.g. Need quotation for 4 camera installation or fix offline DVR..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
               />
@@ -824,17 +901,18 @@ _Sent via ${shopInfo.shopName} Doorstep Portal_`;
             <button
               type="submit"
               className="btn btn-whatsapp btn-block btn-lg"
-              style={{ marginTop: '10px' }}
+              style={{ marginTop: '8px', padding: '12px', fontSize: '0.95rem', fontWeight: 700 }}
             >
-              <MessageCircle size={20} />
+              <MessageCircle size={18} />
               Book Service via WhatsApp
             </button>
 
             <p style={{
-              fontSize: '0.75rem',
+              fontSize: '0.72rem',
               color: '#64748b',
               textAlign: 'center',
-              marginTop: '10px'
+              marginTop: '8px',
+              marginBottom: 0
             }}>
               🔒 No advance payment needed. Pay only after service completion.
             </p>

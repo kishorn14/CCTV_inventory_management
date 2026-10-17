@@ -22,10 +22,24 @@ export interface ProductCategory {
   description?: string;
 }
 
+export interface ComboOffer {
+  id: string;
+  title: string;
+  badge?: string;
+  regularPrice: number;
+  offerPrice: number;
+  items: string[];
+  image: string;
+  gradientTheme?: 'blue' | 'purple' | 'emerald' | 'amber';
+  active: boolean;
+  orderNumber?: number;
+}
+
 export interface Product {
   id: string;
   name: string;
   category: CategoryType;
+  categoryId?: string;     // Unique ID of the ProductCategory (e.g. 'cat-1', 'cat-2')
   categoryNumber?: number; // Category Order Number (e.g. 1, 2, 3...) assigned by admin
   brand: string;
   image: string;
@@ -149,7 +163,7 @@ export interface CctvPricingConfig {
   // Installation & Fitting charges
   installationPerCamera: number;    // Wired camera mounting, wiring & setup
   wifiFittingPerCamera: number;     // WiFi camera wall mounting & phone pairing
-  solarFittingPerCamera: number;    // Solar panel mounting & pole alignment
+  solarFittingPerCamera?: number;   // Deprecated: Solar cameras do not include pole mounting
 }
 
 export const DEFAULT_CCTV_PRICING: CctvPricingConfig = {
@@ -194,7 +208,7 @@ export const DEFAULT_CCTV_PRICING: CctvPricingConfig = {
 
   installationPerCamera: 450,
   wifiFittingPerCamera: 350,
-  solarFittingPerCamera: 650
+  solarFittingPerCamera: 0
 };
 
 export interface BrandPartner {
@@ -256,5 +270,33 @@ export const DEFAULT_BRANDS: BrandPartner[] = [
     badge: 'Specialized 4G'
   }
 ];
+
+export type SiteVisitStatus = 'New' | 'Quotation Sent' | 'Follow Up' | 'Completed' | 'Cancelled';
+
+export interface SiteVisit {
+  id: string;              // unique id e.g. 'sv-1729145600000'
+  visitNumber: string;     // auto-generated sequential number e.g. 'SV-1001'
+  technicianName: string;  // Employee who conducted the site inspection
+  customerName: string;
+  customerPhone: string;
+  customerAddress: string;
+  landmark?: string;
+  city?: string;
+  gpsLocation?: {
+    lat: number;
+    lng: number;
+    accuracy?: number;
+    mapUrl: string;
+  };
+  manualMapUrl?: string;
+  propertyType?: string;   // e.g. 'Home / Villa', 'Shop / Commercial', 'Warehouse / Godown', 'Factory', 'Farm / Agriculture', 'Other'
+  enquiredSystem?: string; // e.g. 'PoE IP Cameras', 'HD Analog Cameras', '4G Solar Standalone', 'Wireless Wi-Fi', 'AMC / Repair'
+  cameraCount?: string;    // e.g. '4 Cameras', '8 Cameras', '12+ Cameras'
+  enquiryNotes: string;    // customer requirements & technician findings
+  photos: string[];        // site photo data URLs or links
+  timestamp: string;       // ISO timestamp
+  formattedDate: string;   // Human-readable date and time
+  status: SiteVisitStatus;
+}
 
 

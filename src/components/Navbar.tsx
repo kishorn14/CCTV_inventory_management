@@ -8,7 +8,8 @@ import {
   MapPin,
   Clock,
   ShieldCheck,
-  Calculator
+  Calculator,
+  Wrench
 } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { createWhatsAppLink } from '../utils/whatsapp';
@@ -212,25 +213,29 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking, onOpenProducts, o
               </div>
             </div>
 
-            <a
-              href="#cctv-cost-estimator"
-              onClick={() => setMobileMenuOpen(false)}
-              className="btn btn-outline btn-sm btn-block"
-              style={{ color: '#1d4ed8', borderColor: '#bfdbfe', background: '#eff6ff' }}
-            >
-              <Calculator size={16} /> Instant Cost Estimator
-            </a>
-
-            <a
-              href="#products"
+            <button
+              type="button"
               onClick={() => {
                 setMobileMenuOpen(false);
-                if (onOpenProducts) onOpenProducts();
+                if (onOpenEstimator) onOpenEstimator();
               }}
               className="btn btn-outline btn-sm btn-block"
+              style={{ color: '#1d4ed8', borderColor: '#bfdbfe', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
             >
-              Browse All 50 Products
-            </a>
+              <Calculator size={16} /> Instant Cost Estimator
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenBooking();
+              }}
+              className="btn btn-outline btn-sm btn-block"
+              style={{ color: '#2563eb', borderColor: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontWeight: 700 }}
+            >
+              <Wrench size={16} /> Request Service
+            </button>
 
             <button
               onClick={() => {

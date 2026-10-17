@@ -9,12 +9,13 @@ import {
   Lock,
   Video,
   Compass,
-  Layers
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import { useShop } from '../../context/ShopContext';
 import { Product, CategoryType } from '../../types';
-import { CATEGORIES } from '../../data/shopData';
 import { ConfirmDeleteModal } from './ConfirmDeleteModal';
+import { ImageUploadField } from './ImageUploadField';
 
 const PRESET_IMAGES: Record<CategoryType, string[]> = {
   all: [],
@@ -71,12 +72,22 @@ const PRESET_IMAGES: Record<CategoryType, string[]> = {
 interface AdminProductsProps {
   onGoToEstimatorPricing?: () => void;
   onGoToCategories?: () => void;
+  onGoToCombos?: () => void;
 }
 
-export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPricing, onGoToCategories }) => {
-  const { products, addProduct, updateProduct, deleteProduct, categories, updateProductCategoryNumber } = useShop();
-  const [categoryFilter, setCategoryFilter] = useState<CategoryType>('all');
+export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPricing, onGoToCategories, onGoToCombos }) => {
+  const { products, addProduct, updateProduct, deleteProduct, categories, updateProductCategory, forceSyncToDisk, comboOffers } = useShop();
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'saved'>('idle');
+
+  const handleForceSync = async () => {
+    setSyncStatus('syncing');
+    const ok = await forceSyncToDisk();
+    setSyncStatus(ok ? 'saved' : 'idle');
+    setNotification(ok ? 'All products, warranties, and categories synced live to store!' : 'Failed to sync to server');
+    setTimeout(() => setSyncStatus('idle'), 3000);
+  };
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -91,6 +102,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
   const [formData, setFormData] = useState({
     name: '',
     category: 'cctv' as CategoryType,
+    categoryId: undefined as string | undefined,
     categoryNumber: undefined as number | undefined,
     brand: '',
     image: PRESET_IMAGES.cctv[0],
@@ -106,11 +118,14 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
   });
 
   const openAddModal = () => {
+    const activeCat = categories.find(c => c.id === categoryFilter);
+    const defaultCat = activeCat || categories[0];
     setEditingProduct(null);
     setFormData({
       name: '',
-      category: categoryFilter !== 'all' ? categoryFilter : 'cctv',
-      categoryNumber: 1,
+      category: 'cctv' as CategoryType,
+      categoryId: defaultCat ? defaultCat.id : undefined,
+      categoryNumber: defaultCat ? defaultCat.orderNumber : 1,
       brand: '',
       image: PRESET_IMAGES.cctv[0],
       badge: 'New Arrival',
@@ -127,11 +142,13 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
   };
 
   const openEditModal = (product: Product) => {
+    const matchedCat = categories.find(c => c.id === product.categoryId || (product.categoryNumber !== undefined && c.orderNumber === product.categoryNumber));
     setEditingProduct(product);
     setFormData({
       name: product.name,
       category: product.category,
-      categoryNumber: product.categoryNumber,
+      categoryId: product.categoryId || matchedCat?.id,
+      categoryNumber: product.categoryNumber !== undefined ? product.categoryNumber : matchedCat?.orderNumber,
       brand: product.brand,
       image: product.image,
       badge: product.badge || '',
@@ -157,6 +174,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
     const productPayload = {
       name: formData.name,
       category: formData.category,
+      categoryId: formData.categoryId,
       categoryNumber: formData.categoryNumber !== undefined && formData.categoryNumber !== null ? Number(formData.categoryNumber) : undefined,
       brand: formData.brand,
       image: formData.image,
@@ -173,9 +191,15 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
 
     if (editingProduct) {
       updateProduct(editingProduct.id, productPayload);
+      setNotification(`"${productPayload.name}" updated! Warranty & details are saved live to store.`);
     } else {
       addProduct(productPayload);
+      setNotification(`"${productPayload.name}" added to inventory!`);
     }
+
+    setTimeout(() => {
+      setNotification(prev => (prev?.includes(productPayload.name) ? null : prev));
+    }, 4000);
 
     setIsModalOpen(false);
   };
@@ -198,7 +222,13 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
 
 
   const filtered = products.filter(p => {
-    const matchCat = categoryFilter === 'all' || p.category === categoryFilter;
+    let matchCat = true;
+    if (categoryFilter !== 'all') {
+      const selectedCat = categories.find(c => c.id === categoryFilter);
+      if (selectedCat) {
+        matchCat = p.categoryId === selectedCat.id || (p.categoryNumber !== undefined && p.categoryNumber === selectedCat.orderNumber);
+      }
+    }
     const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (p.brand || '').toLowerCase().includes(searchQuery.toLowerCase());
     return matchCat && matchSearch;
@@ -244,6 +274,29 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
         </div>
 
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {onGoToCombos && (
+            <button
+              type="button"
+              onClick={onGoToCombos}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '8px',
+                border: '1.5px solid #fed7aa',
+                background: '#fff7ed',
+                color: '#c2410c',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <Sparkles size={15} />
+              <span>Modify Combo Banners ({comboOffers.length}) &rarr;</span>
+            </button>
+          )}
+
           {onGoToCategories && (
             <button
               type="button"
@@ -309,9 +362,54 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
           </p>
         </div>
 
-        <button onClick={openAddModal} className="btn btn-primary btn-sm">
-          <Plus size={18} /> + Add New Product
-        </button>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            onClick={handleForceSync}
+            disabled={syncStatus === 'syncing'}
+            style={{
+              padding: '8px 14px',
+              borderRadius: '8px',
+              border: syncStatus === 'saved' ? '1.5px solid #10b981' : '1.5px solid #bfdbfe',
+              background: syncStatus === 'saved' ? '#ecfdf5' : '#eff6ff',
+              color: syncStatus === 'saved' ? '#047857' : '#1d4ed8',
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              cursor: syncStatus === 'syncing' ? 'wait' : 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+            title="Immediately save all products, categories, and warranty modifications to live storefront across all customer devices"
+          >
+            {syncStatus === 'syncing' ? '⏳ Syncing to Live Store...' : syncStatus === 'saved' ? '✓ Synced to Live Store' : '💾 Force Sync to Live Store'}
+          </button>
+          {onGoToCombos && (
+            <button
+              type="button"
+              onClick={onGoToCombos}
+              style={{
+                padding: '8px 14px',
+                borderRadius: '8px',
+                border: '1.5px solid #fed7aa',
+                background: '#fff7ed',
+                color: '#c2410c',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              title="Configure and edit storefront Combo Package Banners"
+            >
+              <Sparkles size={16} /> Combo Offers ({comboOffers.length})
+            </button>
+          )}
+          <button onClick={openAddModal} className="btn btn-primary btn-sm">
+            <Plus size={18} /> + Add New Product
+          </button>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}
@@ -323,14 +421,31 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
         justifyContent: 'space-between',
         marginBottom: '20px'
       }}>
-        {/* Category Tabs */}
+        {/* Dynamic Category Tabs From Admin Categories */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-          {CATEGORIES.map(cat => {
+          <button
+            onClick={() => setCategoryFilter('all')}
+            style={{
+              padding: '6px 14px',
+              borderRadius: '9999px',
+              border: categoryFilter === 'all' ? '1px solid #1d4ed8' : '1px solid #e2e8f0',
+              background: categoryFilter === 'all' ? '#eff6ff' : '#ffffff',
+              color: categoryFilter === 'all' ? '#1d4ed8' : '#64748b',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              boxShadow: categoryFilter === 'all' ? '0 2px 6px rgba(29, 78, 216, 0.12)' : '0 1px 2px rgba(0,0,0,0.02)'
+            }}
+          >
+            All Products ({products.length})
+          </button>
+          {[...categories].sort((a, b) => a.orderNumber - b.orderNumber).map(cat => {
             const isSelected = categoryFilter === cat.id;
+            const count = products.filter(p => p.categoryId === cat.id || (p.categoryNumber !== undefined && p.categoryNumber === cat.orderNumber)).length;
             return (
               <button
                 key={cat.id}
-                onClick={() => setCategoryFilter(cat.id as CategoryType)}
+                onClick={() => setCategoryFilter(cat.id)}
                 style={{
                   padding: '6px 14px',
                   borderRadius: '9999px',
@@ -343,7 +458,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                   boxShadow: isSelected ? '0 2px 6px rgba(29, 78, 216, 0.12)' : '0 1px 2px rgba(0,0,0,0.02)'
                 }}
               >
-                {cat.label}
+                #{cat.orderNumber} {cat.name} ({count})
               </button>
             );
           })}
@@ -394,7 +509,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
               </div>
             </div>
 
-            {/* Inline Category Number Box for Mobile */}
+            {/* Inline Category Selector for Mobile */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
@@ -405,48 +520,35 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
               border: '1px solid #bfdbfe',
               fontSize: '0.85rem'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#1e40af' }}>
-                  Category #:
-                </span>
-                <input
-                  type="number"
-                  min="1"
-                  value={product.categoryNumber ?? ''}
-                  onChange={(e) => {
-                    const val = e.target.value === '' ? undefined : Number(e.target.value);
-                    updateProductCategoryNumber(product.id, val);
-                  }}
-                  placeholder="None"
-                  style={{
-                    width: '56px',
-                    padding: '4px 6px',
-                    borderRadius: '6px',
-                    border: '1.5px solid #3b82f6',
-                    fontSize: '0.88rem',
-                    fontWeight: 800,
-                    textAlign: 'center',
-                    color: '#1d4ed8',
-                    background: '#ffffff',
-                    outline: 'none'
-                  }}
-                />
-              </div>
-              {(() => {
-                const matchedCat = categories.find(c => c.orderNumber === product.categoryNumber);
-                if (matchedCat) {
-                  return (
-                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#1d4ed8', background: '#dbeafe', padding: '2px 8px', borderRadius: '4px', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      #{matchedCat.orderNumber} {matchedCat.name}
-                    </span>
-                  );
-                }
-                return (
-                  <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontStyle: 'italic' }}>
-                    {product.categoryNumber ? `Cat #${product.categoryNumber}` : 'No Category #'}
-                  </span>
-                );
-              })()}
+              <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#1e40af' }}>
+                Category:
+              </span>
+              <select
+                className="form-select"
+                style={{
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  color: '#1d4ed8',
+                  padding: '4px 8px',
+                  borderRadius: '6px',
+                  background: '#ffffff',
+                  border: '1.5px solid #bfdbfe',
+                  maxWidth: '210px'
+                }}
+                value={product.categoryId || categories.find(c => c.orderNumber === product.categoryNumber)?.id || ''}
+                onChange={(e) => {
+                  const newCatId = e.target.value;
+                  const matched = categories.find(c => c.id === newCatId);
+                  updateProductCategory(product.id, newCatId || undefined, matched?.orderNumber);
+                }}
+              >
+                <option value="">-- No Category --</option>
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>
+                    #{cat.orderNumber} - {cat.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div style={{
@@ -529,80 +631,34 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                   </div>
                 </td>
                 <td style={{ padding: '14px 18px' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b' }}>#</span>
-                      <input
-                        type="number"
-                        min="1"
-                        value={product.categoryNumber ?? ''}
-                        onChange={(e) => {
-                          const val = e.target.value === '' ? undefined : Number(e.target.value);
-                          updateProductCategoryNumber(product.id, val);
-                        }}
-                        placeholder="No #"
-                        style={{
-                          width: '56px',
-                          padding: '5px 6px',
-                          borderRadius: '6px',
-                          border: '1.5px solid #cbd5e1',
-                          fontSize: '0.86rem',
-                          fontWeight: 800,
-                          textAlign: 'center',
-                          color: '#1d4ed8',
-                          background: '#f8fafc',
-                          outline: 'none',
-                          transition: 'all 0.15s ease'
-                        }}
-                        onFocus={(e) => {
-                          e.target.style.borderColor = '#2563eb';
-                          e.target.style.background = '#ffffff';
-                        }}
-                        onBlur={(e) => {
-                          e.target.style.borderColor = '#cbd5e1';
-                          e.target.style.background = '#f8fafc';
-                        }}
-                        title="Category number (1 = appears first, 2 = second, etc.)"
-                      />
-                    </div>
-                    {(() => {
-                      const matchedCat = categories.find(c => c.orderNumber === product.categoryNumber);
-                      if (matchedCat) {
-                        return (
-                          <span 
-                            style={{ 
-                              fontSize: '0.72rem', 
-                              fontWeight: 700, 
-                              color: '#1d4ed8', 
-                              background: '#eff6ff', 
-                              padding: '2px 6px', 
-                              borderRadius: '4px', 
-                              border: '1px solid #bfdbfe',
-                              maxWidth: '135px',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap'
-                            }}
-                            title={`Category #${matchedCat.orderNumber}: ${matchedCat.name}`}
-                          >
-                            {matchedCat.name}
-                          </span>
-                        );
-                      }
-                      if (product.categoryNumber !== undefined) {
-                        return (
-                          <span style={{ fontSize: '0.7rem', color: '#d97706', fontStyle: 'italic' }}>
-                            Cat #{product.categoryNumber}
-                          </span>
-                        );
-                      }
-                      return (
-                        <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontStyle: 'italic' }}>
-                          No category #
-                        </span>
-                      );
-                    })()}
-                  </div>
+                  <select
+                    className="form-select"
+                    style={{
+                      padding: '6px 10px',
+                      fontSize: '0.84rem',
+                      fontWeight: 700,
+                      color: '#1d4ed8',
+                      background: '#eff6ff',
+                      border: '1.5px solid #bfdbfe',
+                      borderRadius: '8px',
+                      maxWidth: '190px',
+                      cursor: 'pointer'
+                    }}
+                    value={product.categoryId || categories.find(c => c.orderNumber === product.categoryNumber)?.id || ''}
+                    onChange={(e) => {
+                      const newCatId = e.target.value;
+                      const matched = categories.find(c => c.id === newCatId);
+                      updateProductCategory(product.id, newCatId || undefined, matched?.orderNumber);
+                    }}
+                    title="Choose category for this product"
+                  >
+                    <option value="">-- No Category --</option>
+                    {categories.map(cat => (
+                      <option key={cat.id} value={cat.id}>
+                        #{cat.orderNumber} - {cat.name}
+                      </option>
+                    ))}
+                  </select>
                 </td>
                 <td style={{ padding: '14px 18px', color: '#1d4ed8', textTransform: 'capitalize', fontWeight: 600 }}>
                   {product.category.replace('_', ' ')}
@@ -715,9 +771,9 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '12px' }}>
-                <div className="form-group">
-                  <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span>Category Number (1, 2, 3...)</span>
+                <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                  <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontWeight: 700, color: '#1d4ed8' }}>Assigned Store Category *</span>
                     {onGoToCategories && (
                       <button
                         type="button"
@@ -731,61 +787,31 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                       </button>
                     )}
                   </label>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                    <input
-                      type="number"
-                      min="1"
-                      className="form-input"
-                      style={{ width: '80px', fontWeight: 800, textAlign: 'center', color: '#1d4ed8' }}
-                      placeholder="1"
-                      value={formData.categoryNumber ?? ''}
-                      onChange={e => setFormData({ 
-                        ...formData, 
-                        categoryNumber: e.target.value === '' ? undefined : Number(e.target.value) 
-                      })}
-                    />
-                    <select
-                      className="form-select"
-                      style={{ flex: 1, fontSize: '0.85rem' }}
-                      value={formData.categoryNumber ?? ''}
-                      onChange={e => {
-                        const val = e.target.value === '' ? undefined : Number(e.target.value);
-                        setFormData({ ...formData, categoryNumber: val });
-                      }}
-                    >
-                      <option value="">-- Or Choose Existing Category --</option>
-                      {categories.map(cat => (
-                        <option key={cat.id} value={cat.orderNumber}>
-                          #{cat.orderNumber} - {cat.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <span style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '3px', display: 'block' }}>
-                    Category 1 appears first at the top of the storefront, 2 below 1, etc.
-                  </span>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Category Filter Tag</label>
                   <select
                     className="form-select"
-                    value={formData.category}
+                    style={{ fontSize: '0.88rem', fontWeight: 600 }}
+                    value={formData.categoryId || categories.find(c => c.orderNumber === formData.categoryNumber)?.id || ''}
                     onChange={e => {
-                      const newCat = e.target.value as CategoryType;
+                      const selectedId = e.target.value;
+                      const matched = categories.find(c => c.id === selectedId);
                       setFormData({
                         ...formData,
-                        category: newCat,
-                        image: PRESET_IMAGES[newCat]?.[0] || formData.image
+                        categoryId: selectedId || undefined,
+                        categoryNumber: matched ? matched.orderNumber : undefined
                       });
                     }}
+                    required
                   >
-                    <option value="kits">HD Kits &amp; DVR</option>
-                    <option value="wifi">Smart Wi-Fi &amp; PTZ</option>
-                    <option value="ip_nvr">4K IP &amp; NVR</option>
-                    <option value="solar_4g">4G SIM &amp; Solar</option>
-                    <option value="cctv">General CCTV</option>
+                    <option value="">-- Choose Store Category --</option>
+                    {categories.map(cat => (
+                      <option key={cat.id} value={cat.id}>
+                        #{cat.orderNumber} - {cat.name}
+                      </option>
+                    ))}
                   </select>
+                  <span style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '3px', display: 'block' }}>
+                    Determines which category section this product appears under on the customer storefront.
+                  </span>
                 </div>
 
                 <div className="form-group">
@@ -826,105 +852,23 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                     onChange={e => setFormData({ ...formData, badge: e.target.value })}
                   />
                 </div>
-
-                <div className="form-group">
-                  <label className="form-label">Product Image Source</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="Paste image web link (https://...)"
-                    value={formData.image}
-                    onChange={e => setFormData({ ...formData, image: e.target.value })}
-                    required
-                  />
-                </div>
               </div>
 
-              {/* Photo Upload & Presets Section */}
-              <div style={{
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
-                borderRadius: '10px',
-                padding: '14px',
-                marginBottom: '16px'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '10px' }}>
-                  <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#1d4ed8' }}>
-                    Option 1: Upload from Phone / PC
-                  </span>
-                  <label style={{
-                    background: '#eff6ff',
-                    border: '1px solid #bfdbfe',
-                    color: '#1d4ed8',
-                    padding: '6px 14px',
-                    borderRadius: '8px',
-                    fontSize: '0.8rem',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px'
-                  }}>
-                    📁 Choose Photo File / Camera
-                    <input
-                      type="file"
-                      accept="image/*"
-                      style={{ display: 'none' }}
-                      onChange={e => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => {
-                            if (typeof reader.result === 'string') {
-                              setFormData({ ...formData, image: reader.result });
-                            }
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
-                    />
-                  </label>
-                </div>
-
-                {/* Preset Options */}
-                {PRESET_IMAGES[formData.category] && (
-                  <div>
-                    <span style={{ fontSize: '0.78rem', color: '#64748b', display: 'block', marginBottom: '8px' }}>
-                      Option 2: Or select a ready-made category photo:
-                    </span>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', overflowX: 'auto', paddingBottom: '4px' }}>
-                      {PRESET_IMAGES[formData.category].map((imgUrl, i) => (
-                        <img
-                          key={i}
-                          src={imgUrl}
-                          alt="preset"
-                          onClick={() => setFormData({ ...formData, image: imgUrl })}
-                          style={{
-                            width: '58px',
-                            height: '46px',
-                            borderRadius: '6px',
-                            objectFit: 'cover',
-                            cursor: 'pointer',
-                            border: formData.image === imgUrl ? '2px solid #1d4ed8' : '1px solid #cbd5e1',
-                            boxShadow: formData.image === imgUrl ? '0 0 10px rgba(29, 78, 216, 0.3)' : 'none'
-                          }}
-                        />
-                      ))}
-                      {/* Live Image Preview */}
-                      {formData.image && (
-                        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                          <span style={{ fontSize: '0.75rem', color: '#059669', fontWeight: 700 }}>Active Preview:</span>
-                          <img
-                            src={formData.image}
-                            alt="preview"
-                            style={{ width: '46px', height: '46px', borderRadius: '6px', objectFit: 'cover', border: '1px solid #10b981' }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
+              {/* Product Image Source & Device Upload */}
+              <ImageUploadField
+                label="Product Image Source"
+                value={formData.image}
+                onChange={img => setFormData({ ...formData, image: img })}
+                required
+                placeholder="Paste image web link (https://...) or choose photo from device"
+                helpText="Upload a photo from your phone or PC (automatically compressed), or pick one of the presets below."
+                presets={PRESET_IMAGES[formData.category]?.map((url, i) => ({
+                  label: `Preset ${i + 1}`,
+                  url
+                }))}
+                maxWidth={1200}
+                maxHeight={1200}
+              />
 
               {/* Camera Sample Footage & 360 Rotation Controls */}
               <div style={{
@@ -1006,38 +950,73 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                     </button>
                   </div>
 
-                  <label style={{
-                    background: '#ffffff',
-                    border: '1px solid #86efac',
-                    color: '#15803d',
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    fontSize: '0.74rem',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}>
-                    📁 Upload MP4 from Device
-                    <input
-                      type="file"
-                      accept="video/mp4,video/webm"
-                      style={{ display: 'none' }}
-                      onChange={e => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => {
-                            if (typeof reader.result === 'string') {
-                              setFormData({ ...formData, sampleVideoUrl: reader.result });
-                            }
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
-                    />
-                  </label>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <label style={{
+                      background: '#ffffff',
+                      border: '1px solid #86efac',
+                      color: '#15803d',
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      fontSize: '0.74rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}>
+                      📁 Upload Day Video (MP4)
+                      <input
+                        type="file"
+                        accept="video/mp4,video/webm"
+                        style={{ display: 'none' }}
+                        onChange={e => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              if (typeof reader.result === 'string') {
+                                setFormData({ ...formData, sampleVideoUrl: reader.result });
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </label>
+
+                    <label style={{
+                      background: '#ffffff',
+                      border: '1px solid #cbd5e1',
+                      color: '#334155',
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      fontSize: '0.74rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}>
+                      🌙 Upload Night Video (MP4)
+                      <input
+                        type="file"
+                        accept="video/mp4,video/webm"
+                        style={{ display: 'none' }}
+                        onChange={e => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              if (typeof reader.result === 'string') {
+                                setFormData({ ...formData, nightVideoUrl: reader.result });
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
                 </div>
 
                 {/* 360 Pan-Tilt Camera Toggle */}
