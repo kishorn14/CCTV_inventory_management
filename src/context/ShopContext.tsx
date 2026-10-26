@@ -213,7 +213,13 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.sort((a: ComboOffer, b: ComboOffer) => (a.orderNumber ?? 0) - (b.orderNumber ?? 0));
+          const migrated = parsed.map((c: ComboOffer) => {
+            if (c.id === 'combo-solar' && (c.image.includes('cpplusworld') || !c.image)) {
+              return { ...c, image: '/combos/solar_combo_banner.jpg' };
+            }
+            return c;
+          });
+          return migrated.sort((a: ComboOffer, b: ComboOffer) => (a.orderNumber ?? 0) - (b.orderNumber ?? 0));
         }
       }
     } catch {}

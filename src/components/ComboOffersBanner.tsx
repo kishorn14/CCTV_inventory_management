@@ -192,6 +192,10 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
             ? Math.round((savings / combo.regularPrice) * 100) 
             : 0;
 
+          const bannerBg = (combo.id === 'combo-solar' || (combo.title && combo.title.toLowerCase().includes('solar')))
+            ? '/combos/solar_combo_banner.jpg'
+            : (combo.image || '/combos/analog_combo_banner.png');
+
           return (
             <div
               key={combo.id}
@@ -199,7 +203,7 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
               style={{
                 flex: '0 0 100%',
                 scrollSnapAlign: 'center',
-                background: `linear-gradient(90deg, rgba(8, 14, 28, 0.94) 0%, rgba(8, 14, 28, 0.84) 42%, rgba(8, 14, 28, 0.38) 75%, rgba(8, 14, 28, 0.1) 100%), url(${combo.image}) right center / cover no-repeat`,
+                background: `linear-gradient(90deg, rgba(8, 14, 28, 0.94) 0%, rgba(8, 14, 28, 0.84) 42%, rgba(8, 14, 28, 0.38) 75%, rgba(8, 14, 28, 0.1) 100%), url(${bannerBg}) right center / cover no-repeat`,
                 borderRadius: '12px',
                 padding: '10px 14px',
                 color: '#ffffff',
@@ -497,7 +501,7 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
                   minHeight: '180px'
                 }}>
                   <img
-                    src={selectedComboForModal.image}
+                    src={(selectedComboForModal.id === 'combo-solar' || (selectedComboForModal.title && selectedComboForModal.title.toLowerCase().includes('solar'))) ? '/combos/solar_combo_banner.jpg' : selectedComboForModal.image}
                     alt={selectedComboForModal.title}
                     style={{
                       maxHeight: '160px',
