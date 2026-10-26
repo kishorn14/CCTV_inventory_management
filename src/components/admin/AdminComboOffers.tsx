@@ -76,7 +76,11 @@ export const AdminComboOffers: React.FC = () => {
           p.category === 'ip_cameras' || 
           p.category === 'hd_analog' || 
           p.category === 'wifi_4g' || 
-          p.category === 'solar'
+          p.category === 'solar' ||
+          p.categoryId === 'cat-1' || p.categoryNumber === 1 ||
+          p.categoryId === 'cat-2' || p.categoryNumber === 2 ||
+          p.categoryId === 'cat-3' || p.categoryNumber === 3 ||
+          p.categoryId === 'cat-4' || p.categoryNumber === 4
         );
       } else {
         list = list.filter(p => p.category === selectedCategoryFilter || p.categoryId === selectedCategoryFilter);

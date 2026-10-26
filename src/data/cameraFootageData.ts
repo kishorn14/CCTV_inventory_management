@@ -17,15 +17,19 @@ export interface CameraFootageInfo {
 }
 
 export function isCameraProduct(product: Product): boolean {
-  if (['ip_cameras', 'hd_analog', 'wifi_4g'].includes(product.category)) return true;
-  if (product.category === 'solar') {
-    if (product.name.toLowerCase().includes('panel with battery kit') || product.name.toLowerCase().includes('cp-sl06k')) {
-      return false; // solar kit only
-    }
-    return true; // solar camera
-  }
-  const n = product.name.toLowerCase();
-  if (n.includes('camera') && !n.includes('cable') && !n.includes('rack') && !n.includes('box')) {
+  // 1. Any product assigned to camera categories 1, 2, 3, or 4 by admin
+  if (product.categoryId === 'cat-1' || product.categoryNumber === 1) return true; // Solar cameras / kits
+  if (product.categoryId === 'cat-2' || product.categoryNumber === 2) return true; // Smart Wi-Fi 360° cameras
+  if (product.categoryId === 'cat-3' || product.categoryNumber === 3) return true; // CP PLUS IP Cameras
+  if (product.categoryId === 'cat-4' || product.categoryNumber === 4) return true; // HD & Analog Cameras
+
+  // 2. Any product with camera category slugs
+  if (['ip_cameras', 'hd_analog', 'wifi_4g', 'solar'].includes(product.category)) return true;
+
+  // 3. Name & badge heuristics for solar, ptz, linkage & camera models
+  const n = (product.name + ' ' + (product.badge || '')).toLowerCase();
+  if ((n.includes('camera') || n.includes('solar') || n.includes('ptz') || n.includes('triple lens') || n.includes('linkage')) && 
+      !n.includes('cable') && !n.includes('rack') && !n.includes('box') && !n.includes('connector')) {
     return true;
   }
   return false;
