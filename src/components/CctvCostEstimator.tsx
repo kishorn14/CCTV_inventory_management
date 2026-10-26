@@ -426,9 +426,9 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   // Doorstep Installation labor rate (dynamically sourced from Admin CCTV Pricing Portal)
   const installationUnitCost = useMemo(() => {
     if (isAllStandalone) {
-      return cctvPricing?.wifiFittingPerCamera ?? 450;
+      return cctvPricing?.wifiFittingPerCamera ?? 600;
     }
-    return cctvPricing?.installationPerCamera ?? (hasIpCameras ? 550 : 450);
+    return cctvPricing?.installationPerCamera ?? (hasIpCameras ? 600 : 600);
   }, [isAllStandalone, hasIpCameras, cctvPricing]);
   const installationTotalCost = includeInstallation ? installationUnitCost * totalCameraCount : 0;
 
