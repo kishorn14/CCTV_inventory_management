@@ -93,10 +93,32 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   const updateCameraQty = (cameraId: string, qty: number) => {
     setCameraQuantities(prev => {
       const updated = { ...prev };
+      const targetProd = cameraProducts.find(p => p.id === cameraId) || products.find(p => p.id === cameraId);
+      const isSecureMax = targetProd && (
+        targetProd.id === 'prod-12' || 
+        targetProd.name.toLowerCase().includes('securemax') ||
+        (targetProd.name.toLowerCase().includes('4g') && targetProd.name.toLowerCase().includes('linkage'))
+      );
+
       if (qty <= 0) {
         delete updated[cameraId];
+        // If SecureMax camera is removed, also remove the auto-paired solar panel
+        if (isSecureMax) {
+          const panelProd = cameraProducts.find(p => isSolarPanelAccessory(p)) || products.find(p => isSolarPanelAccessory(p));
+          if (panelProd) {
+            delete updated[panelProd.id];
+          }
+        }
       } else {
-        updated[cameraId] = Math.min(32, qty);
+        const newQty = Math.min(32, qty);
+        updated[cameraId] = newQty;
+        // When SecureMax camera is selected, automatically add the solar panel with matching quantity
+        if (isSecureMax) {
+          const panelProd = cameraProducts.find(p => isSolarPanelAccessory(p)) || products.find(p => isSolarPanelAccessory(p));
+          if (panelProd) {
+            updated[panelProd.id] = newQty;
+          }
+        }
       }
       return updated;
     });
@@ -137,6 +159,18 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     return selectedCamerasList.reduce((sum, item) => sum + item.quantity, 0);
   }, [selectedCamerasList]);
 
+  // Count of actual recording cameras (excluding solar panel power accessories)
+  const recordingCameraCount = useMemo(() => {
+    return selectedCamerasList.reduce((sum, item) => {
+      if (isSolarPanelAccessory(item.product)) return sum;
+      return sum + item.quantity;
+    }, 0);
+  }, [selectedCamerasList]);
+
+  const hasSolarPanel = useMemo(() => {
+    return selectedCamerasList.some(item => isSolarPanelAccessory(item.product));
+  }, [selectedCamerasList]);
+
   // Minimum 1 camera count for sizing downstream accessories
   const effectiveCameraCount = Math.max(1, totalCameraCount);
 
@@ -161,7 +195,18 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     return Math.max(0, totalCameraCount - (bulletCameraCount + domeCameraCount));
   }, [totalCameraCount, bulletCameraCount, domeCameraCount]);
 
-  // Helper functions for camera classification matching admin-configured categories
+  // Check if a product is a solar panel power kit accessory (not an actual recording camera)
+const isSolarPanelAccessory = (p: Product): boolean => {
+  const n = (p.name + ' ' + (p.badge || '')).toLowerCase();
+  return (
+    n.includes('solar panel') || 
+    n.includes('panel with battery') || 
+    n.includes('cp-sl06k') ||
+    (n.includes('battery kit') && !n.includes('camera'))
+  ) && !n.includes('ptz') && !n.includes('dome') && !n.includes('bullet') && !n.includes('linkage');
+};
+
+// Helper functions for camera classification matching admin-configured categories
   const isSolarCamera = (p: Product): boolean => {
     if (p.categoryId === 'cat-1' || p.categoryNumber === 1) return true;
     if (p.category === 'solar') return true;
@@ -464,7 +509,8 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     }
     return cctvPricing?.installationPerCamera ?? (hasIpCameras ? 600 : 600);
   }, [isAllStandalone, hasIpCameras, cctvPricing]);
-  const installationTotalCost = includeInstallation ? installationUnitCost * totalCameraCount : 0;
+  const installationPointsCount = recordingCameraCount > 0 ? recordingCameraCount : totalCameraCount;
+  const installationTotalCost = includeInstallation ? installationUnitCost * installationPointsCount : 0;
 
   // Total Camera Cost across all types
   const cameraTotal = useMemo(() => {
@@ -473,9 +519,11 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
 
   // Storage quantity: For Wi-Fi / Solar standalone cameras, every camera requires its own individual MicroSD card.
   // For wired DVR/NVR systems, a single central HDD is used.
-  const storageQty = totalCameraCount > 0 && resolvedHdd 
-    ? (isAllStandalone ? totalCameraCount : 1) 
-    : 0;
+  // Storage quantity: For Wi-Fi / Solar standalone cameras, every camera requires its own individual MicroSD card.
+  // Solar panel power kits do NOT require an SD card (1 card per actual camera is enough).
+  const storageQty = recordingCameraCount > 0 && resolvedHdd 
+    ? (isAllStandalone ? recordingCameraCount : 1) 
+    : (totalCameraCount > 0 && resolvedHdd && !isAllStandalone ? 1 : 0);
 
   const hddTotal = resolvedHdd ? (resolvedHdd.price || 0) * storageQty : 0;
   const recorderTotal = totalCameraCount > 0 ? (resolvedRecorder?.price || 0) : 0;
@@ -840,7 +888,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                           Step 1: Select Cameras &amp; Quantities
                         </h3>
                         <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                          Total Selected: <strong style={{ color: '#2563eb' }}>{totalCameraCount} Camera{totalCameraCount !== 1 ? 's' : ''}</strong> ({selectedCamerasList.length} model{selectedCamerasList.length !== 1 ? 's' : ''})
+                          Total Selected: <strong style={{ color: '#2563eb' }}>{recordingCameraCount} Camera{recordingCameraCount !== 1 ? 's' : ''}{hasSolarPanel ? ' + Solar Panel Kit' : ''}</strong> ({selectedCamerasList.length} item{selectedCamerasList.length !== 1 ? 's' : ''})
                         </span>
                       </div>
                     </div>
@@ -1000,7 +1048,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                       </h3>
                       <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
                         {isAllStandalone
-                          ? `Continuous CCTV recording storage for ${totalCameraCount} camera${totalCameraCount !== 1 ? 's' : ''} (1 separate SD card required per camera)`
+                          ? `Continuous CCTV recording storage for ${recordingCameraCount} camera${recordingCameraCount !== 1 ? 's' : ''} (1 separate SD card required per camera, solar panel requires no SD card)`
                           : `Continuous CCTV video recording retention for ${totalCameraCount} camera${totalCameraCount !== 1 ? 's' : ''} (Auto-recommended: ${recommendedHdd?.name})`}
                       </span>
                     </div>
@@ -1523,7 +1571,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                       Live Package Summary
                     </span>
                     <h3 style={{ margin: '2px 0 0', fontSize: '1.15rem', fontWeight: 800, color: '#0f172a' }}>
-                      {totalCameraCount} Camera CCTV Package
+                      {recordingCameraCount > 0 ? `${recordingCameraCount} Camera ${hasSolarPanel ? 'Solar ' : ''}CCTV Package` : `${totalCameraCount} Item CCTV Package`}
                     </h3>
                   </div>
                   <span style={{
@@ -1736,7 +1784,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                           🛠️ Fitting &amp; Mobile App Setup
                         </div>
                         <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                          {totalCameraCount} camera{totalCameraCount !== 1 ? 's' : ''} @ ₹{installationUnitCost} each
+                          {installationPointsCount} camera{installationPointsCount !== 1 ? 's' : ''} @ ₹{installationUnitCost} each
                         </div>
                       </div>
                       <div style={{ fontWeight: 800, color: '#0f172a' }}>

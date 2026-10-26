@@ -394,30 +394,6 @@
       "categoryId": "cat-2"
     },
     {
-      "id": "prod-16",
-      "name": "OEM CCTV PRO HD CAMERA - EYEQUBE EQ-2025C01293| EQ-2025C01295",
-      "category": "solar",
-      "brand": "EYEQUBE",
-      "image": "/products/eyeqube_solar_camera.jpg",
-      "badge": "Solar Powered",
-      "priceRange": "₹11,210",
-      "price": 11210,
-      "mrp": 15150,
-      "unit": "NOS",
-      "is360Camera": true,
-      "features": [
-        "Continuous Solar Powered Operation",
-        "High-Capacity Lithium Battery Kit",
-        "Weatherproof Outdoor IP66 Casing",
-        "Zero Electric Wiring Required",
-        "Mobile View Anywhere"
-      ],
-      "description": "Complete solar security camera kit engineered for agricultural farms, open lands, and remote properties without grid electricity.",
-      "popular": true,
-      "categoryNumber": 1,
-      "categoryId": "cat-1"
-    },
-    {
       "id": "prod-38",
       "name": "CP PLUS SOLAR PANEL WITH BATTERY KIT - CP-SL06K YI86VjM0JDVUUNDr",
       "category": "solar",
