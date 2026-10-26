@@ -158,8 +158,6 @@ function MainApp() {
         </div>
       </div>
 
-
-
       {/* 4. Product Catalog Grid (All 50 Products from MyBillBook - Always Visible & Interactive) */}
       <ProductCatalog
         selectedCategory={selectedCategory}

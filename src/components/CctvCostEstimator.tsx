@@ -1,3 +1,4 @@
+import { Product } from '../types/index';
 import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Calculator, 
@@ -160,28 +161,61 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     return Math.max(0, totalCameraCount - (bulletCameraCount + domeCameraCount));
   }, [totalCameraCount, bulletCameraCount, domeCameraCount]);
 
+  // Helper functions for camera classification matching admin-configured categories
+  const isSolarCamera = (p: Product): boolean => {
+    if (p.categoryId === 'cat-1' || p.categoryNumber === 1) return true;
+    if (p.category === 'solar') return true;
+    const n = (p.name + ' ' + (p.badge || '')).toLowerCase();
+    return n.includes('solar');
+  };
+
+  const isWifiCamera = (p: Product): boolean => {
+    if (isSolarCamera(p)) return false;
+    if (p.categoryId === 'cat-2' || p.categoryNumber === 2) return true;
+    if (p.category === 'wifi_4g') return true;
+    const n = (p.name + ' ' + (p.badge || '')).toLowerCase();
+    return n.includes('wifi') || n.includes('wi-fi') || n.includes('360') || (p.is360Camera === true);
+  };
+
+  const isIpCamera = (p: Product): boolean => {
+    if (isSolarCamera(p) || isWifiCamera(p)) return false;
+    if (p.categoryId === 'cat-3' || p.categoryNumber === 3) return true;
+    if (p.category === 'ip_cameras') return true;
+    return /\bIP\b/i.test(p.name) || p.name.toLowerCase().includes('network camera');
+  };
+
+  const isAnalogCamera = (p: Product): boolean => {
+    if (isSolarCamera(p) || isWifiCamera(p) || isIpCamera(p)) return false;
+    if (p.categoryId === 'cat-4' || p.categoryNumber === 4) return true;
+    if (p.category === 'hd_analog') return true;
+    return true;
+  };
+
+  // Live counts for category tabs
+  const solarCount = useMemo(() => cameraProducts.filter(isSolarCamera).length, [cameraProducts]);
+  const wifiCount = useMemo(() => cameraProducts.filter(isWifiCamera).length, [cameraProducts]);
+  const ipCount = useMemo(() => cameraProducts.filter(isIpCamera).length, [cameraProducts]);
+  const analogCount = useMemo(() => cameraProducts.filter(isAnalogCamera).length, [cameraProducts]);
+
   // Check if any selected camera is an IP camera
   const hasIpCameras = useMemo(() => {
-    return selectedCamerasList.some(item => 
-      item.product.category === 'ip_cameras' || 
-      (item.product.category !== 'wifi_4g' && item.product.category !== 'solar' && /\bIP\b/i.test(item.product.name))
-    );
+    return selectedCamerasList.some(item => isIpCamera(item.product));
   }, [selectedCamerasList]);
 
   // Check if all selected cameras are standalone (Wi-Fi or Solar)
   const isAllStandalone = useMemo(() => {
     return selectedCamerasList.length > 0 && selectedCamerasList.every(item => 
-      item.product.category === 'wifi_4g' || item.product.category === 'solar'
+      isSolarCamera(item.product) || isWifiCamera(item.product)
     );
   }, [selectedCamerasList]);
 
   // Filtered cameras for Step 1
   const filteredCameras = useMemo(() => {
     if (cameraFilter === 'all') return cameraProducts;
-    if (cameraFilter === 'ip') return cameraProducts.filter(p => p.category === 'ip_cameras');
-    if (cameraFilter === 'analog') return cameraProducts.filter(p => p.category === 'hd_analog');
-    if (cameraFilter === 'wifi') return cameraProducts.filter(p => p.category === 'wifi_4g');
-    if (cameraFilter === 'solar') return cameraProducts.filter(p => p.category === 'solar');
+    if (cameraFilter === 'ip') return cameraProducts.filter(isIpCamera);
+    if (cameraFilter === 'analog') return cameraProducts.filter(isAnalogCamera);
+    if (cameraFilter === 'wifi') return cameraProducts.filter(isWifiCamera);
+    if (cameraFilter === 'solar') return cameraProducts.filter(isSolarCamera);
     return cameraProducts;
   }, [cameraProducts, cameraFilter]);
 
@@ -839,10 +873,10 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                   <div className="estimator-filter-tabs">
                     {[
                       { id: 'all', label: `All Cameras (${cameraProducts.length})` },
-                      { id: 'ip', label: 'CP PLUS IP' },
-                      { id: 'analog', label: 'HD Analog' },
-                      { id: 'wifi', label: '360° Wi-Fi & 4G' },
-                      { id: 'solar', label: 'Solar Kit' }
+                      { id: 'ip', label: `CP PLUS IP (${ipCount})` },
+                      { id: 'analog', label: `HD Analog (${analogCount})` },
+                      { id: 'wifi', label: `360° Wi-Fi & 4G (${wifiCount})` },
+                      { id: 'solar', label: `Solar Kit (${solarCount})` }
                     ].map(tab => (
                       <button
                         key={tab.id}
