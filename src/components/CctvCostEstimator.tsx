@@ -163,7 +163,8 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   // Check if any selected camera is an IP camera
   const hasIpCameras = useMemo(() => {
     return selectedCamerasList.some(item => 
-      item.product.category === 'ip_cameras' || item.product.name.toUpperCase().includes('IP')
+      item.product.category === 'ip_cameras' || 
+      (item.product.category !== 'wifi_4g' && item.product.category !== 'solar' && /\bIP\b/i.test(item.product.name))
     );
   }, [selectedCamerasList]);
 
@@ -240,7 +241,9 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   // For IP: <= 4 cams: 1TB, 5-8 cams: 2TB, > 8 cams: 4TB
   const recommendedHdd = useMemo(() => {
     if (isAllStandalone) {
-      return hddProducts.find(p => p.name.includes('128 GB')) || hddProducts.find(p => p.name.includes('64 GB'));
+      return hddProducts.find(p => p.name.includes('128 GB') && (p.name.toUpperCase().includes('SD') || p.badge?.toUpperCase().includes('SD'))) ||
+             hddProducts.find(p => p.name.toUpperCase().includes('SD') || p.badge?.toUpperCase().includes('SD')) ||
+             hddProducts[0];
     }
     if (hasIpCameras) {
       if (effectiveCameraCount <= 4) {
@@ -279,18 +282,34 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     return hddProducts.find(p => p.id === selectedHddId) || null;
   }, [selectedHddId, recommendedHdd, hddProducts]);
 
-  // Selected Rack: 2U Wall Mount Rack auto-selected by default
+  // Filtered storage catalog for Step 2: MicroSD cards for standalone, SATA HDDs for wired
+  const displayedStorageProducts = useMemo(() => {
+    if (isAllStandalone) {
+      const sdCards = hddProducts.filter(p => p.name.toUpperCase().includes('SD') || p.badge?.toUpperCase().includes('SD'));
+      return sdCards.length > 0 ? sdCards : hddProducts;
+    }
+    const hdds = hddProducts.filter(p => !p.name.toUpperCase().includes('SD') && !p.badge?.toUpperCase().includes('SD'));
+    return hdds.length > 0 ? hdds : hddProducts;
+  }, [hddProducts, isAllStandalone]);
+
+  // Selected Rack: 2U Wall Mount Rack auto-selected by default for wired systems.
+  // Not required for Wi-Fi / Solar standalone cameras.
   const recommendedRack = useMemo(() => {
+    if (isAllStandalone) return null;
     return rackProducts.find(p => p.name.toUpperCase().includes('2U')) ||
            rackProducts.find(p => p.id === 'prod-34') ||
            rackProducts[0] || null;
-  }, [rackProducts]);
+  }, [rackProducts, isAllStandalone]);
 
   const resolvedRack = useMemo(() => {
+    if (isAllStandalone) {
+      if (selectedRackId === 'auto' || selectedRackId === 'none') return null;
+      return rackProducts.find(p => p.id === selectedRackId) || null;
+    }
     if (selectedRackId === 'none' || totalCameraCount === 0) return null;
     if (selectedRackId === 'auto') return recommendedRack;
     return rackProducts.find(p => p.id === selectedRackId) || null;
-  }, [selectedRackId, recommendedRack, rackProducts, totalCameraCount]);
+  }, [selectedRackId, recommendedRack, rackProducts, totalCameraCount, isAllStandalone]);
 
   // Resolved Power (PoE switch for IP or SMPS for Analog)
   // Analog: <= 4 cameras: 4CH SMPS; > 4 cameras: 8CH SMPS
@@ -363,7 +382,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     return products.find(p => p.id === 'prod-45') || products.find(p => p.name.includes('RJ45')) || null;
   }, [products]);
   const rj45UnitPrice = rj45Product?.price || 9;
-  const rj45TotalCost = hasIpCameras && includeConnectors ? rj45Count * rj45UnitPrice : 0;
+  const rj45TotalCost = hasIpCameras && includeConnectors && !isAllStandalone ? rj45Count * rj45UnitPrice : 0;
 
   // BNC Connectors for Analog Cameras: 2 per camera + 2 additional
   const bncCount = totalCameraCount > 0 ? (totalCameraCount * 2 + 2) : 0;
@@ -413,7 +432,13 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     return selectedCamerasList.reduce((sum, item) => sum + (item.product.price || 0) * item.quantity, 0);
   }, [selectedCamerasList]);
 
-  const hddTotal = totalCameraCount > 0 ? (resolvedHdd?.price || 0) : 0;
+  // Storage quantity: For Wi-Fi / Solar standalone cameras, every camera requires its own individual MicroSD card.
+  // For wired DVR/NVR systems, a single central HDD is used.
+  const storageQty = totalCameraCount > 0 && resolvedHdd 
+    ? (isAllStandalone ? totalCameraCount : 1) 
+    : 0;
+
+  const hddTotal = resolvedHdd ? (resolvedHdd.price || 0) * storageQty : 0;
   const recorderTotal = totalCameraCount > 0 ? (resolvedRecorder?.price || 0) : 0;
   const rackTotal = totalCameraCount > 0 ? (resolvedRack?.price || 0) : 0;
   const powerTotal = totalCameraCount > 0 ? (resolvedPower?.price || 0) : 0;
@@ -448,9 +473,14 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
     });
     msg += `   └ Cameras Subtotal: ₹${cameraTotal.toLocaleString('en-IN')}\n\n`;
 
-    if (resolvedHdd) {
-      msg += `💾 *Storage:* ${resolvedHdd.name}\n`;
-      msg += `   └ Price: ₹${(resolvedHdd.price || 0).toLocaleString('en-IN')}\n\n`;
+        if (resolvedHdd && storageQty > 0) {
+      if (isAllStandalone) {
+        msg += `💾 *Storage (MicroSD):* ${storageQty}x ${resolvedHdd.name} (1 per camera)\n`;
+        msg += `   ↳ Rate: ₹${(resolvedHdd.price || 0).toLocaleString('en-IN')} × ${storageQty} = ₹${hddTotal.toLocaleString('en-IN')}\n\n`;
+      } else {
+        msg += `💾 *Storage:* ${resolvedHdd.name}\n`;
+        msg += `   ↳ Price: ₹${(resolvedHdd.price || 0).toLocaleString('en-IN')}\n\n`;
+      }
     }
 
     if (resolvedRecorder) {
@@ -473,7 +503,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
       msg += `   └ Est. Price: ₹${cableTotal.toLocaleString('en-IN')}\n\n`;
     }
 
-    if (hasIpCameras && includeConnectors && rj45Count > 0) {
+    if (hasIpCameras && !isAllStandalone && includeConnectors && rj45Count > 0) {
       msg += `🔌 *RJ45 Connectors:* ${rj45Count} Pcs\n`;
       msg += `   └ Price: ₹${rj45TotalCost.toLocaleString('en-IN')}\n\n`;
     }
@@ -669,9 +699,9 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
               <div className="estimator-stepper-strip">
                 {[
                   { num: 1, label: `1. Cameras (${totalCameraCount})`, icon: Camera },
-                  { num: 2, label: '2. HDD Storage', icon: HardDrive },
-                  { num: 3, label: '3. DVR / NVR', icon: Server },
-                  { num: 4, label: '4. Rack Enclosure', icon: Box },
+                  { num: 2, label: isAllStandalone ? '2. MicroSD Storage' : '2. HDD Storage', icon: HardDrive },
+                  { num: 3, label: isAllStandalone ? '3. DVR / NVR (Not Needed)' : '3. DVR / NVR', icon: Server },
+                  { num: 4, label: isAllStandalone ? '4. Rack (Not Needed)' : '4. Rack Enclosure', icon: Box },
                   { num: 5, label: '5. Cabling & Accessories', icon: Zap }
                 ].map(step => {
                   const isActive = activeStep === step.num;
@@ -927,10 +957,12 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     </span>
                     <div>
                       <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: '#0f172a' }}>
-                        Step 2: Select Hard Disk (HDD) Storage Size
+                        {isAllStandalone ? 'Step 2: Select MicroSD Card Storage' : 'Step 2: Select Hard Disk (HDD) Storage Size'}
                       </h3>
                       <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                        Continuous CCTV video recording retention for {totalCameraCount} camera{totalCameraCount !== 1 ? 's' : ''} (Auto-recommended: <strong style={{ color: '#2563eb' }}>{recommendedHdd?.name}</strong>)
+                        {isAllStandalone
+                          ? `Continuous CCTV recording storage for ${totalCameraCount} camera${totalCameraCount !== 1 ? 's' : ''} (1 separate SD card required per camera)`
+                          : `Continuous CCTV video recording retention for ${totalCameraCount} camera${totalCameraCount !== 1 ? 's' : ''} (Auto-recommended: ${recommendedHdd?.name})`}
                       </span>
                     </div>
                   </div>
@@ -940,7 +972,9 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     <div
                       onClick={() => { 
                         setSelectedHddId('auto'); 
-                        advanceToStep(3, `Storage set to Auto Recommended (${recommendedHdd?.name}). Next: Select DVR / NVR.`); 
+                        advanceToStep(3, isAllStandalone 
+                          ? `Storage set to Auto Recommended MicroSD (${recommendedHdd?.name}). Next: DVR/NVR (not needed for standalone).` 
+                          : `Storage set to Auto Recommended (${recommendedHdd?.name}). Next: Select DVR / NVR.`); 
                       }}
                       style={{
                         padding: '10px',
@@ -954,22 +988,30 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     >
                       <div style={{ fontSize: '0.7rem', color: '#1d4ed8', fontWeight: 800 }}>★ AUTO RECOMMENDED</div>
                       <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a', marginTop: '2px' }}>
-                        {recommendedHdd ? recommendedHdd.name.split('-')[0] : 'Auto Storage'}
+                        {recommendedHdd 
+                          ? (isAllStandalone && storageQty > 1 ? `${recommendedHdd.name.split('-')[0]} (${storageQty}x)` : recommendedHdd.name.split('-')[0]) 
+                          : 'Auto Storage'}
                       </div>
                       <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#059669', marginTop: '4px' }}>
-                        ₹{(recommendedHdd?.price || 0).toLocaleString('en-IN')}
+                        ₹{((recommendedHdd?.price || 0) * (isAllStandalone ? storageQty : 1)).toLocaleString('en-IN')}
                       </div>
+                      {isAllStandalone && storageQty > 1 && (
+                        <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '2px' }}>
+                          ₹{(recommendedHdd?.price || 0).toLocaleString('en-IN')} each × {storageQty} cards
+                        </div>
+                      )}
                     </div>
 
-                    {/* Specific HDDs from catalog */}
-                    {hddProducts.map(hdd => {
+                    {/* Specific Storage Products from catalog */}
+                    {displayedStorageProducts.map(hdd => {
                       const isSelected = selectedHddId === hdd.id;
+                      const itemTotal = (hdd.price || 0) * (isAllStandalone ? storageQty : 1);
                       return (
                         <div
                           key={hdd.id}
                           onClick={() => { 
                             setSelectedHddId(hdd.id); 
-                            advanceToStep(3, `Selected HDD: ${hdd.name}. Next: Select DVR / NVR.`); 
+                            advanceToStep(3, `Selected: ${hdd.name}. Next: Review DVR / NVR.`); 
                           }}
                           style={{
                             padding: '10px',
@@ -981,13 +1023,18 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                             boxShadow: isSelected ? '0 2px 8px rgba(37, 99, 235, 0.12)' : 'none'
                           }}
                         >
-                          <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{hdd.brand}</div>
+                          <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{hdd.brand || (isAllStandalone ? 'MicroSD Card' : 'HDD')}</div>
                           <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {hdd.name}
+                            {hdd.name}{isAllStandalone && storageQty > 1 ? ` (${storageQty}x)` : ''}
                           </div>
                           <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#059669', marginTop: '4px' }}>
-                            ₹{(hdd.price || 0).toLocaleString('en-IN')}
+                            ₹{itemTotal.toLocaleString('en-IN')}
                           </div>
+                          {isAllStandalone && storageQty > 1 && (
+                            <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '2px' }}>
+                              ₹{(hdd.price || 0).toLocaleString('en-IN')} each × {storageQty}
+                            </div>
+                          )}
                         </div>
                       );
                     })}
@@ -1010,7 +1057,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                         justifyContent: 'center'
                       }}
                     >
-                      <div style={{ fontSize: '0.78rem', color: '#64748b' }}>Already Have HDD</div>
+                      <div style={{ fontSize: '0.78rem', color: '#64748b' }}>{isAllStandalone ? 'No SD Card / Have Own Card' : 'Already Have HDD'}</div>
                       <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#dc2626', marginTop: '2px' }}>₹0 (Skip)</div>
                     </div>
                   </div>
@@ -1161,54 +1208,85 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                         Step 4: Select CCTV Wall Mount Rack
                       </h3>
                       <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                        Lockable metal chassis to secure DVR, HDD, power supply &amp; wiring
+                        {isAllStandalone 
+                          ? 'Rack enclosure is NOT required for Wi-Fi & Solar cameras (No central DVR/NVR chassis needed)'
+                          : 'Lockable metal chassis to secure DVR, HDD, power supply & wiring'}
                       </span>
                     </div>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 120px), 1fr))', gap: '8px' }}>
-                    {/* Auto Selected 2U Rack Option */}
-                    <div
-                      onClick={() => { 
-                        setSelectedRackId('auto'); 
-                        advanceToStep(5, `2U Rack auto-selected. Next: Review cables, power supplies & connectors.`); 
-                      }}
-                      style={{
-                        padding: '10px',
-                        borderRadius: '10px',
-                        background: selectedRackId === 'auto' ? '#eff6ff' : '#f8fafc',
-                        border: selectedRackId === 'auto' ? '2px solid #2563eb' : '1px solid #e2e8f0',
-                        cursor: 'pointer',
-                        textAlign: 'center',
-                        boxShadow: selectedRackId === 'auto' ? '0 2px 8px rgba(37, 99, 235, 0.12)' : 'none'
-                      }}
-                    >
-                      <div style={{ fontSize: '0.7rem', color: '#1d4ed8', fontWeight: 800 }}>★ AUTO MATCHING</div>
-                      <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {resolvedRack ? resolvedRack.name : '2U Rack Wall Mount'}
+                    {isAllStandalone ? (
+                      /* Standalone: Recommended is No Rack Required */
+                      <div
+                        onClick={() => { 
+                          setSelectedRackId('none'); 
+                          advanceToStep(5, `Rack not required for Wi-Fi / Solar cameras. Next: Review installation & accessories.`); 
+                        }}
+                        style={{
+                          padding: '10px',
+                          borderRadius: '10px',
+                          background: selectedRackId === 'none' || selectedRackId === 'auto' ? '#ecfdf5' : '#f8fafc',
+                          border: selectedRackId === 'none' || selectedRackId === 'auto' ? '2px solid #10b981' : '1px solid #e2e8f0',
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                          boxShadow: selectedRackId === 'none' || selectedRackId === 'auto' ? '0 2px 8px rgba(16, 185, 129, 0.15)' : 'none'
+                        }}
+                      >
+                        <div style={{ fontSize: '0.7rem', color: '#059669', fontWeight: 800 }}>✓ RECOMMENDED FOR WI-FI / SOLAR</div>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0f172a', marginTop: '2px' }}>
+                          No Rack Required
+                        </div>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#059669', marginTop: '4px' }}>
+                          ₹0 (Not Needed)
+                        </div>
                       </div>
-                      <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#059669', marginTop: '4px' }}>
-                        ₹{(resolvedRack?.price || 1416).toLocaleString('en-IN')}
+                    ) : (
+                      /* Auto Selected 2U Rack Option for Wired */
+                      <div
+                        onClick={() => { 
+                          setSelectedRackId('auto'); 
+                          advanceToStep(5, `2U Rack auto-selected. Next: Review cables, power supplies & connectors.`); 
+                        }}
+                        style={{
+                          padding: '10px',
+                          borderRadius: '10px',
+                          background: selectedRackId === 'auto' ? '#eff6ff' : '#f8fafc',
+                          border: selectedRackId === 'auto' ? '2px solid #2563eb' : '1px solid #e2e8f0',
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                          boxShadow: selectedRackId === 'auto' ? '0 2px 8px rgba(37, 99, 235, 0.12)' : 'none'
+                        }}
+                      >
+                        <div style={{ fontSize: '0.7rem', color: '#1d4ed8', fontWeight: 800 }}>★ AUTO MATCHING</div>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {resolvedRack ? resolvedRack.name : '2U Rack Wall Mount'}
+                        </div>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#059669', marginTop: '4px' }}>
+                          ₹{(resolvedRack?.price || 1416).toLocaleString('en-IN')}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
-                    <div
-                      onClick={() => { 
-                        setSelectedRackId('none'); 
-                        advanceToStep(5, `Rack excluded. Next: Review cables, power supplies & connectors.`); 
-                      }}
-                      style={{
-                        padding: '10px',
-                        borderRadius: '10px',
-                        background: selectedRackId === 'none' ? '#fef2f2' : '#f8fafc',
-                        border: selectedRackId === 'none' ? '2px solid #ef4444' : '1px solid #e2e8f0',
-                        cursor: 'pointer',
-                        textAlign: 'center'
-                      }}
-                    >
-                      <div style={{ fontSize: '0.75rem', color: '#64748b' }}>No Rack Enclosure</div>
-                      <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#dc2626', marginTop: '2px' }}>₹0 (Skip)</div>
-                    </div>
+                    {!isAllStandalone && (
+                      <div
+                        onClick={() => { 
+                          setSelectedRackId('none'); 
+                          advanceToStep(5, `Rack excluded. Next: Review cables, power supplies & connectors.`); 
+                        }}
+                        style={{
+                          padding: '10px',
+                          borderRadius: '10px',
+                          background: selectedRackId === 'none' ? '#fef2f2' : '#f8fafc',
+                          border: selectedRackId === 'none' ? '2px solid #ef4444' : '1px solid #e2e8f0',
+                          cursor: 'pointer',
+                          textAlign: 'center'
+                        }}
+                      >
+                        <div style={{ fontSize: '0.75rem', color: '#64748b' }}>No Rack Enclosure</div>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#dc2626', marginTop: '2px' }}>₹0 (Skip)</div>
+                      </div>
+                    )}
 
                     {rackProducts.map(rk => {
                       const isSelected = selectedRackId === rk.id;
@@ -1448,19 +1526,21 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                     ))
                   )}
 
-                  {/* HDD */}
-                  {totalCameraCount > 0 && resolvedHdd && (
+                  {/* Storage (MicroSD for Standalone / HDD for Wired) */}
+                  {totalCameraCount > 0 && resolvedHdd && storageQty > 0 && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#334155', borderBottom: '1px dashed #f1f5f9', paddingBottom: '6px' }}>
-                      <div>
-                        <div style={{ fontWeight: 700, color: '#0f172a' }}>
-                          💾 {resolvedHdd.name}
+                      <div style={{ flex: 1, minWidth: 0, paddingRight: '8px' }}>
+                        <div style={{ fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          💾 {storageQty > 1 ? `${storageQty}x ` : ''}{resolvedHdd.name}
                         </div>
                         <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                          Continuous Recording Storage
+                          {isAllStandalone 
+                            ? `Continuous Storage (${storageQty} card${storageQty > 1 ? 's' : ''} - 1 per camera @ ₹${(resolvedHdd.price || 0).toLocaleString('en-IN')} each)`
+                            : 'Continuous Recording Storage'}
                         </div>
                       </div>
-                      <div style={{ fontWeight: 800, color: '#0f172a' }}>
-                        ₹{(resolvedHdd.price || 0).toLocaleString('en-IN')}
+                      <div style={{ fontWeight: 800, color: '#0f172a', flexShrink: 0 }}>
+                        ₹{hddTotal.toLocaleString('en-IN')}
                       </div>
                     </div>
                   )}
@@ -1525,7 +1605,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                   )}
 
                   {/* RJ45 Connectors for IP Cameras */}
-                  {hasIpCameras && includeConnectors && rj45Count > 0 && (
+                  {hasIpCameras && !isAllStandalone && includeConnectors && rj45Count > 0 && (
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#334155', borderBottom: '1px dashed #f1f5f9', paddingBottom: '6px' }}>
                       <div>
                         <div style={{ fontWeight: 700, color: '#0f172a' }}>
