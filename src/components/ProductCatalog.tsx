@@ -3,8 +3,6 @@ import {
   Sparkles,
   Eye,
   FileText,
-  ChevronLeft,
-  ChevronRight,
   MessageCircle
 } from 'lucide-react';
 import { Product, CategoryType } from '../types';
@@ -84,17 +82,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     return `https://wa.me/${whatsappNum}?text=${encodeURIComponent(message)}`;
   };
 
-  // Smooth scroll helper for horizontal tracks
-  const scrollRow = (trackId: string, direction: 'left' | 'right') => {
-    const track = document.getElementById(trackId);
-    if (track) {
-      const scrollDistance = track.clientWidth * 0.75;
-      track.scrollBy({
-        left: direction === 'left' ? -scrollDistance : scrollDistance,
-        behavior: 'smooth'
-      });
-    }
-  };
 
   // Smooth scroll helper to jump to a specific category section
   const scrollToCategorySection = (catId: string) => {
@@ -268,23 +255,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       </span>
                     </div>
 
-                    {/* Desktop Left / Right Scroll Navigation Arrows */}
-                    <div className="category-scroll-arrows">
-                      <button 
-                        onClick={() => scrollRow(trackId, 'left')}
-                        className="category-scroll-arrow-btn"
-                        title="Scroll Left"
-                      >
-                        <ChevronLeft size={20} />
-                      </button>
-                      <button 
-                        onClick={() => scrollRow(trackId, 'right')}
-                        className="category-scroll-arrow-btn"
-                        title="Scroll Right"
-                      >
-                        <ChevronRight size={20} />
-                      </button>
-                    </div>
+
                   </div>
 
                   {/* Horizontal Scroll Track (Matching Reference Screenshot) */}
@@ -474,20 +445,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     </span>
                   </div>
 
-                  <div className="category-scroll-arrows">
-                    <button 
-                      onClick={() => scrollRow('track-cat-uncategorized', 'left')}
-                      className="category-scroll-arrow-btn"
-                    >
-                      <ChevronLeft size={20} />
-                    </button>
-                    <button 
-                      onClick={() => scrollRow('track-cat-uncategorized', 'right')}
-                      className="category-scroll-arrow-btn"
-                    >
-                      <ChevronRight size={20} />
-                    </button>
-                  </div>
+
                 </div>
 
                 <div id="track-cat-uncategorized" className="horizontal-product-track">

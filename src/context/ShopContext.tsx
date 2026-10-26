@@ -1,6 +1,20 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { Product, ProductCategory, ServiceItem, ShopContactInfo, CctvPricingConfig, DEFAULT_CCTV_PRICING, BrandPartner, DEFAULT_BRANDS, ComboOffer, SiteVisit } from '../types';
 import { PRODUCTS as DEFAULT_PRODUCTS, SERVICES as DEFAULT_SERVICES, DEFAULT_PRODUCT_CATEGORIES, DEFAULT_COMBO_OFFERS } from '../data/shopData';
+import persistedStoreData from '../data/persistedStoreData.json';
+
+interface PersistedStoreType {
+  categories?: ProductCategory[];
+  products?: Product[];
+  services?: ServiceItem[];
+  brands?: BrandPartner[];
+  comboOffers?: ComboOffer[];
+  siteVisits?: SiteVisit[];
+  shopInfo?: Partial<ShopContactInfo>;
+  cctvPricing?: Partial<CctvPricingConfig>;
+}
+
+const bundledData = (persistedStoreData as unknown) as PersistedStoreType;
 import { SHOP_INFO as DEFAULT_SHOP_INFO } from '../utils/whatsapp';
 
 interface ShopContextType {
@@ -69,10 +83,6 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // 1. Categories state (orderNumber determines order: 1 comes first, 2 below 1, etc.)
   const [categories, setCategories] = useState<ProductCategory[]>(() => {
     try {
-      localStorage.removeItem('meksha_shop_categories_v4');
-      localStorage.removeItem('meksha_shop_categories_v3');
-      localStorage.removeItem('meksha_shop_categories_v2');
-      localStorage.removeItem('meksha_shop_categories_v1');
       const saved = localStorage.getItem(STORAGE_KEYS.CATEGORIES);
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -80,28 +90,16 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return parsed.sort((a: ProductCategory, b: ProductCategory) => a.orderNumber - b.orderNumber);
         }
       }
-    } catch {
-      // fallback
-    }
-    return DEFAULT_PRODUCT_CATEGORIES;
+    } catch {}
+    const base = bundledData.categories || DEFAULT_PRODUCT_CATEGORIES;
+    return Array.isArray(base) && base.length > 0
+      ? [...base].sort((a: ProductCategory, b: ProductCategory) => a.orderNumber - b.orderNumber)
+      : DEFAULT_PRODUCT_CATEGORIES;
   });
 
-  // 2. Products state with auto-migration / cleanup
+  // 2. Products state with auto-migration from bundled admin persisted data
   const [products, setProducts] = useState<Product[]>(() => {
     try {
-      localStorage.removeItem('meksha_shop_products_v14');
-      localStorage.removeItem('meksha_shop_products_v13');
-      localStorage.removeItem('meksha_shop_products_v12');
-      localStorage.removeItem('meksha_shop_products_v11');
-      localStorage.removeItem('meksha_shop_products_v10');
-      localStorage.removeItem('meksha_shop_products_v9');
-      localStorage.removeItem('meksha_shop_products_v8');
-      localStorage.removeItem('meksha_shop_products_v4');
-      localStorage.removeItem('meksha_shop_products_v3');
-      localStorage.removeItem('meksha_shop_products_v2');
-      localStorage.removeItem('meksha_shop_products_v1');
-      localStorage.removeItem('cctv_products_data');
-
       const saved = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -109,19 +107,14 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return parsed;
         }
       }
-      return DEFAULT_PRODUCTS;
-    } catch {
-      return DEFAULT_PRODUCTS;
-    }
+    } catch {}
+    const base = bundledData.products || DEFAULT_PRODUCTS;
+    return Array.isArray(base) && base.length > 0 ? base : DEFAULT_PRODUCTS;
   });
 
   // 3. Services state
   const [services, setServices] = useState<ServiceItem[]>(() => {
     try {
-      localStorage.removeItem('meksha_shop_services_v10');
-      localStorage.removeItem('meksha_shop_services_v9');
-      localStorage.removeItem('meksha_shop_services_v8');
-      localStorage.removeItem('meksha_shop_services_v4');
       const saved = localStorage.getItem(STORAGE_KEYS.SERVICES);
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -129,19 +122,14 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return parsed;
         }
       }
-      return DEFAULT_SERVICES;
-    } catch {
-      return DEFAULT_SERVICES;
-    }
+    } catch {}
+    const base = bundledData.services || DEFAULT_SERVICES;
+    return Array.isArray(base) && base.length > 0 ? base : DEFAULT_SERVICES;
   });
 
   // 4. Trusted Brand Partners state
   const [brands, setBrands] = useState<BrandPartner[]>(() => {
     try {
-      localStorage.removeItem('meksha_shop_brands_v10');
-      localStorage.removeItem('meksha_shop_brands_v9');
-      localStorage.removeItem('meksha_shop_brands_v8');
-      localStorage.removeItem('meksha_shop_brands_v4');
       const saved = localStorage.getItem(STORAGE_KEYS.BRANDS);
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -149,10 +137,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return parsed;
         }
       }
-      return DEFAULT_BRANDS;
-    } catch {
-      return DEFAULT_BRANDS;
-    }
+    } catch {}
+    const base = bundledData.brands || DEFAULT_BRANDS;
+    return Array.isArray(base) && base.length > 0 ? base : DEFAULT_BRANDS;
   });
 
   // 5. Shop Info state
@@ -173,37 +160,31 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       googleSheetWebhookUrl: defaultWebhook,
       googleSheetViewUrl: ''
     };
+    const baseInfo = { ...fallbackInfo, ...(bundledData.shopInfo || {}) };
     try {
-      localStorage.removeItem('meksha_shop_info_v10');
-      localStorage.removeItem('meksha_shop_info_v9');
-      localStorage.removeItem('meksha_shop_info_v8');
-      localStorage.removeItem('meksha_shop_info_v4');
       const saved = localStorage.getItem(STORAGE_KEYS.SHOP_INFO);
       if (saved) {
         const parsed = JSON.parse(saved);
-        return { ...fallbackInfo, ...parsed };
+        return { ...baseInfo, ...parsed };
       }
-      return fallbackInfo;
-    } catch {
-      return fallbackInfo;
-    }
+    } catch {}
+    return baseInfo;
   });
 
-  // 6. CCTV Estimator Pricing Config state
+  // 6. CCTV Estimator Pricing Config state (locks admin configured pricing across releases)
   const [cctvPricing, setCctvPricing] = useState<CctvPricingConfig>(() => {
+    const basePricing: CctvPricingConfig = {
+      ...DEFAULT_CCTV_PRICING,
+      ...(bundledData.cctvPricing || {})
+    };
     try {
-      localStorage.removeItem('meksha_cctv_pricing_v10');
-      localStorage.removeItem('meksha_cctv_pricing_v9');
-      localStorage.removeItem('meksha_cctv_pricing_v8');
       const saved = localStorage.getItem(STORAGE_KEYS.CCTV_PRICING);
       if (saved) {
         const parsed = JSON.parse(saved);
-        return { ...DEFAULT_CCTV_PRICING, ...parsed };
+        return { ...basePricing, ...parsed };
       }
-      return DEFAULT_CCTV_PRICING;
-    } catch {
-      return DEFAULT_CCTV_PRICING;
-    }
+    } catch {}
+    return basePricing;
   });
 
   // 7. Combo Offers state (Configured by admin, auto-rotating hero banner)
@@ -213,10 +194,38 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.sort((a: ComboOffer, b: ComboOffer) => (a.orderNumber ?? 0) - (b.orderNumber ?? 0));
+          const migrated = parsed.map((c: ComboOffer) => {
+            if (c.id === 'combo-solar' && (!c.image || c.image.includes('cpplusworld'))) {
+              return { ...c, image: '/combos/solar_combo_banner.jpg' };
+            }
+            if (c.id === 'combo-ip' && (!c.image || c.image.includes('cpplusworld'))) {
+              return { ...c, image: '/combos/ip_combo_banner.jpg' };
+            }
+            if (c.id === 'combo-analog' && (!c.image || c.image.includes('ncaps'))) {
+              return { ...c, image: '/combos/analog_combo_banner.jpg' };
+            }
+            return c;
+          });
+          return migrated.sort((a: ComboOffer, b: ComboOffer) => (a.orderNumber ?? 0) - (b.orderNumber ?? 0));
         }
       }
     } catch {}
+    const base = bundledData.comboOffers || DEFAULT_COMBO_OFFERS;
+    if (Array.isArray(base) && base.length > 0) {
+      const migrated = base.map((c: ComboOffer) => {
+        if (c.id === 'combo-solar' && (!c.image || c.image.includes('cpplusworld'))) {
+          return { ...c, image: '/combos/solar_combo_banner.jpg' };
+        }
+        if (c.id === 'combo-ip' && (!c.image || c.image.includes('cpplusworld'))) {
+          return { ...c, image: '/combos/ip_combo_banner.jpg' };
+        }
+        if (c.id === 'combo-analog' && (!c.image || c.image.includes('ncaps'))) {
+          return { ...c, image: '/combos/analog_combo_banner.jpg' };
+        }
+        return c;
+      });
+      return migrated.sort((a: ComboOffer, b: ComboOffer) => (a.orderNumber ?? 0) - (b.orderNumber ?? 0));
+    }
     return DEFAULT_COMBO_OFFERS;
   });
 
@@ -231,7 +240,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }
     } catch {}
-    return [];
+    return bundledData.siteVisits || [];
   });
 
   // 5. Admin Password state
@@ -680,39 +689,72 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const addService = (newSrv: Omit<ServiceItem, 'id'>) => {
     isReadyToSaveRef.current = true;
     const id = `srv-${Date.now()}`;
-    setServices(prev => [ ...prev, { ...newSrv, id } ]);
+    setServices(prev => {
+      const next = [ ...prev, { ...newSrv, id } ];
+      try { localStorage.setItem(STORAGE_KEYS.SERVICES, JSON.stringify(next)); } catch {}
+      saveDirectlyToDisk({ services: next });
+      return next;
+    });
   };
 
   const updateService = (id: string, updated: Partial<ServiceItem>) => {
     isReadyToSaveRef.current = true;
-    setServices(prev => prev.map(s => s.id === id ? { ...s, ...updated } : s));
+    setServices(prev => {
+      const next = prev.map(s => s.id === id ? { ...s, ...updated } : s);
+      try { localStorage.setItem(STORAGE_KEYS.SERVICES, JSON.stringify(next)); } catch {}
+      saveDirectlyToDisk({ services: next });
+      return next;
+    });
   };
 
   const deleteService = (id: string) => {
     isReadyToSaveRef.current = true;
-    setServices(prev => prev.filter(s => s.id !== id));
+    setServices(prev => {
+      const next = prev.filter(s => s.id !== id);
+      try { localStorage.setItem(STORAGE_KEYS.SERVICES, JSON.stringify(next)); } catch {}
+      saveDirectlyToDisk({ services: next });
+      return next;
+    });
   };
 
   // Brand CRUD
   const addBrand = (newBrand: Omit<BrandPartner, 'id'>) => {
     isReadyToSaveRef.current = true;
     const id = `brand-${Date.now()}`;
-    setBrands(prev => [ ...prev, { ...newBrand, id } ]);
+    setBrands(prev => {
+      const next = [ ...prev, { ...newBrand, id } ];
+      try { localStorage.setItem(STORAGE_KEYS.BRANDS, JSON.stringify(next)); } catch {}
+      saveDirectlyToDisk({ brands: next });
+      return next;
+    });
   };
 
   const updateBrand = (id: string, updated: Partial<BrandPartner>) => {
     isReadyToSaveRef.current = true;
-    setBrands(prev => prev.map(b => b.id === id ? { ...b, ...updated } : b));
+    setBrands(prev => {
+      const next = prev.map(b => b.id === id ? { ...b, ...updated } : b);
+      try { localStorage.setItem(STORAGE_KEYS.BRANDS, JSON.stringify(next)); } catch {}
+      saveDirectlyToDisk({ brands: next });
+      return next;
+    });
   };
 
   const deleteBrand = (id: string) => {
     isReadyToSaveRef.current = true;
-    setBrands(prev => prev.filter(b => b.id !== id));
+    setBrands(prev => {
+      const next = prev.filter(b => b.id !== id);
+      try { localStorage.setItem(STORAGE_KEYS.BRANDS, JSON.stringify(next)); } catch {}
+      saveDirectlyToDisk({ brands: next });
+      return next;
+    });
   };
 
   const resetBrands = () => {
     isReadyToSaveRef.current = true;
-    setBrands(DEFAULT_BRANDS);
+    const baseline = bundledData.brands || DEFAULT_BRANDS;
+    setBrands(baseline);
+    try { localStorage.setItem(STORAGE_KEYS.BRANDS, JSON.stringify(baseline)); } catch {}
+    saveDirectlyToDisk({ brands: baseline });
   };
 
   // Combo Offer CRUD (Banners configured by admin)
@@ -806,31 +848,41 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateShopInfo = (newInfo: ShopContactInfo) => {
     isReadyToSaveRef.current = true;
     setShopInfo(newInfo);
+    try { localStorage.setItem(STORAGE_KEYS.SHOP_INFO, JSON.stringify(newInfo)); } catch {}
+    saveDirectlyToDisk({ shopInfo: newInfo });
   };
 
   const updateCctvPricing = (newPricing: CctvPricingConfig) => {
     isReadyToSaveRef.current = true;
     setCctvPricing(newPricing);
+    try { localStorage.setItem(STORAGE_KEYS.CCTV_PRICING, JSON.stringify(newPricing)); } catch {}
+    saveDirectlyToDisk({ cctvPricing: newPricing });
   };
 
   const resetCctvPricing = () => {
     isReadyToSaveRef.current = true;
-    setCctvPricing(DEFAULT_CCTV_PRICING);
+    const baseline: CctvPricingConfig = {
+      ...DEFAULT_CCTV_PRICING,
+      ...(bundledData.cctvPricing || {})
+    };
+    setCctvPricing(baseline);
+    try { localStorage.setItem(STORAGE_KEYS.CCTV_PRICING, JSON.stringify(baseline)); } catch {}
+    saveDirectlyToDisk({ cctvPricing: baseline });
   };
 
   const updateAdminPassword = (newPass: string) => {
     setAdminPassword(newPass);
   };
 
-  // Reset to default seed
+  // Reset to default seed (uses current admin-configured baseline, not ancient template)
   const resetToDefaults = () => {
-    setProducts(DEFAULT_PRODUCTS);
-    setCategories(DEFAULT_PRODUCT_CATEGORIES);
-    setServices(DEFAULT_SERVICES);
-    setBrands(DEFAULT_BRANDS);
-    setComboOffers(DEFAULT_COMBO_OFFERS);
-    setCctvPricing(DEFAULT_CCTV_PRICING);
-    setShopInfo({
+    const baseCats = bundledData.categories || DEFAULT_PRODUCT_CATEGORIES;
+    const baseProds = bundledData.products || DEFAULT_PRODUCTS;
+    const baseServs = bundledData.services || DEFAULT_SERVICES;
+    const baseBrands = bundledData.brands || DEFAULT_BRANDS;
+    const baseCombos = bundledData.comboOffers || DEFAULT_COMBO_OFFERS;
+    const basePricing: CctvPricingConfig = { ...DEFAULT_CCTV_PRICING, ...(bundledData.cctvPricing || {}) };
+    const baseInfo: ShopContactInfo = {
       shopName: DEFAULT_SHOP_INFO.shopName,
       tagline: DEFAULT_SHOP_INFO.tagline,
       phone: DEFAULT_SHOP_INFO.phone,
@@ -843,12 +895,39 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       workingDays: DEFAULT_SHOP_INFO.workingDays,
       instagramUrl: DEFAULT_SHOP_INFO.instagramUrl,
       googleSheetWebhookUrl: 'https://script.google.com/macros/s/AKfycbzXmQwZ0f3EzFWkvWy_hqNBRpBy8ETYI9Rdql9Q6P3RXxlJEaIN_jVl_Vnjgkb_2x13mw/exec',
-      googleSheetViewUrl: ''
+      googleSheetViewUrl: '',
+      ...(bundledData.shopInfo || {})
+    };
+
+    setProducts(baseProds);
+    setCategories(baseCats);
+    setServices(baseServs);
+    setBrands(baseBrands);
+    setComboOffers(baseCombos);
+    setCctvPricing(basePricing);
+    setShopInfo(baseInfo);
+
+    try {
+      localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(baseProds));
+      localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(baseCats));
+      localStorage.setItem(STORAGE_KEYS.SERVICES, JSON.stringify(baseServs));
+      localStorage.setItem(STORAGE_KEYS.BRANDS, JSON.stringify(baseBrands));
+      localStorage.setItem(STORAGE_KEYS.COMBO_OFFERS, JSON.stringify(baseCombos));
+      localStorage.setItem(STORAGE_KEYS.CCTV_PRICING, JSON.stringify(basePricing));
+      localStorage.setItem(STORAGE_KEYS.SHOP_INFO, JSON.stringify(baseInfo));
+    } catch {}
+
+    saveDirectlyToDisk({
+      categories: baseCats,
+      products: baseProds,
+      services: baseServs,
+      brands: baseBrands,
+      comboOffers: baseCombos,
+      cctvPricing: basePricing,
+      shopInfo: baseInfo
     });
-    setAdminPassword(DEFAULT_PASS);
   };
 
-  // Backup / Export / Import
   const exportDataJSON = () => {
     return JSON.stringify({
       products,
@@ -865,27 +944,59 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const importDataJSON = (jsonString: string): boolean => {
     try {
       const parsed = JSON.parse(jsonString);
+      let updatedProds = products;
+      let updatedCats = categories;
+      let updatedServs = services;
+      let updatedBrands = brands;
+      let updatedCombos = comboOffers;
+      let updatedInfo = shopInfo;
+      let updatedPricing = cctvPricing;
+
       if (parsed.products && Array.isArray(parsed.products)) {
-        setProducts(parsed.products);
+        updatedProds = parsed.products;
+        setProducts(updatedProds);
+        try { localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(updatedProds)); } catch {}
       }
       if (parsed.categories && Array.isArray(parsed.categories)) {
-        setCategories(parsed.categories);
+        updatedCats = parsed.categories;
+        setCategories(updatedCats);
+        try { localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(updatedCats)); } catch {}
       }
       if (parsed.services && Array.isArray(parsed.services)) {
-        setServices(parsed.services);
+        updatedServs = parsed.services;
+        setServices(updatedServs);
+        try { localStorage.setItem(STORAGE_KEYS.SERVICES, JSON.stringify(updatedServs)); } catch {}
       }
       if (parsed.brands && Array.isArray(parsed.brands)) {
-        setBrands(parsed.brands);
+        updatedBrands = parsed.brands;
+        setBrands(updatedBrands);
+        try { localStorage.setItem(STORAGE_KEYS.BRANDS, JSON.stringify(updatedBrands)); } catch {}
       }
       if (parsed.comboOffers && Array.isArray(parsed.comboOffers)) {
-        setComboOffers(parsed.comboOffers);
+        updatedCombos = parsed.comboOffers;
+        setComboOffers(updatedCombos);
+        try { localStorage.setItem(STORAGE_KEYS.COMBO_OFFERS, JSON.stringify(updatedCombos)); } catch {}
       }
       if (parsed.shopInfo) {
-        setShopInfo(parsed.shopInfo);
+        updatedInfo = { ...shopInfo, ...parsed.shopInfo };
+        setShopInfo(updatedInfo);
+        try { localStorage.setItem(STORAGE_KEYS.SHOP_INFO, JSON.stringify(updatedInfo)); } catch {}
       }
       if (parsed.cctvPricing) {
-        setCctvPricing(parsed.cctvPricing);
+        updatedPricing = { ...cctvPricing, ...parsed.cctvPricing };
+        setCctvPricing(updatedPricing);
+        try { localStorage.setItem(STORAGE_KEYS.CCTV_PRICING, JSON.stringify(updatedPricing)); } catch {}
       }
+
+      saveDirectlyToDisk({
+        products: updatedProds,
+        categories: updatedCats,
+        services: updatedServs,
+        brands: updatedBrands,
+        comboOffers: updatedCombos,
+        shopInfo: updatedInfo,
+        cctvPricing: updatedPricing
+      });
       return true;
     } catch {
       return false;

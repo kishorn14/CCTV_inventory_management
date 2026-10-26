@@ -7,6 +7,19 @@ interface ComboOffersBannerProps {
   onOpenEstimator?: () => void;
 }
 
+export const getComboBannerBg = (combo: ComboOffer): string => {
+  if (combo.id === 'combo-solar' || (combo.title && combo.title.toLowerCase().includes('solar'))) {
+    return '/combos/solar_combo_banner.jpg';
+  }
+  if (combo.id === 'combo-ip' || (combo.title && combo.title.toLowerCase().includes('ip'))) {
+    return '/combos/ip_combo_banner.jpg';
+  }
+  if (combo.id === 'combo-analog' || (combo.title && combo.title.toLowerCase().includes('analog'))) {
+    return '/combos/analog_combo_banner.jpg';
+  }
+  return combo.image || '/combos/ip_combo_banner.jpg';
+};
+
 export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEstimator }) => {
   const { comboOffers, shopInfo } = useShop();
   const activeOffers = comboOffers.filter(offer => offer.active);
@@ -192,6 +205,8 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
             ? Math.round((savings / combo.regularPrice) * 100) 
             : 0;
 
+          const bannerBg = getComboBannerBg(combo);
+
           return (
             <div
               key={combo.id}
@@ -199,7 +214,7 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
               style={{
                 flex: '0 0 100%',
                 scrollSnapAlign: 'center',
-                background: `linear-gradient(90deg, rgba(8, 14, 28, 0.94) 0%, rgba(8, 14, 28, 0.84) 42%, rgba(8, 14, 28, 0.38) 75%, rgba(8, 14, 28, 0.1) 100%), url(${combo.image}) right center / cover no-repeat`,
+                background: `linear-gradient(90deg, rgba(8, 14, 28, 0.94) 0%, rgba(8, 14, 28, 0.84) 42%, rgba(8, 14, 28, 0.38) 75%, rgba(8, 14, 28, 0.1) 100%), url(${bannerBg}) right center / cover no-repeat`,
                 borderRadius: '12px',
                 padding: '10px 14px',
                 color: '#ffffff',
@@ -497,7 +512,7 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
                   minHeight: '180px'
                 }}>
                   <img
-                    src={selectedComboForModal.image}
+                    src={getComboBannerBg(selectedComboForModal)}
                     alt={selectedComboForModal.title}
                     style={{
                       maxHeight: '160px',

@@ -206,8 +206,8 @@ export const DEFAULT_CCTV_PRICING: CctvPricingConfig = {
   rack2U: 1450,
   wifiRouter4G: 2100,
 
-  installationPerCamera: 450,
-  wifiFittingPerCamera: 350,
+  installationPerCamera: 600,
+  wifiFittingPerCamera: 600,
   solarFittingPerCamera: 0
 };
 

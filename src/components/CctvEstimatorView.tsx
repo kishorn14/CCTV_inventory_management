@@ -146,7 +146,7 @@ export const CctvEstimatorView: React.FC<CctvEstimatorViewProps> = ({ embedded =
   const bncCost = includeBncConnectors ? totalWiredCameras * (pricing.bncConnectorsPerCam || 90) : 0;
   const rackCost = include2uRack ? (pricing.rack2U || 1450) : 0;
   const wiredRouterCost = includeWiredWifiRouter ? (pricing.wifiRouter4G || 2100) : 0;
-  const wiredInstallationCost = includeWiredInstallation ? totalWiredCameras * (pricing.installationPerCamera || 450) : 0;
+  const wiredInstallationCost = includeWiredInstallation ? totalWiredCameras * (pricing.installationPerCamera || 600) : 0;
 
   const wiredGrandTotal = wiredCamerasCost + recorderCost + hddCost + smpsCost + cableCost + modularBoxesCost + bncCost + rackCost + wiredRouterCost + wiredInstallationCost;
 
@@ -158,7 +158,7 @@ export const CctvEstimatorView: React.FC<CctvEstimatorViewProps> = ({ embedded =
     wifiSdCard === '64gb' ? wifiCameraCount * (pricing.sdCard64GB || 550) :
     wifiSdCard === '128gb' ? wifiCameraCount * (pricing.sdCard128GB || 950) : 0;
   const wifiRouterCost = includeWifiRouter ? (pricing.wifiRouter4G || 2100) : 0;
-  const wifiFittingCost = includeWifiFitting ? wifiCameraCount * (pricing.wifiFittingPerCamera || 350) : 0;
+  const wifiFittingCost = includeWifiFitting ? wifiCameraCount * (pricing.wifiFittingPerCamera || 600) : 0;
 
   const wifiGrandTotal = wifiCameraCost + wifiSdCardCost + wifiRouterCost + wifiFittingCost;
 
