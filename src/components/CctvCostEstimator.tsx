@@ -24,7 +24,7 @@ interface CctvCostEstimatorProps {
 }
 
 export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose }) => {
-  const { products } = useShop();
+  const { products, cctvPricing } = useShop();
 
   // Lock background scroll when modal is open and handle Escape key
   useEffect(() => {
@@ -423,8 +423,13 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
         ? (rj45TotalCost + box4x4TotalCost + box5x5TotalCost) 
         : (bncTotalCost + dcPinTotalCost + box4x4TotalCost + box5x5TotalCost));
 
-  // Doorstep Installation labor rate
-  const installationUnitCost = isAllStandalone ? 450 : (hasIpCameras ? 550 : 450);
+  // Doorstep Installation labor rate (dynamically sourced from Admin CCTV Pricing Portal)
+  const installationUnitCost = useMemo(() => {
+    if (isAllStandalone) {
+      return cctvPricing?.wifiFittingPerCamera ?? 450;
+    }
+    return cctvPricing?.installationPerCamera ?? (hasIpCameras ? 550 : 450);
+  }, [isAllStandalone, hasIpCameras, cctvPricing]);
   const installationTotalCost = includeInstallation ? installationUnitCost * totalCameraCount : 0;
 
   // Total Camera Cost across all types
@@ -1456,7 +1461,7 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                           Doorstep Fitting &amp; Setup
                         </div>
                         <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
-                          Davanagere district fitting &amp; app config ({totalCameraCount} points)
+                          Davanagere district fitting &amp; app config ({totalCameraCount} point{totalCameraCount !== 1 ? 's' : ''} @ ₹{installationUnitCost}/cam)
                         </div>
                       </div>
                       <div style={{ fontSize: '0.85rem', fontWeight: 800, color: includeInstallation ? '#059669' : '#94a3b8' }}>
@@ -1695,6 +1700,9 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
                       <div>
                         <div style={{ fontWeight: 700, color: '#0f172a' }}>
                           🛠️ Fitting &amp; Mobile App Setup
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                          {totalCameraCount} camera{totalCameraCount !== 1 ? 's' : ''} @ ₹{installationUnitCost} each
                         </div>
                       </div>
                       <div style={{ fontWeight: 800, color: '#0f172a' }}>
