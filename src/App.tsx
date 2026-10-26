@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ShopProvider } from './context/ShopContext';
 import { Navbar } from './components/Navbar';
 import { GoogleReviews } from './components/GoogleReviews';
+import { OurCustomers } from './components/OurCustomers';
 import { ProductCatalog } from './components/ProductCatalog';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
@@ -167,6 +168,9 @@ function MainApp() {
         onOpenFootageModal={(prod) => setFootageProduct(prod)}
         onOpenEstimator={handleOpenEstimator}
       />
+
+      {/* 5. Our Valued Customers & Commercial Security Installations */}
+      <OurCustomers />
 
       {/* 4. Google Reviews (From Davanagere Customers - Identical to reference site carousel) */}
       <GoogleReviews />
