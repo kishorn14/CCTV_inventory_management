@@ -7,6 +7,19 @@ interface ComboOffersBannerProps {
   onOpenEstimator?: () => void;
 }
 
+export const getComboBannerBg = (combo: ComboOffer): string => {
+  if (combo.id === 'combo-solar' || (combo.title && combo.title.toLowerCase().includes('solar'))) {
+    return '/combos/solar_combo_banner.jpg';
+  }
+  if (combo.id === 'combo-ip' || (combo.title && combo.title.toLowerCase().includes('ip'))) {
+    return '/combos/ip_combo_banner.jpg';
+  }
+  if (combo.id === 'combo-analog' || (combo.title && combo.title.toLowerCase().includes('analog'))) {
+    return '/combos/analog_combo_banner.jpg';
+  }
+  return combo.image || '/combos/ip_combo_banner.jpg';
+};
+
 export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEstimator }) => {
   const { comboOffers, shopInfo } = useShop();
   const activeOffers = comboOffers.filter(offer => offer.active);
@@ -192,9 +205,7 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
             ? Math.round((savings / combo.regularPrice) * 100) 
             : 0;
 
-          const bannerBg = (combo.id === 'combo-solar' || (combo.title && combo.title.toLowerCase().includes('solar')))
-            ? '/combos/solar_combo_banner.jpg'
-            : (combo.image || '/combos/analog_combo_banner.png');
+          const bannerBg = getComboBannerBg(combo);
 
           return (
             <div
@@ -501,7 +512,7 @@ export const ComboOffersBanner: React.FC<ComboOffersBannerProps> = ({ onOpenEsti
                   minHeight: '180px'
                 }}>
                   <img
-                    src={(selectedComboForModal.id === 'combo-solar' || (selectedComboForModal.title && selectedComboForModal.title.toLowerCase().includes('solar'))) ? '/combos/solar_combo_banner.jpg' : selectedComboForModal.image}
+                    src={getComboBannerBg(selectedComboForModal)}
                     alt={selectedComboForModal.title}
                     style={{
                       maxHeight: '160px',

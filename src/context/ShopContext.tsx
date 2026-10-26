@@ -195,8 +195,14 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
           const migrated = parsed.map((c: ComboOffer) => {
-            if (c.id === 'combo-solar' && (c.image.includes('cpplusworld') || !c.image)) {
+            if (c.id === 'combo-solar' && (!c.image || c.image.includes('cpplusworld'))) {
               return { ...c, image: '/combos/solar_combo_banner.jpg' };
+            }
+            if (c.id === 'combo-ip' && (!c.image || c.image.includes('cpplusworld'))) {
+              return { ...c, image: '/combos/ip_combo_banner.jpg' };
+            }
+            if (c.id === 'combo-analog' && (!c.image || c.image.includes('ncaps'))) {
+              return { ...c, image: '/combos/analog_combo_banner.jpg' };
             }
             return c;
           });
@@ -207,8 +213,14 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const base = bundledData.comboOffers || DEFAULT_COMBO_OFFERS;
     if (Array.isArray(base) && base.length > 0) {
       const migrated = base.map((c: ComboOffer) => {
-        if (c.id === 'combo-solar' && (c.image.includes('cpplusworld') || !c.image)) {
+        if (c.id === 'combo-solar' && (!c.image || c.image.includes('cpplusworld'))) {
           return { ...c, image: '/combos/solar_combo_banner.jpg' };
+        }
+        if (c.id === 'combo-ip' && (!c.image || c.image.includes('cpplusworld'))) {
+          return { ...c, image: '/combos/ip_combo_banner.jpg' };
+        }
+        if (c.id === 'combo-analog' && (!c.image || c.image.includes('ncaps'))) {
+          return { ...c, image: '/combos/analog_combo_banner.jpg' };
         }
         return c;
       });
