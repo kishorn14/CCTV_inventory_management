@@ -20,6 +20,47 @@ import { useShop } from '../context/ShopContext';
 import { isCameraProduct } from '../data/cameraFootageData';
 import { createWhatsAppLink, SHOP_INFO } from '../utils/whatsapp';
 
+// Check if a product is a solar panel power kit accessory (not an actual recording camera)
+export const isSolarPanelAccessory = (p: Product): boolean => {
+const n = (p.name + ' ' + (p.badge || '')).toLowerCase();
+return (
+  n.includes('solar panel') || 
+  n.includes('panel with battery') || 
+  n.includes('cp-sl06k') ||
+  (n.includes('battery kit') && !n.includes('camera'))
+) && !n.includes('ptz') && !n.includes('dome') && !n.includes('bullet') && !n.includes('linkage');
+};
+
+// Helper functions for camera classification matching admin-configured categories
+export const isSolarCamera = (p: Product): boolean => {
+  if (p.categoryId === 'cat-1' || p.categoryNumber === 1) return true;
+  if (p.category === 'solar') return true;
+  const n = (p.name + ' ' + (p.badge || '')).toLowerCase();
+  return n.includes('solar');
+};
+
+export const isWifiCamera = (p: Product): boolean => {
+  if (isSolarCamera(p)) return false;
+  if (p.categoryId === 'cat-2' || p.categoryNumber === 2) return true;
+  if (p.category === 'wifi_4g') return true;
+  const n = (p.name + ' ' + (p.badge || '')).toLowerCase();
+  return n.includes('wifi') || n.includes('wi-fi') || n.includes('360') || (p.is360Camera === true);
+};
+
+export const isIpCamera = (p: Product): boolean => {
+  if (isSolarCamera(p) || isWifiCamera(p)) return false;
+  if (p.categoryId === 'cat-3' || p.categoryNumber === 3) return true;
+  if (p.category === 'ip_cameras') return true;
+  return /\bIP\b/i.test(p.name) || p.name.toLowerCase().includes('network camera');
+};
+
+export const isAnalogCamera = (p: Product): boolean => {
+  if (isSolarCamera(p) || isWifiCamera(p) || isIpCamera(p)) return false;
+  if (p.categoryId === 'cat-4' || p.categoryNumber === 4) return true;
+  if (p.category === 'hd_analog') return true;
+  return true;
+};
+
 interface CctvCostEstimatorProps {
   onClose?: () => void;
 }
@@ -194,47 +235,6 @@ export const CctvCostEstimator: React.FC<CctvCostEstimatorProps> = ({ onClose })
   const otherCameraCount = useMemo(() => {
     return Math.max(0, totalCameraCount - (bulletCameraCount + domeCameraCount));
   }, [totalCameraCount, bulletCameraCount, domeCameraCount]);
-
-  // Check if a product is a solar panel power kit accessory (not an actual recording camera)
-const isSolarPanelAccessory = (p: Product): boolean => {
-  const n = (p.name + ' ' + (p.badge || '')).toLowerCase();
-  return (
-    n.includes('solar panel') || 
-    n.includes('panel with battery') || 
-    n.includes('cp-sl06k') ||
-    (n.includes('battery kit') && !n.includes('camera'))
-  ) && !n.includes('ptz') && !n.includes('dome') && !n.includes('bullet') && !n.includes('linkage');
-};
-
-// Helper functions for camera classification matching admin-configured categories
-  const isSolarCamera = (p: Product): boolean => {
-    if (p.categoryId === 'cat-1' || p.categoryNumber === 1) return true;
-    if (p.category === 'solar') return true;
-    const n = (p.name + ' ' + (p.badge || '')).toLowerCase();
-    return n.includes('solar');
-  };
-
-  const isWifiCamera = (p: Product): boolean => {
-    if (isSolarCamera(p)) return false;
-    if (p.categoryId === 'cat-2' || p.categoryNumber === 2) return true;
-    if (p.category === 'wifi_4g') return true;
-    const n = (p.name + ' ' + (p.badge || '')).toLowerCase();
-    return n.includes('wifi') || n.includes('wi-fi') || n.includes('360') || (p.is360Camera === true);
-  };
-
-  const isIpCamera = (p: Product): boolean => {
-    if (isSolarCamera(p) || isWifiCamera(p)) return false;
-    if (p.categoryId === 'cat-3' || p.categoryNumber === 3) return true;
-    if (p.category === 'ip_cameras') return true;
-    return /\bIP\b/i.test(p.name) || p.name.toLowerCase().includes('network camera');
-  };
-
-  const isAnalogCamera = (p: Product): boolean => {
-    if (isSolarCamera(p) || isWifiCamera(p) || isIpCamera(p)) return false;
-    if (p.categoryId === 'cat-4' || p.categoryNumber === 4) return true;
-    if (p.category === 'hd_analog') return true;
-    return true;
-  };
 
   // Live counts for category tabs
   const solarCount = useMemo(() => cameraProducts.filter(isSolarCamera).length, [cameraProducts]);
