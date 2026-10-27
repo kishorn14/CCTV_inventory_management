@@ -44,6 +44,25 @@
   ],
   "products": [
     {
+      "name": "Wifi",
+      "category": "cctv",
+      "categoryId": "cat-2",
+      "categoryNumber": 2,
+      "brand": "asac",
+      "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80",
+      "badge": "New Arrival",
+      "priceRange": "₹7316",
+      "is360Camera": false,
+      "features": [
+        "High Quality Build",
+        "Free Doorstep Fitting",
+        "Genuine Company Support"
+      ],
+      "description": "Brand new high performance model with express installation.",
+      "popular": false,
+      "id": "prod-1793075820167"
+    },
+    {
       "id": "prod-1",
       "name": "4mp ip Bullet Illuamx With Mic(CP-UNC-TA41L3C-D-LQ)",
       "category": "ip_cameras",
@@ -1826,5 +1845,7 @@
       "timestamp": "2026-10-17T06:43:55.522Z",
       "formattedDate": "17 Oct 2026, 12:13 pm"
     }
-  ]
+  ],
+  "lastBuildTime": "2026-10-27T04:38:47.555Z",
+  "catalogVersion": "release_1793075927556"
 }

@@ -20,6 +20,10 @@ try {
   const content = fs.readFileSync(persistedPath, 'utf8');
   const data = JSON.parse(content);
 
+  // Stamp unique catalog build timestamp and version to auto-bust stale browser localStorage
+  data.lastBuildTime = new Date().toISOString();
+  data.catalogVersion = `release_${Date.now()}`;
+
   // Validate and protect fitting rates
   if (data.cctvPricing) {
     if (!data.cctvPricing.installationPerCamera || data.cctvPricing.installationPerCamera < 600) {
@@ -50,6 +54,8 @@ try {
   const comboCount = data.comboOffers?.length || 0;
   const installRate = data.cctvPricing?.installationPerCamera || 600;
   const wifiRate = data.cctvPricing?.wifiFittingPerCamera || 600;
+
+  fs.writeFileSync(persistedPath, JSON.stringify(data, null, 2), 'utf8');
 
   console.log(`[sync-store-data] ✓ Store data validated and locked for release:`);
   console.log(`  - Products: ${prodCount}`);
