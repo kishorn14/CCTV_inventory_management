@@ -12,6 +12,7 @@ import { useShop } from '../context/ShopContext';
 import { formatProductInquiry, createWhatsAppLink } from '../utils/whatsapp';
 
 import { isCameraProduct } from '../data/cameraFootageData';
+import { parseProductPricing } from './ProductCatalog';
 import { Eye } from 'lucide-react';
 
 interface ProductDetailModalProps {
@@ -23,6 +24,7 @@ interface ProductDetailModalProps {
 export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product, onClose, onWatchFootage }) => {
   const { shopInfo } = useShop();
   if (!product) return null;
+  const { sellingPrice, mrp, discountPercent } = parseProductPricing(product);
 
   const waLink = createWhatsAppLink(formatProductInquiry(product), shopInfo.whatsappPhone);
 
@@ -207,11 +209,23 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({ product,
             marginBottom: '24px'
           }}>
             <div>
-              <div style={{ fontSize: '0.8rem', color: '#1e40af', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700 }}>
-                Estimated Price / Range
+              <div style={{ fontSize: '0.78rem', color: '#1e40af', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700 }}>
+                Wholesale Price
               </div>
-              <div style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a' }}>
-                {product.priceRange}
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '1.45rem', fontWeight: 900, color: '#0f172a' }}>
+                  {sellingPrice > 0 ? `₹${sellingPrice.toLocaleString('en-IN')}` : (product.priceRange || 'Enquire for Price')}
+                </span>
+                {mrp > sellingPrice && (
+                  <span style={{ fontSize: '0.95rem', color: '#94a3b8', textDecoration: 'line-through' }}>
+                    ₹${mrp.toLocaleString('en-IN')}
+                  </span>
+                )}
+                {discountPercent > 0 && (
+                  <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#16a34a', background: '#dcfce7', padding: '2px 8px', borderRadius: '6px' }}>
+                    {discountPercent}% OFF
+                  </span>
+                )}
               </div>
             </div>
             <div style={{ fontSize: '0.82rem', color: '#065f46', fontWeight: 600 }}>

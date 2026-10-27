@@ -33,6 +33,7 @@ return (
 
 // Helper functions for camera classification matching admin-configured categories
 export const isSolarCamera = (p: Product): boolean => {
+  if (p.categoryIds?.includes('cat-1') || p.categoryNumbers?.includes(1)) return true;
   if (p.categoryId === 'cat-1' || p.categoryNumber === 1) return true;
   if (p.category === 'solar') return true;
   const n = (p.name + ' ' + (p.badge || '')).toLowerCase();
@@ -41,6 +42,7 @@ export const isSolarCamera = (p: Product): boolean => {
 
 export const isWifiCamera = (p: Product): boolean => {
   if (isSolarCamera(p)) return false;
+  if (p.categoryIds?.includes('cat-2') || p.categoryNumbers?.includes(2)) return true;
   if (p.categoryId === 'cat-2' || p.categoryNumber === 2) return true;
   if (p.category === 'wifi_4g') return true;
   const n = (p.name + ' ' + (p.badge || '')).toLowerCase();
@@ -49,6 +51,7 @@ export const isWifiCamera = (p: Product): boolean => {
 
 export const isIpCamera = (p: Product): boolean => {
   if (isSolarCamera(p) || isWifiCamera(p)) return false;
+  if (p.categoryIds?.includes('cat-3') || p.categoryNumbers?.includes(3)) return true;
   if (p.categoryId === 'cat-3' || p.categoryNumber === 3) return true;
   if (p.category === 'ip_cameras') return true;
   return /\bIP\b/i.test(p.name) || p.name.toLowerCase().includes('network camera');
@@ -56,6 +59,7 @@ export const isIpCamera = (p: Product): boolean => {
 
 export const isAnalogCamera = (p: Product): boolean => {
   if (isSolarCamera(p) || isWifiCamera(p) || isIpCamera(p)) return false;
+  if (p.categoryIds?.includes('cat-4') || p.categoryNumbers?.includes(4)) return true;
   if (p.categoryId === 'cat-4' || p.categoryNumber === 4) return true;
   if (p.category === 'hd_analog') return true;
   return true;

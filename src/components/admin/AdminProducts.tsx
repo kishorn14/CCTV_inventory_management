@@ -441,7 +441,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
           </button>
           {[...categories].sort((a, b) => a.orderNumber - b.orderNumber).map(cat => {
             const isSelected = categoryFilter === cat.id;
-            const count = products.filter(p => p.categoryId === cat.id || (p.categoryNumber !== undefined && p.categoryNumber === cat.orderNumber)).length;
+            const count = products.filter(p => (p.categoryIds && p.categoryIds.includes(cat.id)) || (p.categoryNumbers && p.categoryNumbers.includes(cat.orderNumber)) || p.categoryId === cat.id || (p.categoryNumber !== undefined && p.categoryNumber === cat.orderNumber)).length;
             return (
               <button
                 key={cat.id}

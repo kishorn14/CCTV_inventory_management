@@ -32,6 +32,7 @@ interface ShopContextType {
   deleteProduct: (id: string) => void;
   updateProductCategory: (productId: string, categoryId: string | undefined, categoryNumber: number | undefined) => void;
   updateProductCategoryNumber: (productId: string, categoryNumber: number | undefined) => void;
+  updateProductCategories: (productId: string, categoryIds: string[], categoryNumbers: number[]) => void;
   addCategory: (category: Omit<ProductCategory, 'id'>) => void;
   updateCategory: (id: string, updated: Partial<ProductCategory>) => void;
   deleteCategory: (id: string) => void;
@@ -611,6 +612,25 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const updateProductCategories = (productId: string, categoryIds: string[], categoryNumbers: number[]) => {
+    isReadyToSaveRef.current = true;
+    setProducts(prev => {
+      const next = prev.map(p => {
+        if (p.id !== productId) return p;
+        return {
+          ...p,
+          categoryId: categoryIds[0] || undefined,
+          categoryNumber: categoryNumbers[0] !== undefined ? categoryNumbers[0] : undefined,
+          categoryIds,
+          categoryNumbers
+        };
+      });
+      try { localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(next)); } catch {}
+      saveDirectlyToDisk({ products: next });
+      return next;
+    });
+  };
+
   // Category CRUD
   const addCategory = (categoryData: Omit<ProductCategory, 'id'>) => {
     isReadyToSaveRef.current = true;
@@ -1019,6 +1039,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       deleteProduct,
       updateProductCategory,
       updateProductCategoryNumber,
+      updateProductCategories,
       addCategory,
       updateCategory,
       deleteCategory,

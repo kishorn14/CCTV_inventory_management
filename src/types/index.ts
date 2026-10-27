@@ -41,6 +41,9 @@ export interface Product {
   category: CategoryType;
   categoryId?: string;     // Unique ID of the ProductCategory (e.g. 'cat-1', 'cat-2')
   categoryNumber?: number; // Category Order Number (e.g. 1, 2, 3...) assigned by admin
+  categoryIds?: string[];  // Multiple assigned Category IDs (allows single product in multiple categories)
+  categoryNumbers?: number[]; // Multiple assigned Category Order Numbers
+  discountPercent?: number;
   brand: string;
   image: string;
   badge?: string;
