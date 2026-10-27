@@ -44,25 +44,6 @@
   ],
   "products": [
     {
-      "name": "Wifi",
-      "category": "cctv",
-      "categoryId": "cat-2",
-      "categoryNumber": 2,
-      "brand": "asac",
-      "image": "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=800&q=80",
-      "badge": "New Arrival",
-      "priceRange": "₹7316",
-      "is360Camera": false,
-      "features": [
-        "High Quality Build",
-        "Free Doorstep Fitting",
-        "Genuine Company Support"
-      ],
-      "description": "Brand new high performance model with express installation.",
-      "popular": false,
-      "id": "prod-1793075820167"
-    },
-    {
       "id": "prod-1",
       "name": "4mp ip Bullet Illuamx With Mic(CP-UNC-TA41L3C-D-LQ)",
       "category": "ip_cameras",
@@ -202,35 +183,6 @@
       "categoryNumber": 3,
       "categoryId": "cat-3",
       "warranty": "2 Years Brand Warranty",
-      "categoryIds": [
-        "cat-3"
-      ],
-      "categoryNumbers": [
-        3
-      ]
-    },
-    {
-      "id": "prod-6",
-      "name": "CP PLUS 2MP IP DUAL IR DOME WITH MIC - CP-UNC-TA21L3C-LQ",
-      "category": "ip_cameras",
-      "brand": "CP PLUS",
-      "image": "https://cpplusworld.com/prodassets/product/small/1fafd883-5ef9-4a97-9f07-165b6f98b55f.png",
-      "badge": "2MP IP Dome",
-      "priceRange": "₹0",
-      "price": 0,
-      "mrp": 20,
-      "unit": "NOS",
-      "features": [
-        "PoE Smart IP Network Camera",
-        "Built-in High Sensitivity Microphone",
-        "Dual IR LEDs for Vivid Night Vision",
-        "H.265+ Ultra Compression",
-        "Metal Housing Weatherproof"
-      ],
-      "description": "CP PLUS high-definition IP dome camera with audio recording, crisp night vision, and easy PoE network plug & play.",
-      "popular": false,
-      "categoryNumber": 3,
-      "categoryId": "cat-3",
       "categoryIds": [
         "cat-3"
       ],
@@ -1846,6 +1798,6 @@
       "formattedDate": "17 Oct 2026, 12:13 pm"
     }
   ],
-  "lastBuildTime": "2026-10-27T04:42:06.813Z",
-  "catalogVersion": "release_1793076126814"
+  "lastBuildTime": "2026-10-27T04:46:33.298Z",
+  "catalogVersion": "release_1793076393298"
 }

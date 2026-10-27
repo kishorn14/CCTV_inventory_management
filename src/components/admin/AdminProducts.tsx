@@ -298,7 +298,10 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
     if (categoryFilter !== 'all') {
       const selectedCat = categories.find(c => c.id === categoryFilter);
       if (selectedCat) {
-        matchCat = p.categoryId === selectedCat.id || (p.categoryNumber !== undefined && p.categoryNumber === selectedCat.orderNumber);
+        matchCat = (p.categoryIds && Array.isArray(p.categoryIds) && p.categoryIds.includes(selectedCat.id)) ||
+                   (p.categoryNumbers && Array.isArray(p.categoryNumbers) && p.categoryNumbers.includes(selectedCat.orderNumber)) ||
+                   p.categoryId === selectedCat.id || 
+                   (p.categoryNumber !== undefined && p.categoryNumber === selectedCat.orderNumber);
       }
     }
     const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -731,6 +734,32 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                       </option>
                     ))}
                   </select>
+                  {product.categoryIds && product.categoryIds.length > 1 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '6px' }}>
+                      {product.categoryIds.map(cid => {
+                        const c = categories.find(cat => cat.id === cid);
+                        if (!c) return null;
+                        return (
+                          <span
+                            key={cid}
+                            style={{
+                              fontSize: '0.68rem',
+                              fontWeight: 800,
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              background: '#eff6ff',
+                              color: '#1d4ed8',
+                              border: '1px solid #bfdbfe',
+                              whiteSpace: 'nowrap'
+                            }}
+                            title={c.name}
+                          >
+                            ✓ #{c.orderNumber} {c.name.split(' ')[0]}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
                 </td>
                 <td style={{ padding: '14px 18px', color: '#1d4ed8', textTransform: 'capitalize', fontWeight: 600 }}>
                   {product.category.replace('_', ' ')}
@@ -738,8 +767,22 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                 <td style={{ padding: '14px 18px', color: '#0f172a', fontWeight: 600 }}>
                   {product.brand?.trim() ? product.brand : <span style={{ color: '#94a3b8' }}>—</span>}
                 </td>
-                <td style={{ padding: '14px 18px', color: '#059669', fontWeight: 800 }}>
-                  {product.priceRange}
+                <td style={{ padding: '14px 18px' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
+                    <span style={{ color: '#0f172a', fontWeight: 900, fontSize: '0.94rem' }}>
+                      {product.price !== undefined && product.price > 0 ? `₹${product.price.toLocaleString('en-IN')}` : product.priceRange}
+                    </span>
+                    {product.mrp && product.price && product.mrp > product.price && (
+                      <>
+                        <span style={{ fontSize: '0.74rem', color: '#94a3b8', textDecoration: 'line-through' }}>
+                          ₹${product.mrp.toLocaleString('en-IN')}
+                        </span>
+                        <span style={{ fontSize: '0.72rem', color: '#16a34a', fontWeight: 800, background: '#dcfce7', padding: '1px 5px', borderRadius: '4px' }}>
+                          {Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </td>
                 <td style={{ padding: '14px 18px', fontSize: '0.82rem' }}>
                   {product.warranty ? (
