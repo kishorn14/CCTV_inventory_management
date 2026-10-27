@@ -5,7 +5,7 @@ import {
   FileText,
   MessageCircle
 } from 'lucide-react';
-import { Product, CategoryType } from '../types';
+import { Product, ProductCategory, CategoryType } from '../types';
 import { useShop } from '../context/ShopContext';
 import { isCameraProduct } from '../data/cameraFootageData';
 import { ComboOffersBanner } from './ComboOffersBanner';
@@ -18,6 +18,35 @@ interface ProductCatalogProps {
   onOpenEstimator?: () => void;
   onClose?: () => void;
 }
+
+// Helper to check if a product belongs to a category (supports single and multiple assigned categories)
+export const isProductInCategory = (product: Product, category: ProductCategory): boolean => {
+  if (product.categoryIds && Array.isArray(product.categoryIds) && product.categoryIds.includes(category.id)) {
+    return true;
+  }
+  if (product.categoryNumbers && Array.isArray(product.categoryNumbers) && product.categoryNumbers.includes(category.orderNumber)) {
+    return true;
+  }
+  if (product.categoryId === category.id) return true;
+  if (product.categoryNumber !== undefined && product.categoryNumber === category.orderNumber) return true;
+  return false;
+};
+
+// Helper to resolve selling price, MRP, and discount with fallback for legacy priceRange strings
+export const parseProductPricing = (product: Product) => {
+  let sellingPrice = typeof product.price === 'number' && product.price > 0 ? product.price : 0;
+  if (sellingPrice === 0 && product.priceRange) {
+    const clean = product.priceRange.replace(/,/g, '');
+    const match = clean.match(/\d+/);
+    if (match) {
+      sellingPrice = parseInt(match[0], 10);
+    }
+  }
+  const mrp = typeof product.mrp === 'number' && product.mrp > 0 ? product.mrp : 0;
+  const hasDiscount = mrp > sellingPrice && sellingPrice > 0;
+  const discountPercent = hasDiscount ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0;
+  return { sellingPrice, mrp, hasDiscount, discountPercent };
+};
 
 export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   selectedCategory,
@@ -43,8 +72,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
   // Group products by category (matching either by explicit categoryId or categoryNumber)
   const categorizedGroups = sortedCategories.map(cat => {
-    const catProducts = products
-      .filter(p => p.categoryId === cat.id || (p.categoryNumber !== undefined && p.categoryNumber === cat.orderNumber));
+    const catProducts = products.filter(p => isProductInCategory(p, cat));
     return {
       category: cat,
       products: catProducts
@@ -52,8 +80,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   });
 
   // Any uncategorized products (no category match)
-  const uncategorizedProducts = products
-    .filter(p => !sortedCategories.some(c => c.id === p.categoryId || (p.categoryNumber !== undefined && c.orderNumber === p.categoryNumber)));
+  const uncategorizedProducts = products.filter(p => !sortedCategories.some(c => isProductInCategory(p, c)));
 
   // Calculate total matching products
   const totalMatchingProducts = products.length;
@@ -170,7 +197,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           {/* Individual Category Pills in 1, 2, 3... Sequence */}
           {sortedCategories.map((cat) => {
             const isSelected = activeCategoryPill === cat.id;
-            const count = products.filter(p => p.categoryId === cat.id || (p.categoryNumber !== undefined && p.categoryNumber === cat.orderNumber)).length;
+            const count = products.filter(p => isProductInCategory(p, cat)).length;
 
             return (
               <button
@@ -261,10 +288,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   {/* Horizontal Scroll Track (Matching Reference Screenshot) */}
                   <div id={trackId} className="horizontal-product-track">
                     {catProducts.map((product) => {
-                      const sellingPrice = product.price || 0;
-                      const mrp = product.mrp || 0;
-                      const hasDiscount = mrp > sellingPrice && sellingPrice > 0;
-                      const discountPercent = hasDiscount ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0;
+                      const { sellingPrice, mrp, discountPercent } = parseProductPricing(product);
                       const qty = cart[product.id] || 0;
 
                       return (
@@ -450,10 +474,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
                 <div id="track-cat-uncategorized" className="horizontal-product-track">
                   {uncategorizedProducts.map((product) => {
-                    const sellingPrice = product.price || 0;
-                    const mrp = product.mrp || 0;
-                    const hasDiscount = mrp > sellingPrice && sellingPrice > 0;
-                    const discountPercent = hasDiscount ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0;
+                    const { sellingPrice, mrp, discountPercent } = parseProductPricing(product);
                     const qty = cart[product.id] || 0;
 
                     return (
@@ -617,9 +638,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               <div>
                 <div style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.98rem' }}>
                   {totalCartCount} item{totalCartCount > 1 ? 's' : ''} in Cart: <span style={{ color: '#16a34a', fontWeight: 900 }}>₹{totalCartPrice.toLocaleString('en-IN')}</span>
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                  Davanagere wholesale rates with genuine brand warranty
                 </div>
               </div>
             </div>

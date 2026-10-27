@@ -4,6 +4,8 @@ import { PRODUCTS as DEFAULT_PRODUCTS, SERVICES as DEFAULT_SERVICES, DEFAULT_PRO
 import persistedStoreData from '../data/persistedStoreData.json';
 
 interface PersistedStoreType {
+  catalogVersion?: string;
+  lastBuildTime?: string;
   categories?: ProductCategory[];
   products?: Product[];
   services?: ServiceItem[];
@@ -32,6 +34,7 @@ interface ShopContextType {
   deleteProduct: (id: string) => void;
   updateProductCategory: (productId: string, categoryId: string | undefined, categoryNumber: number | undefined) => void;
   updateProductCategoryNumber: (productId: string, categoryNumber: number | undefined) => void;
+  updateProductCategories: (productId: string, categoryIds: string[], categoryNumbers: number[]) => void;
   addCategory: (category: Omit<ProductCategory, 'id'>) => void;
   updateCategory: (id: string, updated: Partial<ProductCategory>) => void;
   deleteCategory: (id: string) => void;
@@ -78,6 +81,29 @@ const STORAGE_KEYS = {
 };
 
 const DEFAULT_PASS = 'meksha@2026';
+
+// Dynamic release version stamp
+const BUNDLED_CATALOG_VERSION = bundledData.catalogVersion || bundledData.lastBuildTime || 'v_release_20261027_01';
+
+// Auto-bust stale browser localStorage if a new build or catalog version is detected across devices
+if (typeof window !== 'undefined') {
+  try {
+    const savedVersion = localStorage.getItem('meksha_catalog_version');
+    if (savedVersion !== BUNDLED_CATALOG_VERSION) {
+      console.log(`[ShopContext] New catalog release detected: ${BUNDLED_CATALOG_VERSION} (was ${savedVersion}). Purging stale browser cache to guarantee laptop, mobile & incognito display identical products.`);
+      localStorage.removeItem(STORAGE_KEYS.PRODUCTS);
+      localStorage.removeItem(STORAGE_KEYS.CATEGORIES);
+      localStorage.removeItem(STORAGE_KEYS.SERVICES);
+      localStorage.removeItem(STORAGE_KEYS.BRANDS);
+      localStorage.removeItem(STORAGE_KEYS.COMBO_OFFERS);
+      localStorage.removeItem(STORAGE_KEYS.SHOP_INFO);
+      localStorage.removeItem(STORAGE_KEYS.CCTV_PRICING);
+      localStorage.setItem('meksha_catalog_version', BUNDLED_CATALOG_VERSION);
+    }
+  } catch (e) {
+    console.warn('[ShopContext] Error checking catalog version in localStorage:', e);
+  }
+}
 
 export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // 1. Categories state (orderNumber determines order: 1 comes first, 2 below 1, etc.)
@@ -611,6 +637,25 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const updateProductCategories = (productId: string, categoryIds: string[], categoryNumbers: number[]) => {
+    isReadyToSaveRef.current = true;
+    setProducts(prev => {
+      const next = prev.map(p => {
+        if (p.id !== productId) return p;
+        return {
+          ...p,
+          categoryId: categoryIds[0] || undefined,
+          categoryNumber: categoryNumbers[0] !== undefined ? categoryNumbers[0] : undefined,
+          categoryIds,
+          categoryNumbers
+        };
+      });
+      try { localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(next)); } catch {}
+      saveDirectlyToDisk({ products: next });
+      return next;
+    });
+  };
+
   // Category CRUD
   const addCategory = (categoryData: Omit<ProductCategory, 'id'>) => {
     isReadyToSaveRef.current = true;
@@ -1019,6 +1064,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       deleteProduct,
       updateProductCategory,
       updateProductCategoryNumber,
+      updateProductCategories,
       addCategory,
       updateCategory,
       deleteCategory,

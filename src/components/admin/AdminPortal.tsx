@@ -11,7 +11,8 @@ import {
   Award,
   Sparkles,
   ClipboardCheck,
-  MapPin
+  MapPin,
+  RefreshCw
 } from 'lucide-react';
 import { AdminLogin } from './AdminLogin';
 import { AdminProducts } from './AdminProducts';
@@ -123,6 +124,38 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onGoToStore, onGoToSit
               title="Open the Field Inspection Web App for employees (Password: admin@2026)"
             >
               <MapPin size={15} color="#2563eb" /> Field Site Visit App
+            </button>
+
+            <button
+              onClick={() => {
+                if (window.confirm('Do you want to clear your local browser cache and sync to the latest published store catalog?')) {
+                  localStorage.removeItem('meksha_shop_products_v15');
+                  localStorage.removeItem('meksha_shop_categories_v5');
+                  localStorage.removeItem('meksha_shop_services_v11');
+                  localStorage.removeItem('meksha_shop_brands_v11');
+                  localStorage.removeItem('meksha_shop_combos_v1');
+                  localStorage.removeItem('meksha_shop_info_v11');
+                  localStorage.removeItem('meksha_cctv_pricing_v11');
+                  localStorage.removeItem('meksha_catalog_version');
+                  window.location.reload();
+                }
+              }}
+              style={{
+                background: '#f8fafc',
+                border: '1px solid #cbd5e1',
+                color: '#475569',
+                borderRadius: '8px',
+                padding: '7px 12px',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              title="Purge cached products and reload fresh catalog"
+            >
+              <RefreshCw size={14} /> Clear Cache &amp; Sync
             </button>
 
             <button

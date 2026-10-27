@@ -104,10 +104,15 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
     category: 'cctv' as CategoryType,
     categoryId: undefined as string | undefined,
     categoryNumber: undefined as number | undefined,
+    categoryIds: [] as string[],
+    categoryNumbers: [] as number[],
     brand: '',
     image: PRESET_IMAGES.cctv[0],
     badge: '',
+    price: '' as string | number,
+    mrp: '' as string | number,
     priceRange: '',
+    discountPercent: 0,
     warranty: '',
     sampleVideoUrl: '',
     nightVideoUrl: '',
@@ -120,17 +125,24 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
   const openAddModal = () => {
     const activeCat = categories.find(c => c.id === categoryFilter);
     const defaultCat = activeCat || categories[0];
+    const initialCatIds = defaultCat ? [defaultCat.id] : [];
+    const initialCatNums = defaultCat ? [defaultCat.orderNumber] : [1];
     setEditingProduct(null);
     setFormData({
       name: '',
       category: 'cctv' as CategoryType,
       categoryId: defaultCat ? defaultCat.id : undefined,
       categoryNumber: defaultCat ? defaultCat.orderNumber : 1,
+      categoryIds: initialCatIds,
+      categoryNumbers: initialCatNums,
       brand: '',
       image: PRESET_IMAGES.cctv[0],
       badge: 'New Arrival',
-      priceRange: '₹3,500 - ₹5,000',
-      warranty: '',
+      price: 3500,
+      mrp: 4500,
+      priceRange: '₹3,500',
+      discountPercent: 22,
+      warranty: '2 Years Brand Warranty',
       sampleVideoUrl: '',
       nightVideoUrl: '',
       is360Camera: false,
@@ -143,16 +155,50 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
 
   const openEditModal = (product: Product) => {
     const matchedCat = categories.find(c => c.id === product.categoryId || (product.categoryNumber !== undefined && c.orderNumber === product.categoryNumber));
+    
+    // Resolve assigned categories (support both single and multiple categories)
+    let initialIds: string[] = [];
+    if (product.categoryIds && Array.isArray(product.categoryIds) && product.categoryIds.length > 0) {
+      initialIds = [...product.categoryIds];
+    } else if (product.categoryId) {
+      initialIds = [product.categoryId];
+    } else if (matchedCat) {
+      initialIds = [matchedCat.id];
+    }
+
+    let initialNums: number[] = [];
+    if (product.categoryNumbers && Array.isArray(product.categoryNumbers) && product.categoryNumbers.length > 0) {
+      initialNums = [...product.categoryNumbers];
+    } else {
+      initialNums = initialIds.map(id => categories.find(c => c.id === id)?.orderNumber).filter(Boolean) as number[];
+    }
+
+    // Resolve prices
+    let sPrice: string | number = product.price !== undefined ? product.price : '';
+    if (sPrice === '' && product.priceRange) {
+      const clean = product.priceRange.replace(/,/g, '');
+      const match = clean.match(/\d+/);
+      if (match) sPrice = parseInt(match[0], 10);
+    }
+    const numPrice = typeof sPrice === 'number' ? sPrice : (Number(sPrice) || 0);
+    const numMrp = typeof product.mrp === 'number' ? product.mrp : (Number(product.mrp) || 0);
+    const disc = numMrp > numPrice && numPrice > 0 ? Math.round(((numMrp - numPrice) / numMrp) * 100) : 0;
+
     setEditingProduct(product);
     setFormData({
       name: product.name,
       category: product.category,
-      categoryId: product.categoryId || matchedCat?.id,
-      categoryNumber: product.categoryNumber !== undefined ? product.categoryNumber : matchedCat?.orderNumber,
+      categoryId: initialIds[0] || product.categoryId || matchedCat?.id,
+      categoryNumber: initialNums[0] || (product.categoryNumber !== undefined ? product.categoryNumber : matchedCat?.orderNumber),
+      categoryIds: initialIds,
+      categoryNumbers: initialNums,
       brand: product.brand,
       image: product.image,
       badge: product.badge || '',
-      priceRange: product.priceRange,
+      price: sPrice,
+      mrp: product.mrp !== undefined ? product.mrp : '',
+      priceRange: product.priceRange || (numPrice ? `₹${numPrice.toLocaleString('en-IN')}` : ''),
+      discountPercent: disc,
       warranty: product.warranty || '',
       sampleVideoUrl: product.sampleVideoUrl || '',
       nightVideoUrl: product.nightVideoUrl || '',
@@ -171,15 +217,41 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
       .map(f => f.trim())
       .filter(f => f.length > 0);
 
+    const numPrice = formData.price !== '' && formData.price !== undefined && !isNaN(Number(formData.price))
+      ? Number(formData.price)
+      : undefined;
+
+    const numMrp = formData.mrp !== '' && formData.mrp !== undefined && !isNaN(Number(formData.mrp))
+      ? Number(formData.mrp)
+      : undefined;
+
+    let finalPriceRange = formData.priceRange.trim();
+    if (!finalPriceRange && numPrice) {
+      finalPriceRange = `₹${numPrice.toLocaleString('en-IN')}`;
+    }
+
+    let finalCategoryIds = formData.categoryIds;
+    if (!finalCategoryIds || finalCategoryIds.length === 0) {
+      if (formData.categoryId) finalCategoryIds = [formData.categoryId];
+      else if (categories.length > 0) finalCategoryIds = [categories[0].id];
+      else finalCategoryIds = [];
+    }
+
+    const finalCategoryNumbers = finalCategoryIds.map(id => categories.find(c => c.id === id)?.orderNumber).filter(Boolean) as number[];
+
     const productPayload = {
       name: formData.name,
       category: formData.category,
-      categoryId: formData.categoryId,
-      categoryNumber: formData.categoryNumber !== undefined && formData.categoryNumber !== null ? Number(formData.categoryNumber) : undefined,
+      categoryId: finalCategoryIds[0],
+      categoryNumber: finalCategoryNumbers[0],
+      categoryIds: finalCategoryIds,
+      categoryNumbers: finalCategoryNumbers,
       brand: formData.brand,
       image: formData.image,
       badge: formData.badge ? formData.badge : undefined,
-      priceRange: formData.priceRange,
+      price: numPrice,
+      mrp: numMrp,
+      priceRange: finalPriceRange,
       warranty: formData.warranty.trim() ? formData.warranty.trim() : undefined,
       sampleVideoUrl: formData.sampleVideoUrl.trim() ? formData.sampleVideoUrl.trim() : undefined,
       nightVideoUrl: formData.nightVideoUrl.trim() ? formData.nightVideoUrl.trim() : undefined,
@@ -191,10 +263,10 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
 
     if (editingProduct) {
       updateProduct(editingProduct.id, productPayload);
-      setNotification(`"${productPayload.name}" updated! Warranty & details are saved live to store.`);
+      setNotification(`"${productPayload.name}" updated with Offer Price ₹${(numPrice || 0).toLocaleString('en-IN')}${numMrp ? ` (MRP ₹${numMrp.toLocaleString('en-IN')})` : ''}!`);
     } else {
       addProduct(productPayload);
-      setNotification(`"${productPayload.name}" added to inventory!`);
+      setNotification(`"${productPayload.name}" added to inventory with Offer Price ₹${(numPrice || 0).toLocaleString('en-IN')}!`);
     }
 
     setTimeout(() => {
@@ -226,7 +298,10 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
     if (categoryFilter !== 'all') {
       const selectedCat = categories.find(c => c.id === categoryFilter);
       if (selectedCat) {
-        matchCat = p.categoryId === selectedCat.id || (p.categoryNumber !== undefined && p.categoryNumber === selectedCat.orderNumber);
+        matchCat = (p.categoryIds && Array.isArray(p.categoryIds) && p.categoryIds.includes(selectedCat.id)) ||
+                   (p.categoryNumbers && Array.isArray(p.categoryNumbers) && p.categoryNumbers.includes(selectedCat.orderNumber)) ||
+                   p.categoryId === selectedCat.id || 
+                   (p.categoryNumber !== undefined && p.categoryNumber === selectedCat.orderNumber);
       }
     }
     const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -441,7 +516,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
           </button>
           {[...categories].sort((a, b) => a.orderNumber - b.orderNumber).map(cat => {
             const isSelected = categoryFilter === cat.id;
-            const count = products.filter(p => p.categoryId === cat.id || (p.categoryNumber !== undefined && p.categoryNumber === cat.orderNumber)).length;
+            const count = products.filter(p => (p.categoryIds && p.categoryIds.includes(cat.id)) || (p.categoryNumbers && p.categoryNumbers.includes(cat.orderNumber)) || p.categoryId === cat.id || (p.categoryNumber !== undefined && p.categoryNumber === cat.orderNumber)).length;
             return (
               <button
                 key={cat.id}
@@ -659,6 +734,32 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                       </option>
                     ))}
                   </select>
+                  {product.categoryIds && product.categoryIds.length > 1 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '6px' }}>
+                      {product.categoryIds.map(cid => {
+                        const c = categories.find(cat => cat.id === cid);
+                        if (!c) return null;
+                        return (
+                          <span
+                            key={cid}
+                            style={{
+                              fontSize: '0.68rem',
+                              fontWeight: 800,
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              background: '#eff6ff',
+                              color: '#1d4ed8',
+                              border: '1px solid #bfdbfe',
+                              whiteSpace: 'nowrap'
+                            }}
+                            title={c.name}
+                          >
+                            ✓ #{c.orderNumber} {c.name.split(' ')[0]}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
                 </td>
                 <td style={{ padding: '14px 18px', color: '#1d4ed8', textTransform: 'capitalize', fontWeight: 600 }}>
                   {product.category.replace('_', ' ')}
@@ -666,8 +767,22 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                 <td style={{ padding: '14px 18px', color: '#0f172a', fontWeight: 600 }}>
                   {product.brand?.trim() ? product.brand : <span style={{ color: '#94a3b8' }}>—</span>}
                 </td>
-                <td style={{ padding: '14px 18px', color: '#059669', fontWeight: 800 }}>
-                  {product.priceRange}
+                <td style={{ padding: '14px 18px' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
+                    <span style={{ color: '#0f172a', fontWeight: 900, fontSize: '0.94rem' }}>
+                      {product.price !== undefined && product.price > 0 ? `₹${product.price.toLocaleString('en-IN')}` : product.priceRange}
+                    </span>
+                    {product.mrp && product.price && product.mrp > product.price && (
+                      <>
+                        <span style={{ fontSize: '0.74rem', color: '#94a3b8', textDecoration: 'line-through' }}>
+                          ₹${product.mrp.toLocaleString('en-IN')}
+                        </span>
+                        <span style={{ fontSize: '0.72rem', color: '#16a34a', fontWeight: 800, background: '#dcfce7', padding: '1px 5px', borderRadius: '4px' }}>
+                          {Math.round(((product.mrp - product.price) / product.mrp) * 100)}% OFF
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </td>
                 <td style={{ padding: '14px 18px', fontSize: '0.82rem' }}>
                   {product.warranty ? (
@@ -771,9 +886,12 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '12px' }}>
+                {/* Multi-Category Selector */}
                 <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                  <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontWeight: 700, color: '#1d4ed8' }}>Assigned Store Category *</span>
+                  <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontWeight: 800, color: '#1d4ed8', fontSize: '0.92rem' }}>
+                      Assigned Categories * ({formData.categoryIds.length} Selected)
+                    </span>
                     {onGoToCategories && (
                       <button
                         type="button"
@@ -787,43 +905,203 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({ onGoToEstimatorPri
                       </button>
                     )}
                   </label>
-                  <select
-                    className="form-select"
-                    style={{ fontSize: '0.88rem', fontWeight: 600 }}
-                    value={formData.categoryId || categories.find(c => c.orderNumber === formData.categoryNumber)?.id || ''}
-                    onChange={e => {
-                      const selectedId = e.target.value;
-                      const matched = categories.find(c => c.id === selectedId);
-                      setFormData({
-                        ...formData,
-                        categoryId: selectedId || undefined,
-                        categoryNumber: matched ? matched.orderNumber : undefined
-                      });
-                    }}
-                    required
-                  >
-                    <option value="">-- Choose Store Category --</option>
-                    {categories.map(cat => (
-                      <option key={cat.id} value={cat.id}>
-                        #{cat.orderNumber} - {cat.name}
-                      </option>
-                    ))}
-                  </select>
-                  <span style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '3px', display: 'block' }}>
-                    Determines which category section this product appears under on the customer storefront.
-                  </span>
+                  
+                  {/* Category Pills (Click to toggle on/off) */}
+                  <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '8px',
+                    padding: '12px',
+                    background: '#f8fafc',
+                    border: formData.categoryIds.length === 0 ? '1.5px solid #ef4444' : '1.5px solid #cbd5e1',
+                    borderRadius: '10px'
+                  }}>
+                    {categories.map(cat => {
+                      const isChecked = formData.categoryIds.includes(cat.id);
+                      return (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => {
+                            const nextIds = isChecked
+                              ? formData.categoryIds.filter(id => id !== cat.id)
+                              : [...formData.categoryIds, cat.id];
+                            const nextNums = nextIds
+                              .map(id => categories.find(c => c.id === id)?.orderNumber)
+                              .filter((n): n is number => n !== undefined);
+                            setFormData({
+                              ...formData,
+                              categoryIds: nextIds,
+                              categoryNumbers: nextNums,
+                              categoryId: nextIds[0] || undefined,
+                              categoryNumber: nextNums[0] || undefined
+                            });
+                          }}
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            padding: '7px 13px',
+                            borderRadius: '20px',
+                            fontSize: '0.82rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            transition: 'all 0.15s ease',
+                            border: isChecked ? '1.5px solid #2563eb' : '1px solid #cbd5e1',
+                            background: isChecked ? '#eff6ff' : '#ffffff',
+                            color: isChecked ? '#1d4ed8' : '#475569',
+                            boxShadow: isChecked ? '0 1px 3px rgba(37,99,235,0.15)' : 'none'
+                          }}
+                        >
+                          <span style={{ fontSize: '0.9rem', fontWeight: 900 }}>{isChecked ? '✓' : '+'}</span>
+                          <span>#{cat.orderNumber} - {cat.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {formData.categoryIds.length === 0 ? (
+                    <span style={{ fontSize: '0.74rem', color: '#ef4444', fontWeight: 600, marginTop: '4px', display: 'block' }}>
+                      ⚠️ Please click at least one category above to assign this product.
+                    </span>
+                  ) : (
+                    <span style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '4px', display: 'block' }}>
+                      💡 Tip: Click any category pill to toggle on/off. Product will appear simultaneously in all {formData.categoryIds.length} selected categories on the storefront!
+                    </span>
+                  )}
                 </div>
 
-                <div className="form-group">
-                  <label className="form-label">Price Range *</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="e.g. ₹4,500 - ₹6,000"
-                    value={formData.priceRange}
-                    onChange={e => setFormData({ ...formData, priceRange: e.target.value })}
-                    required
-                  />
+                {/* Pricing & Discount Section: Offer Price, Original Price (MRP), and Discount % */}
+                <div style={{
+                  gridColumn: 'span 2',
+                  background: '#f8fafc',
+                  border: '1.5px solid #cbd5e1',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
+                    <div style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.92rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span>💰 Offer Price & Original Price (Discount)</span>
+                    </div>
+
+                    {/* Live Preview of how the price will appear on customer cards */}
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#ffffff', padding: '6px 12px', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}>
+                      <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 600 }}>Card Preview:</span>
+                      <span style={{ fontWeight: 900, color: '#0f172a', fontSize: '0.98rem' }}>
+                        {formData.price !== '' && Number(formData.price) > 0 ? `₹${Number(formData.price).toLocaleString('en-IN')}` : (formData.priceRange || '₹0')}
+                      </span>
+                      {Number(formData.mrp) > Number(formData.price) && Number(formData.price) > 0 && (
+                        <>
+                          <span style={{ fontSize: '0.8rem', color: '#94a3b8', textDecoration: 'line-through' }}>
+                            ₹${Number(formData.mrp).toLocaleString('en-IN')}
+                          </span>
+                          <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#16a34a', background: '#dcfce7', padding: '1px 6px', borderRadius: '4px' }}>
+                            ({Math.round(((Number(formData.mrp) - Number(formData.price)) / Number(formData.mrp)) * 100)}% OFF)
+                          </span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 150px), 1fr))', gap: '14px' }}>
+                    {/* Offer Price / Selling Price */}
+                    <div>
+                      <label className="form-label" style={{ fontWeight: 700, color: '#0f172a' }}>
+                        Offer Price (₹) *
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        className="form-input"
+                        placeholder="e.g. 7316"
+                        value={formData.price}
+                        onChange={e => {
+                          const val = e.target.value;
+                          const num = val === '' ? '' : Number(val);
+                          const mrpNum = Number(formData.mrp) || 0;
+                          let disc = 0;
+                          if (mrpNum > Number(num) && Number(num) > 0) {
+                            disc = Math.round(((mrpNum - Number(num)) / mrpNum) * 100);
+                          }
+                          setFormData({
+                            ...formData,
+                            price: num,
+                            priceRange: num ? `₹${Number(num).toLocaleString('en-IN')}` : '',
+                            discountPercent: disc
+                          });
+                        }}
+                        required
+                      />
+                      <span style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '2px', display: 'block' }}>
+                        Final customer selling rate (bold)
+                      </span>
+                    </div>
+
+                    {/* Original Price / MRP */}
+                    <div>
+                      <label className="form-label" style={{ fontWeight: 700, color: '#64748b' }}>
+                        Original Price / MRP (₹)
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        className="form-input"
+                        placeholder="e.g. 9900 (leave blank if no discount)"
+                        value={formData.mrp}
+                        onChange={e => {
+                          const val = e.target.value;
+                          const num = val === '' ? '' : Number(val);
+                          const sellNum = Number(formData.price) || 0;
+                          let disc = 0;
+                          if (Number(num) > sellNum && sellNum > 0) {
+                            disc = Math.round(((Number(num) - sellNum) / Number(num)) * 100);
+                          }
+                          setFormData({
+                            ...formData,
+                            mrp: num,
+                            discountPercent: disc
+                          });
+                        }}
+                      />
+                      <span style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '2px', display: 'block' }}>
+                        Strike-through rate (e.g. ₹9,900)
+                      </span>
+                    </div>
+
+                    {/* Discount % (auto-calculates or enter % to recalculate offer price) */}
+                    <div>
+                      <label className="form-label" style={{ fontWeight: 700, color: '#16a34a' }}>
+                        Discount % (Auto-calculated)
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="99"
+                        className="form-input"
+                        placeholder="e.g. 26"
+                        value={
+                          Number(formData.mrp) > Number(formData.price) && Number(formData.price) > 0
+                            ? Math.round(((Number(formData.mrp) - Number(formData.price)) / Number(formData.mrp)) * 100)
+                            : ''
+                        }
+                        onChange={e => {
+                          const disc = Number(e.target.value);
+                          if (disc > 0 && disc < 100 && Number(formData.mrp) > 0) {
+                            const calculatedSelling = Math.round(Number(formData.mrp) * (1 - disc / 100));
+                            setFormData({
+                              ...formData,
+                              price: calculatedSelling,
+                              priceRange: `₹${calculatedSelling.toLocaleString('en-IN')}`,
+                              discountPercent: disc
+                            });
+                          }
+                        }}
+                      />
+                      <span style={{ fontSize: '0.7rem', color: '#16a34a', marginTop: '2px', display: 'block' }}>
+                        Green discount badge (e.g. 26% OFF)
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="form-group">

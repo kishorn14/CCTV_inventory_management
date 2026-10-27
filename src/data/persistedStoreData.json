@@ -64,7 +64,13 @@
       "description": "CP PLUS professional IP bullet camera designed for outdoor perimeter monitoring, factories, shops, and residential complexes.",
       "popular": true,
       "categoryNumber": 3,
-      "categoryId": "cat-3"
+      "categoryId": "cat-3",
+      "categoryIds": [
+        "cat-3"
+      ],
+      "categoryNumbers": [
+        3
+      ]
     },
     {
       "id": "prod-2",
@@ -87,7 +93,13 @@
       "description": "CP PLUS high-definition IP dome camera with audio recording, crisp night vision, and easy PoE network plug & play.",
       "popular": false,
       "categoryNumber": 3,
-      "categoryId": "cat-3"
+      "categoryId": "cat-3",
+      "categoryIds": [
+        "cat-3"
+      ],
+      "categoryNumbers": [
+        3
+      ]
     },
     {
       "id": "prod-3",
@@ -110,7 +122,13 @@
       "description": "CP PLUS professional IP bullet camera designed for outdoor perimeter monitoring, factories, shops, and residential complexes.",
       "popular": true,
       "categoryNumber": 3,
-      "categoryId": "cat-3"
+      "categoryId": "cat-3",
+      "categoryIds": [
+        "cat-3"
+      ],
+      "categoryNumbers": [
+        3
+      ]
     },
     {
       "id": "prod-4",
@@ -134,7 +152,13 @@
       "popular": false,
       "categoryNumber": 3,
       "categoryId": "cat-3",
-      "warranty": "2 Years Brand Warranty"
+      "warranty": "2 Years Brand Warranty",
+      "categoryIds": [
+        "cat-3"
+      ],
+      "categoryNumbers": [
+        3
+      ]
     },
     {
       "id": "prod-5",
@@ -158,30 +182,13 @@
       "popular": false,
       "categoryNumber": 3,
       "categoryId": "cat-3",
-      "warranty": "2 Years Brand Warranty"
-    },
-    {
-      "id": "prod-6",
-      "name": "CP PLUS 2MP IP DUAL IR DOME WITH MIC - CP-UNC-TA21L3C-LQ",
-      "category": "ip_cameras",
-      "brand": "CP PLUS",
-      "image": "https://cpplusworld.com/prodassets/product/small/1fafd883-5ef9-4a97-9f07-165b6f98b55f.png",
-      "badge": "2MP IP Dome",
-      "priceRange": "₹0",
-      "price": 0,
-      "mrp": 20,
-      "unit": "NOS",
-      "features": [
-        "PoE Smart IP Network Camera",
-        "Built-in High Sensitivity Microphone",
-        "Dual IR LEDs for Vivid Night Vision",
-        "H.265+ Ultra Compression",
-        "Metal Housing Weatherproof"
+      "warranty": "2 Years Brand Warranty",
+      "categoryIds": [
+        "cat-3"
       ],
-      "description": "CP PLUS high-definition IP dome camera with audio recording, crisp night vision, and easy PoE network plug & play.",
-      "popular": false,
-      "categoryNumber": 3,
-      "categoryId": "cat-3"
+      "categoryNumbers": [
+        3
+      ]
     },
     {
       "id": "prod-7",
@@ -204,7 +211,13 @@
       "description": "CP PLUS professional IP bullet camera designed for outdoor perimeter monitoring, factories, shops, and residential complexes.",
       "popular": true,
       "categoryNumber": 3,
-      "categoryId": "cat-3"
+      "categoryId": "cat-3",
+      "categoryIds": [
+        "cat-3"
+      ],
+      "categoryNumbers": [
+        3
+      ]
     },
     {
       "id": "prod-8",
@@ -227,7 +240,13 @@
       "description": "CP PLUS professional IP bullet camera designed for outdoor perimeter monitoring, factories, shops, and residential complexes.",
       "popular": true,
       "categoryNumber": 3,
-      "categoryId": "cat-3"
+      "categoryId": "cat-3",
+      "categoryIds": [
+        "cat-3"
+      ],
+      "categoryNumbers": [
+        3
+      ]
     },
     {
       "id": "prod-9",
@@ -250,7 +269,13 @@
       "description": "CP PLUS high-definition IP dome camera with audio recording, crisp night vision, and easy PoE network plug & play.",
       "popular": false,
       "categoryNumber": 3,
-      "categoryId": "cat-3"
+      "categoryId": "cat-3",
+      "categoryIds": [
+        "cat-3"
+      ],
+      "categoryNumbers": [
+        3
+      ]
     },
     {
       "id": "prod-10",
@@ -273,7 +298,13 @@
       "description": "Trueview 2MP outdoor HD bullet camera with dual illumination night vision for residential and retail protection.",
       "popular": false,
       "categoryNumber": 4,
-      "categoryId": "cat-4"
+      "categoryId": "cat-4",
+      "categoryIds": [
+        "cat-4"
+      ],
+      "categoryNumbers": [
+        4
+      ]
     },
     {
       "id": "prod-11",
@@ -296,7 +327,13 @@
       "description": "Trueview 2MP indoor dome HD camera with dual light illumination for crystal clear security on any HD DVR setup.",
       "popular": false,
       "categoryNumber": 4,
-      "categoryId": "cat-4"
+      "categoryId": "cat-4",
+      "categoryIds": [
+        "cat-4"
+      ],
+      "categoryNumbers": [
+        4
+      ]
     },
     {
       "id": "prod-12",
@@ -320,7 +357,15 @@
       "description": "SecureMax 6MP 4G Linkage Triple Lens PT Camera with multi-angle surveillance, ideal for large areas without broadband.",
       "popular": true,
       "categoryNumber": 1,
-      "categoryId": "cat-1"
+      "categoryId": "cat-1",
+      "categoryIds": [
+        "cat-1",
+        "cat-2"
+      ],
+      "categoryNumbers": [
+        1,
+        2
+      ]
     },
     {
       "id": "prod-13",
@@ -344,7 +389,13 @@
       "description": "Trueview 3MP Pan & Tilt smart camera with 360-degree rotation and clear two-way communication.",
       "popular": true,
       "categoryNumber": 2,
-      "categoryId": "cat-2"
+      "categoryId": "cat-2",
+      "categoryIds": [
+        "cat-2"
+      ],
+      "categoryNumbers": [
+        2
+      ]
     },
     {
       "id": "prod-14",
@@ -368,7 +419,13 @@
       "description": "Trueview 3MP Pan & Tilt smart camera with 360-degree rotation and clear two-way communication.",
       "popular": true,
       "categoryNumber": 2,
-      "categoryId": "cat-2"
+      "categoryId": "cat-2",
+      "categoryIds": [
+        "cat-2"
+      ],
+      "categoryNumbers": [
+        2
+      ]
     },
     {
       "id": "prod-15",
@@ -391,7 +448,13 @@
       "description": "Trueview 3MP Wi-Fi outdoor color bullet camera with mobile app live viewing, motion detection and two-way talk.",
       "popular": false,
       "categoryNumber": 2,
-      "categoryId": "cat-2"
+      "categoryId": "cat-2",
+      "categoryIds": [
+        "cat-2"
+      ],
+      "categoryNumbers": [
+        2
+      ]
     },
     {
       "id": "prod-38",
@@ -415,7 +478,13 @@
       "description": "Complete solar security camera kit engineered for agricultural farms, open lands, and remote properties without grid electricity.",
       "popular": true,
       "categoryNumber": 1,
-      "categoryId": "cat-1"
+      "categoryId": "cat-1",
+      "categoryIds": [
+        "cat-1"
+      ],
+      "categoryNumbers": [
+        1
+      ]
     },
     {
       "id": "prod-17",
@@ -438,7 +507,13 @@
       "description": "Reliable SATA internal hard disk drive for CCTV video storage with 2 years replacement warranty.",
       "popular": false,
       "categoryNumber": 5,
-      "categoryId": "cat-5"
+      "categoryId": "cat-5",
+      "categoryIds": [
+        "cat-5"
+      ],
+      "categoryNumbers": [
+        5
+      ]
     },
     {
       "id": "prod-18",
@@ -461,7 +536,13 @@
       "description": "Reliable SATA internal hard disk drive for CCTV video storage with 2 years replacement warranty.",
       "popular": false,
       "categoryNumber": 5,
-      "categoryId": "cat-5"
+      "categoryId": "cat-5",
+      "categoryIds": [
+        "cat-5"
+      ],
+      "categoryNumbers": [
+        5
+      ]
     },
     {
       "id": "prod-19",
@@ -485,7 +566,13 @@
       "description": "Original Seagate SkyHawk Surveillance HDD designed specifically for continuous 24/7 DVR and NVR video recording.",
       "popular": true,
       "categoryNumber": 5,
-      "categoryId": "cat-5"
+      "categoryId": "cat-5",
+      "categoryIds": [
+        "cat-5"
+      ],
+      "categoryNumbers": [
+        5
+      ]
     },
     {
       "id": "prod-20",
@@ -509,7 +596,13 @@
       "description": "Original Seagate SkyHawk Surveillance HDD designed specifically for continuous 24/7 DVR and NVR video recording.",
       "popular": true,
       "categoryNumber": 5,
-      "categoryId": "cat-5"
+      "categoryId": "cat-5",
+      "categoryIds": [
+        "cat-5"
+      ],
+      "categoryNumbers": [
+        5
+      ]
     },
     {
       "id": "prod-21",
@@ -532,7 +625,13 @@
       "description": "High-endurance Micro SD memory card for standalone Wi-Fi and 4G smart cameras with fast read/write speeds.",
       "popular": false,
       "categoryNumber": 5,
-      "categoryId": "cat-5"
+      "categoryId": "cat-5",
+      "categoryIds": [
+        "cat-5"
+      ],
+      "categoryNumbers": [
+        5
+      ]
     },
     {
       "id": "prod-22",
@@ -555,7 +654,13 @@
       "description": "High-endurance Micro SD memory card for standalone Wi-Fi and 4G smart cameras with fast read/write speeds.",
       "popular": false,
       "categoryNumber": 5,
-      "categoryId": "cat-5"
+      "categoryId": "cat-5",
+      "categoryIds": [
+        "cat-5"
+      ],
+      "categoryNumbers": [
+        5
+      ]
     },
     {
       "id": "prod-26",
@@ -579,7 +684,13 @@
       "description": "Trueview 4-Channel HD DVR with two-way audio talk and reliable continuous recording.",
       "popular": false,
       "categoryNumber": 6,
-      "categoryId": "cat-6"
+      "categoryId": "cat-6",
+      "categoryIds": [
+        "cat-6"
+      ],
+      "categoryNumbers": [
+        6
+      ]
     },
     {
       "id": "prod-25",
@@ -603,7 +714,13 @@
       "description": "CP PLUS 8-Channel NVR recorder suitable for homes, offices, and small retail showrooms.",
       "popular": false,
       "categoryNumber": 6,
-      "categoryId": "cat-6"
+      "categoryId": "cat-6",
+      "categoryIds": [
+        "cat-6"
+      ],
+      "categoryNumbers": [
+        6
+      ]
     },
     {
       "id": "prod-23",
@@ -627,7 +744,13 @@
       "description": "CP PLUS 16-Channel 4K NVR for commercial shops, multi-floor buildings, and warehouses.",
       "popular": true,
       "categoryNumber": 6,
-      "categoryId": "cat-6"
+      "categoryId": "cat-6",
+      "categoryIds": [
+        "cat-6"
+      ],
+      "categoryNumbers": [
+        6
+      ]
     },
     {
       "id": "prod-24",
@@ -651,7 +774,13 @@
       "description": "CP PLUS 32-Channel 4K Network Video Recorder for large commercial enterprises, apartments, and industrial facilities.",
       "popular": true,
       "categoryNumber": 6,
-      "categoryId": "cat-6"
+      "categoryId": "cat-6",
+      "categoryIds": [
+        "cat-6"
+      ],
+      "categoryNumbers": [
+        6
+      ]
     },
     {
       "id": "prod-36",
@@ -674,7 +803,13 @@
       "description": "Mini wall mount enclosure to prevent tampering and theft of CCTV recording units.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-37",
@@ -697,7 +832,13 @@
       "description": "Mini wall mount enclosure to prevent tampering and theft of CCTV recording units.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-34",
@@ -720,7 +861,13 @@
       "description": "Compact 2U wall mount CCTV rack to house DVR, SMPS, and cables cleanly in homes and shops.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-35",
@@ -743,7 +890,13 @@
       "description": "Heavy duty 6U server and CCTV rack cabinet to secure NVR, DVR, PoE switch, and power supplies.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-27",
@@ -766,7 +919,13 @@
       "description": "D-Link / Maxxion 5-Port desktop ethernet switch for expanding network connections in CCTV and office setups.",
       "popular": false,
       "categoryNumber": 7,
-      "categoryId": "cat-7"
+      "categoryId": "cat-7",
+      "categoryIds": [
+        "cat-7"
+      ],
+      "categoryNumbers": [
+        7
+      ]
     },
     {
       "id": "prod-28",
@@ -789,7 +948,13 @@
       "description": "Power over Ethernet (PoE) network switch to deliver both power and data to IP cameras over single Cat6 cable.",
       "popular": true,
       "categoryNumber": 7,
-      "categoryId": "cat-7"
+      "categoryId": "cat-7",
+      "categoryIds": [
+        "cat-7"
+      ],
+      "categoryNumbers": [
+        7
+      ]
     },
     {
       "id": "prod-29",
@@ -812,7 +977,13 @@
       "description": "D-Link / Maxxion 5-Port desktop ethernet switch for expanding network connections in CCTV and office setups.",
       "popular": false,
       "categoryNumber": 7,
-      "categoryId": "cat-7"
+      "categoryId": "cat-7",
+      "categoryIds": [
+        "cat-7"
+      ],
+      "categoryNumbers": [
+        7
+      ]
     },
     {
       "id": "prod-30",
@@ -835,7 +1006,13 @@
       "description": "TP-Link high-speed Gigabit LAN adapter for laptops, PCs and network testing.",
       "popular": false,
       "categoryNumber": 7,
-      "categoryId": "cat-7"
+      "categoryId": "cat-7",
+      "categoryIds": [
+        "cat-7"
+      ],
+      "categoryNumbers": [
+        7
+      ]
     },
     {
       "id": "prod-31",
@@ -858,7 +1035,13 @@
       "description": "Trueview 4G SIM wireless router providing instant internet connectivity for CCTV setups without broadband connection.",
       "popular": false,
       "categoryNumber": 7,
-      "categoryId": "cat-7"
+      "categoryId": "cat-7",
+      "categoryIds": [
+        "cat-7"
+      ],
+      "categoryNumbers": [
+        7
+      ]
     },
     {
       "id": "prod-32",
@@ -881,7 +1064,13 @@
       "description": "Power over Ethernet (PoE) network switch to deliver both power and data to IP cameras over single Cat6 cable.",
       "popular": true,
       "categoryNumber": 7,
-      "categoryId": "cat-7"
+      "categoryId": "cat-7",
+      "categoryIds": [
+        "cat-7"
+      ],
+      "categoryNumbers": [
+        7
+      ]
     },
     {
       "id": "prod-33",
@@ -904,7 +1093,13 @@
       "description": "Power over Ethernet (PoE) network switch to deliver both power and data to IP cameras over single Cat6 cable.",
       "popular": true,
       "categoryNumber": 7,
-      "categoryId": "cat-7"
+      "categoryId": "cat-7",
+      "categoryIds": [
+        "cat-7"
+      ],
+      "categoryNumbers": [
+        7
+      ]
     },
     {
       "id": "prod-39",
@@ -927,7 +1122,13 @@
       "description": "Fyber centralized CCTV SMPS power supply box to power 4 or 8 cameras safely from a single power point.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-40",
@@ -950,7 +1151,13 @@
       "description": "Fyber centralized CCTV SMPS power supply box to power 4 or 8 cameras safely from a single power point.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-41",
@@ -973,7 +1180,13 @@
       "description": "High grade pure copper Cat6 networking cable sold per meter for custom wiring lengths.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-42",
@@ -996,7 +1209,13 @@
       "description": "CP PLUS 3+1 CCTV cable 90m bundle designed for analog and HD DVR camera wiring.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-43",
@@ -1019,7 +1238,13 @@
       "description": "CP PLUS 305m pure solid Cat6 networking cable drum for professional IP CCTV camera installations.",
       "popular": true,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-48",
@@ -1042,7 +1267,13 @@
       "description": "Maxxion CCTV wired DC male power pins for connecting 12V power supply to security cameras.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-49",
@@ -1065,7 +1296,13 @@
       "description": "Maxxion Elite wired BNC connectors for crisp, noise-free video transmission from HD cameras.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-44",
@@ -1088,7 +1325,13 @@
       "description": "High quality RJ45 crimp modular connectors for terminating IP camera network cables.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-45",
@@ -1111,7 +1354,13 @@
       "description": "High quality RJ45 crimp modular connectors for terminating IP camera network cables.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-50",
@@ -1133,7 +1382,13 @@
       "description": "Essential installation accessory for secure CCTV system deployment.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-46",
@@ -1156,7 +1411,13 @@
       "description": "iFyber waterproof modular junction box to conceal and protect camera connectors from rain and dust.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-47",
@@ -1179,7 +1440,13 @@
       "description": "iFyber waterproof modular junction box to conceal and protect camera connectors from rain and dust.",
       "popular": false,
       "categoryNumber": 8,
-      "categoryId": "cat-8"
+      "categoryId": "cat-8",
+      "categoryIds": [
+        "cat-8"
+      ],
+      "categoryNumbers": [
+        8
+      ]
     },
     {
       "id": "prod-51",
@@ -1203,7 +1470,13 @@
       "description": "CP PLUS 4-Channel dedicated NVR recorder for crystal clear IP security camera monitoring and recording.",
       "popular": true,
       "categoryNumber": 6,
-      "categoryId": "cat-6"
+      "categoryId": "cat-6",
+      "categoryIds": [
+        "cat-6"
+      ],
+      "categoryNumbers": [
+        6
+      ]
     },
     {
       "id": "prod-52",
@@ -1226,7 +1499,13 @@
       "description": "High performance 4-Port PoE Switch supplying power and high-speed data transmission for up to 4 IP cameras.",
       "popular": true,
       "categoryNumber": 7,
-      "categoryId": "cat-7"
+      "categoryId": "cat-7",
+      "categoryIds": [
+        "cat-7"
+      ],
+      "categoryNumbers": [
+        7
+      ]
     },
     {
       "id": "prod-53",
@@ -1250,7 +1529,13 @@
       "description": "CP PLUS 8-Channel Universal HD DVR with two-way audio support for residential & commercial security.",
       "popular": true,
       "categoryNumber": 6,
-      "categoryId": "cat-6"
+      "categoryId": "cat-6",
+      "categoryIds": [
+        "cat-6"
+      ],
+      "categoryNumbers": [
+        6
+      ]
     },
     {
       "id": "prod-54",
@@ -1274,7 +1559,13 @@
       "description": "CP PLUS 16-Channel HD DVR recorder for large shops, schools, commercial complexes, and apartments.",
       "popular": true,
       "categoryNumber": 6,
-      "categoryId": "cat-6"
+      "categoryId": "cat-6",
+      "categoryIds": [
+        "cat-6"
+      ],
+      "categoryNumbers": [
+        6
+      ]
     }
   ],
   "services": [
@@ -1506,5 +1797,7 @@
       "timestamp": "2026-10-17T06:43:55.522Z",
       "formattedDate": "17 Oct 2026, 12:13 pm"
     }
-  ]
+  ],
+  "lastBuildTime": "2026-10-27T04:46:33.298Z",
+  "catalogVersion": "release_1793076393298"
 }
