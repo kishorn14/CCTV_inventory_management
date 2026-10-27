@@ -618,9 +618,6 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                 <div style={{ fontWeight: 800, color: '#0f172a', fontSize: '0.98rem' }}>
                   {totalCartCount} item{totalCartCount > 1 ? 's' : ''} in Cart: <span style={{ color: '#16a34a', fontWeight: 900 }}>₹{totalCartPrice.toLocaleString('en-IN')}</span>
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                  Davanagere wholesale rates with genuine brand warranty
-                </div>
               </div>
             </div>
 
